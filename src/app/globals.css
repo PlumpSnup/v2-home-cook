@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Brand colours — warm, homey and minimal. */
+@theme {
+  --color-cream: #faf7f2;
+  --color-surface: #ffffff;
+  --color-brand: #c8553d;
+  --color-brand-dark: #a8432e;
+  --color-brand-soft: #f6e4df;
+  --color-sage: #6b8f71;
+  --color-sage-soft: #e6eee7;
+  --color-ink: #2b2b2b;
+  --color-muted: #7a746d;
+  --color-line: #ece6dd;
+  --color-whatsapp: #25d366;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-dark;
+}
+@utility btn-secondary {
+  @apply btn border border-line bg-surface text-ink hover:border-muted;
+}
+@utility btn-whatsapp {
+  @apply btn bg-whatsapp text-white hover:brightness-95;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-surface;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-base outline-none placeholder:text-muted/70 focus:border-brand;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium;
+}
+@utility chip {
+  @apply inline-flex items-center rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-muted;
+}

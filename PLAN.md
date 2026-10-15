@@ -1,33 +1,29 @@
-# Home Cook Marketplace — v1 Plan (draft, pending answers)
+# HomeCook — v1 plan
+
+## Decisions
+- **Card payments:** Stripe Connect Express. Money goes straight to the cook. An optional platform fee is set with `PLATFORM_FEE_PERCENT`.
+- **Buyer login:** optional. Guests order with a name and phone number. Gmail login lets a buyer see their order history.
+- **Availability:** a simple on/off switch on each dish.
+- **Pickup and delivery:** each cook chooses pickup, delivery or both. Delivery can carry a fee.
+- **Region:** Canada, prices in CAD. The time zone defaults to America/Toronto.
 
 ## Stack
-- Next.js (App Router) + TypeScript + Tailwind CSS — mobile-first, deploy on Vercel
-- Supabase — Postgres, Google (Gmail) login, image storage for food photos
-- Stripe Connect (Express) + Stripe Checkout — card/debit payments go to the cook
-- Cash / e-transfer — shown as payment instructions; cook marks order paid
+Next.js 15 + TypeScript + Tailwind 4 · Supabase (Postgres, Google auth, storage) · Stripe Connect · Vercel
 
 ## Pages
-Buyer: Home (search + categories), Search results, Dish page, Cook storefront `/c/[slug]`, Order sheet, My orders
-Cook: Google login, onboarding (name, area, WhatsApp, payment methods, e-transfer email), Menu manager (add dish: photo, name, price, category, short description), Orders, Sales dashboard (meals sold + revenue: today / week / month), Share storefront (copy link, WhatsApp share, Instagram-ready link + QR)
+- **Buyer:** `/` (search and category tabs) · `/dish/[id]` (with the order form) · `/c/[slug]` (storefront) · `/order/[id]` (confirmation and WhatsApp) · `/orders`
+- **Cook:** `/login` · `/cook/onboarding` · `/cook` (home) · `/cook/orders` · `/cook/menu` (+ new/edit) · `/cook/sales` · `/cook/share` · `/cook/settings`
 
-## Data
-profiles(cook/buyer) · dishes(category: Main Meals, Appetizers, Soups, Desserts) · orders(dish, qty, buyer contact, payment method, status, total)
-
-## Order flow
-Buyer picks dish → enters name + phone → picks payment method the cook accepts →
-- Card: Stripe Checkout → order marked paid automatically
-- Cash / e-transfer: order saved, WhatsApp opens with a prefilled message to the cook
-Cook confirms / marks paid / completed → feeds sales dashboard and success metrics.
-
-## Colors
-- Background cream `#FAF7F2`, surface white `#FFFFFF`
-- Primary terracotta `#C8553D` (buttons, links)
-- Accent sage `#6B8F71` (available / paid / success)
-- Text charcoal `#2B2B2B`, muted `#7A746D`, borders `#ECE6DD`
+## Colours
+| Token | Hex | Use |
+|---|---|---|
+| cream | `#FAF7F2` | page background |
+| surface | `#FFFFFF` | cards |
+| brand (terracotta) | `#C8553D` | buttons, prices, links |
+| sage | `#6B8F71` | available, paid, success |
+| ink | `#2B2B2B` | text |
+| muted | `#7A746D` | secondary text |
+| line | `#ECE6DD` | borders |
 
 ## Out of scope (v1)
-AI listing helper, photo enhancement, tags, AI food finder.
-
-## Build order
-1. Scaffold, design tokens, auth  2. Cook onboarding + menu  3. Browse/search + storefront + share
-4. Orders + WhatsApp  5. Stripe Connect  6. Sales dashboard  7. Seed data, deploy
+AI listing helper, photo enhancement, tags, AI food finder, multi-dish cart.
