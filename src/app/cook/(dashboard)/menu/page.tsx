@@ -4,17 +4,14 @@ import { DishPhoto } from "@/components/DishCard";
 import { AvailabilitySwitch } from "@/components/AvailabilitySwitch";
 import { requireCook } from "@/lib/auth";
 import { categoryLabel, money } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
-import type { Dish } from "@/lib/types";
+import { getCookDishes } from "@/lib/queries";
 
 export const metadata: Metadata = { title: "My menu" };
 
 export default async function MenuPage({ searchParams }: { searchParams: Promise<{ added?: string }> }) {
   const cook = await requireCook();
   const { added } = await searchParams;
-  const supabase = await createClient();
-  const { data } = await supabase.from("dishes").select("*").eq("cook_id", cook.id).order("created_at", { ascending: false });
-  const dishes = (data ?? []) as Dish[];
+  const dishes = await getCookDishes(cook.id);
 
   return (
     <div className="space-y-4">

@@ -8,16 +8,14 @@ import { OrderForm } from "@/components/OrderForm";
 import { getCurrentProfile } from "@/lib/auth";
 import { acceptedPayments, fulfillmentOptions, kitchenName } from "@/lib/cook";
 import { categoryLabel, money, whatsappLink } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
-import type { Dish, Profile } from "@/lib/types";
+import { getDish, getProfile } from "@/lib/queries";
 
 type Props = { params: Promise<{ id: string }> };
 
 async function load(id: string) {
-  const supabase = await createClient();
-  const { data: dish } = await supabase.from("dishes").select("*").eq("id", id).maybeSingle<Dish>();
+  const dish = await getDish(id);
   if (!dish) return null;
-  const { data: cook } = await supabase.from("profiles").select("*").eq("id", dish.cook_id).single<Profile>();
+  const cook = await getProfile(dish.cook_id);
   if (!cook?.is_cook) return null;
   return { dish, cook };
 }

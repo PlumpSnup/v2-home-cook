@@ -4,7 +4,7 @@ import { CookProfileForm } from "@/components/CookProfileForm";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireCook } from "@/lib/auth";
 import { stripe, stripeEnabled } from "@/lib/stripe";
-import { createServiceClient } from "@/lib/supabase/server";
+import { db } from "@/lib/db";
 import type { Profile } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -56,7 +56,8 @@ async function syncStripe(cook: Profile): Promise<Profile> {
   try {
     const account = await stripe().accounts.retrieve(cook.stripe_account_id!);
     if (!account.charges_enabled) return cook;
-    await createServiceClient().from("profiles").update({ stripe_charges_enabled: true }).eq("id", cook.id);
+    const sql = await db();
+    await sql`update profiles set stripe_charges_enabled = true where id = ${cook.id}`;
     return { ...cook, stripe_charges_enabled: true };
   } catch {
     return cook;

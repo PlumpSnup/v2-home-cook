@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { SignOutButton } from "@/components/SignOutButton";
 import { getCurrentProfile } from "@/lib/auth";
 import { money } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/lib/db";
 import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "My orders" };
@@ -20,14 +20,13 @@ export default async function MyOrdersPage() {
   const profile = await getCurrentProfile();
   if (!profile) redirect("/login?next=/orders");
 
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("orders")
-    .select("*, cook:profiles!orders_cook_id_fkey(kitchen_name, slug)")
-    .eq("buyer_id", profile.id)
-    .order("created_at", { ascending: false })
-    .limit(50);
-  const orders = (data ?? []) as (Order & { cook: { kitchen_name: string | null; slug: string | null } | null })[];
+  const sql = await db();
+  const orders = await sql<(Order & { kitchen_name: string | null })[]>`
+    select o.*, p.kitchen_name from orders o
+    join profiles p on p.id = o.cook_id
+    where o.buyer_id = ${profile.id}
+    order by o.created_at desc
+    limit 50`;
 
   return (
     <div className="space-y-4 pt-6">
@@ -49,7 +48,7 @@ export default async function MyOrdersPage() {
                     {o.quantity} × {o.dish_name}
                   </p>
                   <p className="truncate text-sm text-muted">
-                    {o.cook?.kitchen_name} · {new Date(o.created_at).toLocaleDateString("en-CA", { month: "short", day: "numeric" })}
+                    {o.kitchen_name} · {new Date(o.created_at).toLocaleDateString("en-CA", { month: "short", day: "numeric" })}
                   </p>
                 </div>
                 <div className="shrink-0 text-right">

@@ -3,32 +3,24 @@ import Link from "next/link";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
 import { money } from "@/lib/format";
+import { db } from "@/lib/db";
+import { getRecentSales } from "@/lib/queries";
 import { salesWindowStart, summarize } from "@/lib/sales";
-import { createClient } from "@/lib/supabase/server";
-import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "My kitchen" };
 
 export default async function CookHome() {
   const cook = await requireCook();
-  const supabase = await createClient();
+  const sql = await db();
 
-  const [{ count: activeCount }, { count: dishCount }, { data: sales }] = await Promise.all([
-    supabase
-      .from("orders")
-      .select("id", { count: "exact", head: true })
-      .eq("cook_id", cook.id)
-      .in("status", ["pending", "confirmed"])
-      .or("payment_method.neq.card,paid.eq.true"),
-    supabase.from("dishes").select("id", { count: "exact", head: true }).eq("cook_id", cook.id),
-    supabase
-      .from("orders")
-      .select("quantity, total_cents, completed_at, dish_name")
-      .eq("cook_id", cook.id)
-      .eq("status", "completed")
-      .gte("completed_at", salesWindowStart()),
+  const [[{ activeCount, dishCount }], rows] = await Promise.all([
+    sql<{ activeCount: number; dishCount: number }[]>`
+      select
+        (select count(*)::int from orders where cook_id = ${cook.id} and status in ('pending', 'confirmed')
+           and (payment_method <> 'card' or paid)) as "activeCount",
+        (select count(*)::int from dishes where cook_id = ${cook.id}) as "dishCount"`,
+    getRecentSales(cook.id, salesWindowStart()),
   ]);
-  const rows = (sales ?? []) as Pick<Order, "quantity" | "total_cents" | "completed_at" | "dish_name">[];
   const today = summarize(rows, "today");
   const week = summarize(rows, "week");
 

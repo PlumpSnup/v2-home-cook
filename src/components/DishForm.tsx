@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import { useActionState, useRef, useState } from "react";
-import { saveDish } from "@/app/actions/cook";
+import { saveDish, uploadDishPhoto } from "@/app/actions/cook";
 import { CATEGORIES } from "@/lib/format";
-import { createClient } from "@/lib/supabase/client";
 import type { Dish } from "@/lib/types";
 
 /** Shrinks a phone photo to a ~1200px JPEG so uploads are fast on mobile data. */
@@ -20,7 +19,7 @@ async function resizeImage(file: File, max = 1200): Promise<Blob> {
   );
 }
 
-export function DishForm({ dish, userId }: { dish?: Dish; userId: string }) {
+export function DishForm({ dish }: { dish?: Dish }) {
   const [state, action, pending] = useActionState(saveDish, {});
   const [photoUrl, setPhotoUrl] = useState(dish?.photo_url ?? "");
   const [uploading, setUploading] = useState(false);
@@ -32,12 +31,11 @@ export function DishForm({ dish, userId }: { dish?: Dish; userId: string }) {
     setUploading(true);
     setUploadError("");
     try {
-      const blob = await resizeImage(file);
-      const path = `${userId}/${crypto.randomUUID()}.jpg`;
-      const supabase = createClient();
-      const { error } = await supabase.storage.from("dish-photos").upload(path, blob, { contentType: "image/jpeg" });
-      if (error) throw error;
-      setPhotoUrl(supabase.storage.from("dish-photos").getPublicUrl(path).data.publicUrl);
+      const form = new FormData();
+      form.append("photo", await resizeImage(file), "photo.jpg");
+      const result = await uploadDishPhoto(form);
+      if (!result.url) throw new Error(result.error);
+      setPhotoUrl(result.url);
     } catch {
       setUploadError("Photo upload failed. Please try again.");
     } finally {

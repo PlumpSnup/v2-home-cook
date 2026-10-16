@@ -5,8 +5,9 @@ import { APP_NAME } from "@/lib/brand";
 import { kitchenName } from "@/lib/cook";
 import { money, PAYMENT_LABELS, whatsappLink } from "@/lib/format";
 import { stripe, stripeEnabled } from "@/lib/stripe";
-import { createServiceClient } from "@/lib/supabase/server";
-import type { Order, Profile } from "@/lib/types";
+import { db } from "@/lib/db";
+import { getOrder, getProfile } from "@/lib/queries";
+import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Your order", robots: { index: false } };
 
@@ -15,14 +16,12 @@ type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ paid?: s
 export default async function OrderPage({ params, searchParams }: Props) {
   const { id } = await params;
   const { paid: returnedFromStripe } = await searchParams;
-  if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
   // The order id is an unguessable UUID shared only with the buyer, so it acts as the access key.
-  const admin = createServiceClient();
-  const { data: order } = await admin.from("orders").select("*").eq("id", id).maybeSingle<Order>();
+  const order = await getOrder(id);
   if (!order) notFound();
   if (order.payment_method === "card" && !order.paid) order.paid = await syncCardPayment(order);
-  const { data: cook } = await admin.from("profiles").select("*").eq("id", order.cook_id).single<Profile>();
+  const cook = await getProfile(order.cook_id);
   if (!cook) notFound();
 
   const name = kitchenName(cook);
@@ -115,6 +114,7 @@ async function syncCardPayment(order: Order) {
   if (!stripeEnabled || !order.stripe_session_id) return false;
   const session = await stripe().checkout.sessions.retrieve(order.stripe_session_id);
   if (session.payment_status !== "paid") return false;
-  await createServiceClient().from("orders").update({ paid: true }).eq("id", order.id);
+  const sql = await db();
+  await sql`update orders set paid = true where id = ${order.id}`;
   return true;
 }

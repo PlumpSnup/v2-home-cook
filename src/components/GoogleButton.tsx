@@ -1,22 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useFormStatus } from "react-dom";
+import { signInWithGoogle } from "@/app/actions/auth";
 
 export function GoogleButton({ next }: { next: string }) {
-  const [loading, setLoading] = useState(false);
-
-  async function signIn() {
-    setLoading(true);
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}` },
-    });
-  }
-
   return (
-    <button type="button" onClick={signIn} disabled={loading} className="btn-secondary w-full py-4 text-base">
+    <form action={signInWithGoogle.bind(null, next)}>
+      <Submit />
+    </form>
+  );
+}
+
+function Submit() {
+  const { pending: loading } = useFormStatus();
+  return (
+    <button type="submit" disabled={loading} className="btn-secondary w-full py-4 text-base">
       <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden>
         <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z" />
         <path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />

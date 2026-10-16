@@ -6,27 +6,14 @@ import { DishGrid } from "@/components/DishCard";
 import { ShareButton } from "@/components/ShareButton";
 import { kitchenName } from "@/lib/cook";
 import { CATEGORIES, siteUrl, whatsappLink } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
-import type { Dish, Profile } from "@/lib/types";
+import { getCookBySlug, getCookDishes } from "@/lib/queries";
 
 type Props = { params: Promise<{ slug: string }> };
 
 async function load(slug: string) {
-  const supabase = await createClient();
-  const { data: cook } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_cook", true)
-    .maybeSingle<Profile>();
+  const cook = await getCookBySlug(slug);
   if (!cook) return null;
-  const { data: dishes } = await supabase
-    .from("dishes")
-    .select("*")
-    .eq("cook_id", cook.id)
-    .order("available", { ascending: false })
-    .order("created_at", { ascending: false });
-  return { cook, dishes: (dishes ?? []) as Dish[] };
+  return { cook, dishes: await getCookDishes(cook.id) };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
