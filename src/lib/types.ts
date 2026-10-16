@@ -5,6 +5,7 @@ export type OrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 
 export type Profile = {
   id: string;
+  email: string;
   full_name: string | null;
   avatar_url: string | null;
   is_cook: boolean;

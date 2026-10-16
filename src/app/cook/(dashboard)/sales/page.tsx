@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireCook } from "@/lib/auth";
 import { money } from "@/lib/format";
+import { getRecentSales } from "@/lib/queries";
 import { dailyRevenue, salesWindowStart, summarize, TIMEZONE, type Period } from "@/lib/sales";
-import { createClient } from "@/lib/supabase/server";
-import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Sales" };
 
@@ -19,14 +18,7 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
   const { period: raw } = await searchParams;
   const period: Period = PERIODS.some((p) => p.value === raw) ? (raw as Period) : "week";
 
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("orders")
-    .select("quantity, total_cents, completed_at, dish_name")
-    .eq("cook_id", cook.id)
-    .eq("status", "completed")
-    .gte("completed_at", salesWindowStart());
-  const orders = (data ?? []) as Pick<Order, "quantity" | "total_cents" | "completed_at" | "dish_name">[];
+  const orders = await getRecentSales(cook.id, salesWindowStart());
 
   const stats = summarize(orders, period);
   const days = dailyRevenue(orders, 14);

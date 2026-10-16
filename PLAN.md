@@ -8,7 +8,7 @@
 - **Region:** Canada, prices in CAD. The time zone defaults to America/Toronto.
 
 ## Stack
-Next.js 15 + TypeScript + Tailwind 4 · Supabase (Postgres, Google auth, storage) · Stripe Connect · Vercel
+Next.js 15 + TypeScript + Tailwind 4 · Neon Postgres · Auth.js (Google) · Vercel Blob · Stripe Connect · Vercel
 
 ## Pages
 - **Buyer:** `/` (search and category tabs) · `/dish/[id]` (with the order form) · `/c/[slug]` (storefront) · `/order/[id]` (confirmation and WhatsApp) · `/orders`

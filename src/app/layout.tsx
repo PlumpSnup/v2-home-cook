@@ -54,7 +54,10 @@ function SetupNeeded({ missing }: { missing: string[] }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-sm text-muted">Find the values in Supabase → Project Settings → API.</p>
+      <p className="mt-4 text-sm text-muted">
+        DATABASE_URL is added for you when you connect a Neon database in Vercel → Storage. For AUTH_SECRET, use any long
+        random text (e.g. from generate-secret.vercel.app/32).
+      </p>
     </main>
   );
 }

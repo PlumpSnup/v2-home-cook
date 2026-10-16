@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { GoogleButton } from "@/components/GoogleButton";
 import { getCurrentProfile } from "@/lib/auth";
 import { APP_NAME } from "@/lib/brand";
+import { googleLoginEnabled } from "@/lib/env";
 
 export const metadata: Metadata = { title: "Log in" };
 
@@ -29,7 +30,13 @@ export default async function LoginPage({ searchParams }: Props) {
             : "Sign in to keep track of your orders."}
         </p>
       </div>
-      <GoogleButton next={safeNext} />
+      {googleLoginEnabled ? (
+        <GoogleButton next={safeNext} />
+      ) : (
+        <p className="card p-4 text-sm text-muted">
+          Google login isn’t set up yet. Add AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET to the environment variables.
+        </p>
+      )}
       {error && <p className="text-sm text-brand-dark">That didn’t work. Please try again.</p>}
     </div>
   );

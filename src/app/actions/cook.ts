@@ -3,24 +3,24 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { normalizePhone, parseMoney, slugify } from "@/lib/format";
-import { createClient } from "@/lib/supabase/server";
+import { currentUserId } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { isUuid } from "@/lib/queries";
+import { isOwnPhoto, savePhoto } from "@/lib/storage";
 import type { Category, OrderStatus } from "@/lib/types";
 
 export type FormState = { error?: string; ok?: boolean };
 
 async function currentUser() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login?next=/cook");
-  return { supabase, user };
+  const id = await currentUserId();
+  if (!id) redirect("/login?next=/cook");
+  return { sql: await db(), userId: id };
 }
 
 // Profile -----------------------------------------------------------------
 
 export async function saveCookProfile(_prev: FormState, form: FormData): Promise<FormState> {
-  const { supabase, user } = await currentUser();
+  const { sql, userId } = await currentUser();
   const isOnboarding = form.get("onboarding") === "1";
 
   const kitchenName = String(form.get("kitchen_name") ?? "").trim().slice(0, 60);
@@ -43,40 +43,42 @@ export async function saveCookProfile(_prev: FormState, form: FormData): Promise
   if (!offersPickup && !offersDelivery) return { error: "Choose pickup, delivery or both." };
   if (deliveryFee === null) return { error: "Delivery fee should be a number, like 5 or 4.50." };
 
-  const { data: existing } = await supabase.from("profiles").select("slug").eq("id", user.id).single();
-  const slug = existing?.slug ?? (await uniqueSlug(supabase, kitchenName));
+  const [existing] = await sql<{ slug: string | null }[]>`select slug from profiles where id = ${userId}`;
+  const slug = existing?.slug ?? (await uniqueSlug(sql, kitchenName));
 
-  const { error } = await supabase
-    .from("profiles")
-    .update({
-      is_cook: true,
-      slug,
-      kitchen_name: kitchenName,
-      area: area || null,
-      whatsapp,
-      bio,
-      accepts_cash: acceptsCash,
-      accepts_etransfer: acceptsEtransfer,
-      accepts_card: acceptsCard,
-      etransfer_email: etransferEmail,
-      offers_pickup: offersPickup,
-      offers_delivery: offersDelivery,
-      delivery_fee_cents: offersDelivery ? deliveryFee : 0,
-    })
-    .eq("id", user.id);
-  if (error) return { error: "Couldn’t save. Please try again." };
+  try {
+    await sql`
+      update profiles set ${sql({
+        is_cook: true,
+        slug,
+        kitchen_name: kitchenName,
+        area: area || null,
+        whatsapp,
+        bio,
+        accepts_cash: acceptsCash,
+        accepts_etransfer: acceptsEtransfer,
+        accepts_card: acceptsCard,
+        etransfer_email: etransferEmail,
+        offers_pickup: offersPickup,
+        offers_delivery: offersDelivery,
+        delivery_fee_cents: offersDelivery ? deliveryFee : 0,
+      })}
+      where id = ${userId}`;
+  } catch {
+    return { error: "Couldn’t save. Please try again." };
+  }
 
   revalidatePath("/", "layout");
   if (isOnboarding) redirect(acceptsCard ? "/cook/settings?welcome=1" : "/cook/menu/new?welcome=1");
   return { ok: true };
 }
 
-async function uniqueSlug(supabase: Awaited<ReturnType<typeof createClient>>, name: string) {
+async function uniqueSlug(sql: Awaited<ReturnType<typeof db>>, name: string) {
   const base = slugify(name) || "kitchen";
   for (let i = 0; i < 20; i++) {
     const candidate = i === 0 ? base : `${base}-${i + 1}`;
-    const { data } = await supabase.from("profiles").select("id").eq("slug", candidate).maybeSingle();
-    if (!data) return candidate;
+    const [taken] = await sql`select 1 from profiles where slug = ${candidate}`;
+    if (!taken) return candidate;
   }
   return `${base}-${crypto.randomUUID().slice(0, 6)}`;
 }
@@ -85,8 +87,20 @@ async function uniqueSlug(supabase: Awaited<ReturnType<typeof createClient>>, na
 
 const CATEGORY_VALUES: Category[] = ["main", "appetizer", "soup", "dessert"];
 
+export async function uploadDishPhoto(form: FormData): Promise<{ url?: string; error?: string }> {
+  const { userId } = await currentUser();
+  const file = form.get("photo");
+  if (!(file instanceof Blob) || file.size === 0) return { error: "No photo received." };
+  if (file.size > 1_500_000) return { error: "That photo is too large." };
+  try {
+    return { url: await savePhoto(userId, file) };
+  } catch {
+    return { error: "Photo upload failed. Please try again." };
+  }
+}
+
 export async function saveDish(_prev: FormState, form: FormData): Promise<FormState> {
-  const { supabase, user } = await currentUser();
+  const { sql, userId } = await currentUser();
   const id = String(form.get("id") ?? "") || null;
   const name = String(form.get("name") ?? "").trim().slice(0, 80);
   const description = String(form.get("description") ?? "").trim().slice(0, 300) || null;
@@ -97,44 +111,54 @@ export async function saveDish(_prev: FormState, form: FormData): Promise<FormSt
   if (!name) return { error: "What’s the dish called?" };
   if (!CATEGORY_VALUES.includes(category)) return { error: "Pick a category." };
   if (!price) return { error: "Add a price, like 15 or 12.50." };
-  const storagePrefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/dish-photos/${user.id}/`;
-  if (photoUrl && !photoUrl.startsWith(storagePrefix)) return { error: "Please upload the photo again." };
+  if (photoUrl && !isOwnPhoto(photoUrl, userId)) return { error: "Please upload the photo again." };
+  if (id && !isUuid(id)) return { error: "Couldn’t find that dish." };
+
+  const [cook] = await sql`select 1 from profiles where id = ${userId} and is_cook`;
+  if (!cook) redirect("/cook/onboarding");
 
   const values = { name, description, category, price_cents: price, photo_url: photoUrl };
-  const { error } = id
-    ? await supabase.from("dishes").update(values).eq("id", id).eq("cook_id", user.id)
-    : await supabase.from("dishes").insert({ ...values, cook_id: user.id });
-  if (error) return { error: "Couldn’t save the dish. Please try again." };
+  try {
+    if (id) await sql`update dishes set ${sql(values)} where id = ${id} and cook_id = ${userId}`;
+    else await sql`insert into dishes ${sql({ ...values, cook_id: userId })}`;
+  } catch {
+    return { error: "Couldn’t save the dish. Please try again." };
+  }
 
   revalidatePath("/", "layout");
   redirect(id ? "/cook/menu" : "/cook/menu?added=1");
 }
 
 export async function setDishAvailable(id: string, available: boolean) {
-  const { supabase, user } = await currentUser();
-  await supabase.from("dishes").update({ available }).eq("id", id).eq("cook_id", user.id);
+  const { sql, userId } = await currentUser();
+  if (!isUuid(id)) return;
+  await sql`update dishes set available = ${available === true} where id = ${id} and cook_id = ${userId}`;
   revalidatePath("/", "layout");
 }
 
 export async function deleteDish(id: string) {
-  const { supabase, user } = await currentUser();
-  await supabase.from("dishes").delete().eq("id", id).eq("cook_id", user.id);
+  const { sql, userId } = await currentUser();
+  if (isUuid(id)) await sql`delete from dishes where id = ${id} and cook_id = ${userId}`;
   revalidatePath("/", "layout");
   redirect("/cook/menu");
 }
 
 // Orders ------------------------------------------------------------------
 
+const ORDER_STATUSES: OrderStatus[] = ["pending", "confirmed", "completed", "cancelled"];
+
 export async function updateOrder(id: string, change: { status?: OrderStatus; paid?: boolean }) {
-  const { supabase, user } = await currentUser();
-  const values: Record<string, unknown> = {};
-  if (change.status) {
+  const { sql, userId } = await currentUser();
+  if (!isUuid(id)) return;
+  const values: Record<string, string | boolean | null> = {};
+  if (change.status && ORDER_STATUSES.includes(change.status)) {
     values.status = change.status;
     values.completed_at = change.status === "completed" ? new Date().toISOString() : null;
     // Completing an order means the cook has been paid.
     if (change.status === "completed") values.paid = true;
   }
-  if (change.paid !== undefined) values.paid = change.paid;
-  await supabase.from("orders").update(values).eq("id", id).eq("cook_id", user.id);
+  if (typeof change.paid === "boolean") values.paid = change.paid;
+  if (Object.keys(values).length === 0) return;
+  await sql`update orders set ${sql(values)} where id = ${id} and cook_id = ${userId}`;
   revalidatePath("/cook", "layout");
 }

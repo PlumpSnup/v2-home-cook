@@ -5,7 +5,7 @@ HomeCook is a mobile-first marketplace where home cooks list their dishes and bu
 - **Cooks:** sign in with Gmail and set up a kitchen in about a minute. Add a dish with a photo, a name and a price. Switch dishes on or off, and manage orders. A sales dashboard shows meals sold and money made today, this week and this month. Cooks share their storefront with a link, on WhatsApp, on Instagram (bio, story or QR code) or as a printable QR code.
 - **Buyers:** search dishes or browse by category (Main Meals, Appetizers, Soups, Desserts). Buyers order as a guest with a name and phone number, or sign in to see past orders. After ordering, one tap sends the order to the cook on WhatsApp.
 
-Stack: Next.js 15 (App Router) + Tailwind CSS 4, Supabase (Postgres, Google auth, photo storage), Stripe Connect Express.
+Stack: Next.js 15 (App Router) + Tailwind CSS 4, Postgres on Neon, Auth.js (Google login), Vercel Blob (photos), Stripe Connect Express.
 
 To rename the app, change `src/lib/brand.ts`. The brand colours are in `src/app/globals.css`.
 
@@ -13,17 +13,27 @@ To rename the app, change `src/lib/brand.ts`. The brand colours are in `src/app/
 
 ```bash
 npm install
-npx supabase start            # needs Docker; applies supabase/migrations
-cp .env.example .env.local    # fill in the URL + anon/service keys printed by supabase start
+cp .env.example .env.local    # set DATABASE_URL to any Postgres and AUTH_SECRET to random text
 npm run dev
 ```
 
-## Go live
+The app creates its tables the first time it connects, so there's no SQL to run. Without a Blob token, photos are saved in `.uploads/` locally.
 
-1. **Supabase:** create a project. Run `supabase/migrations/0001_init.sql` in the SQL editor, or run `npx supabase db push`.
-2. **Google login:** in Google Cloud Console, create an OAuth client (Web). Add `https://<project>.supabase.co/auth/v1/callback` as an authorised redirect URI. In Supabase → Authentication → Providers → Google, paste the client ID and secret. In Authentication → URL Configuration, set the Site URL to your domain and add `https://<your-domain>/auth/callback` to the redirect URLs.
-3. **Stripe (optional, for card payments):** enable Connect (Express) in your Stripe dashboard. Add a webhook endpoint `https://<your-domain>/api/stripe/webhook` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Put the API key and the webhook secret in the env vars. If `STRIPE_SECRET_KEY` is empty, the app runs with cash and e-Transfer only.
-4. **Vercel:** import the repo and add the variables from `.env.example`.
+## Go live on Vercel
+
+1. **Database:** go to Storage → Create → **Neon**, then connect it to the project. Leave Auth and Realtime off and leave the prefix blank. This adds `DATABASE_URL`.
+2. **Photos:** go to Storage → Create → **Blob**, then connect it to the project. This adds `BLOB_READ_WRITE_TOKEN`.
+3. **Settings:** add these environment variables:
+   - `AUTH_SECRET`: any long random text, for example from https://generate-secret.vercel.app/32
+   - `NEXT_PUBLIC_SITE_URL`: e.g. `https://your-app.vercel.app`
+4. **Google login:** in Google Cloud Console, create an OAuth client (type: Web application).
+   - Authorised redirect URI: `https://<your-domain>/api/auth/callback/google`
+   - Put the client ID and secret in `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
+5. **Stripe (optional, for card payments):** enable Connect (Express) in your Stripe dashboard.
+   - Add a webhook endpoint `https://<your-domain>/api/stripe/webhook` for `checkout.session.completed` and `checkout.session.async_payment_succeeded`.
+   - Set `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`.
+   - If `STRIPE_SECRET_KEY` is empty, the app runs with cash and e-Transfer only.
+6. Redeploy.
 
 ## How orders work
 
@@ -34,7 +44,7 @@ npm run dev
 
 ## Success metrics
 
-Run these in the Supabase SQL editor:
+Run these in the Neon SQL editor (Vercel → Storage → your database → Open in Neon):
 
 ```sql
 select count(*) from profiles where is_cook;                                     -- cooks (goal 50)

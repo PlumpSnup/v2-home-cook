@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CookOrderCard } from "@/components/CookOrderCard";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/lib/db";
 import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Orders" };
@@ -19,17 +19,15 @@ export default async function CookOrdersPage({ searchParams }: { searchParams: P
   const { show } = await searchParams;
   const filter = FILTERS.find((f) => f.value === show) ?? FILTERS[0];
 
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("orders")
-    .select("*")
-    .eq("cook_id", cook.id)
-    .in("status", [...filter.statuses])
-    // Card orders only count once the buyer has actually paid.
-    .or("payment_method.neq.card,paid.eq.true")
-    .order("created_at", { ascending: false })
-    .limit(100);
-  const orders = (data ?? []) as Order[];
+  const sql = await db();
+  const orders = await sql<Order[]>`
+    select * from orders
+    where cook_id = ${cook.id}
+      and status in ${sql([...filter.statuses])}
+      -- card orders only count once the buyer has actually paid
+      and (payment_method <> 'card' or paid)
+    order by created_at desc
+    limit 100`;
 
   return (
     <div className="space-y-4">
