@@ -1,9 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
+import type { User } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Keeps the Supabase session cookie fresh and guards signed-in areas.
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
+
+  // Not configured yet — let the page render the setup message instead of crashing.
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) return response;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,9 +24,16 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: User | null = null;
+  try {
+    ({
+      data: { user },
+    } = await supabase.auth.getUser());
+  } catch (error) {
+    // A wrong Supabase URL or an outage shouldn't take the whole site down.
+    console.error("Supabase session check failed", error);
+    return response;
+  }
 
   const path = request.nextUrl.pathname;
   if (!user && (path.startsWith("/cook") || path === "/orders")) {
