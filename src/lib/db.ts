@@ -1,9 +1,6 @@
 import "server-only";
 import postgres from "postgres";
-
-export function databaseUrl() {
-  return process.env.DATABASE_URL || process.env.POSTGRES_URL || "";
-}
+import { databaseUrl } from "./env";
 
 const globalForDb = globalThis as unknown as { sql?: postgres.Sql; schemaReady?: Promise<void> };
 
