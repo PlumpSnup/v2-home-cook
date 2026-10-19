@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
 import { missingEnv } from "@/lib/env";
@@ -32,6 +33,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <>
             <Header />
             <main className="mx-auto w-full max-w-3xl px-4 pb-16">{children}</main>
+            <footer className="mx-auto flex w-full max-w-3xl justify-center gap-4 px-4 pb-8 text-xs text-muted">
+              <Link href="/privacy" className="hover:text-ink">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-ink">
+                Terms
+              </Link>
+            </footer>
           </>
         )}
       </body>
