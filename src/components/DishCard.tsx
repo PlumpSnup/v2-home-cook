@@ -41,7 +41,7 @@ export function DishCard({ dish, showCook = true }: { dish: Dish | DishWithCook;
 
 export function DishGrid({ dishes, showCook }: { dishes: (Dish | DishWithCook)[]; showCook?: boolean }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {dishes.map((d) => (
         <DishCard key={d.id} dish={d} showCook={showCook} />
       ))}

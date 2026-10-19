@@ -29,7 +29,7 @@ export default async function MyOrdersPage() {
     limit 50`;
 
   return (
-    <div className="space-y-4 pt-6">
+    <div className="mx-auto max-w-3xl space-y-4 pt-6">
       <h1 className="font-display text-2xl font-semibold">My orders</h1>
       {orders.length === 0 ? (
         <div className="card p-8 text-center">

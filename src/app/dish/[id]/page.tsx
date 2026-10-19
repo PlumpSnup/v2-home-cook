@@ -39,7 +39,7 @@ export default async function DishPage({ params }: Props) {
   const name = kitchenName(cook);
 
   return (
-    <div className="-mx-4 sm:mx-0 sm:pt-5">
+    <div className="-mx-4 sm:mx-auto sm:max-w-3xl sm:pt-5">
       <DishPhoto dish={dish} className="aspect-[4/3] sm:rounded-2xl" />
 
       <div className="space-y-6 px-4 pt-5 sm:px-0">

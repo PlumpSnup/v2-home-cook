@@ -12,7 +12,7 @@ export default async function OnboardingPage() {
   if (profile.is_cook) redirect("/cook");
 
   return (
-    <div className="space-y-6 pt-6">
+    <div className="mx-auto max-w-3xl space-y-6 pt-6">
       <div>
         <p className="text-sm font-medium text-brand">Step 1 of 2</p>
         <h1 className="mt-1 font-display text-2xl font-semibold">Set up your kitchen</h1>
