@@ -19,7 +19,7 @@ export function AvailabilitySwitch({ id, available }: { id: string; available: b
           await setDishAvailable(id, !optimistic);
         })
       }
-      className={`relative h-7 w-12 shrink-0 rounded-full transition ${optimistic ? "bg-sage" : "bg-line"}`}
+      className={`pressable relative h-7 w-12 shrink-0 rounded-full hover:brightness-95 ${optimistic ? "bg-sage" : "bg-line"}`}
     >
       <span
         className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all ${optimistic ? "left-6" : "left-1"}`}

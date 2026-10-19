@@ -8,7 +8,7 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-cream/90 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-3xl items-center justify-between px-4">
-        <Link href="/" className="font-display text-xl font-semibold text-brand">
+        <Link href="/" className="pressable font-display text-xl font-semibold text-brand hover:text-brand-dark">
           {APP_NAME}
         </Link>
         <nav className="flex items-center gap-2 text-sm">
@@ -22,11 +22,11 @@ export async function Header() {
             </Link>
           )}
           {profile ? (
-            <Link href="/orders" className="px-2 py-2 font-medium text-muted hover:text-ink">
+            <Link href="/orders" className="btn-ghost">
               Orders
             </Link>
           ) : (
-            <Link href="/login" className="px-2 py-2 font-medium text-muted hover:text-ink">
+            <Link href="/login" className="btn-ghost">
               Log in
             </Link>
           )}

@@ -52,7 +52,7 @@ export default async function DishPage({ params }: Props) {
           {dish.description && <p className="mt-2 text-muted">{dish.description}</p>}
         </div>
 
-        <Link href={`/c/${cook.slug}`} className="card flex items-center gap-3 p-3">
+        <Link href={`/c/${cook.slug}`} className="card listing flex items-center gap-3 p-3">
           <Avatar src={cook.avatar_url} name={name} size={44} />
           <div className="min-w-0 flex-1">
             <p className="truncate font-semibold">{name}</p>

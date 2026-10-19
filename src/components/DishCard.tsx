@@ -7,7 +7,7 @@ export function DishPhoto({ dish, className = "" }: { dish: Pick<Dish, "photo_ur
   return (
     <div className={`relative overflow-hidden bg-brand-soft ${className}`}>
       {dish.photo_url ? (
-        <Image src={dish.photo_url} alt={dish.name} fill sizes="(max-width: 640px) 50vw, 300px" className="object-cover" />
+        <Image src={dish.photo_url} alt={dish.name} fill sizes="(max-width: 640px) 50vw, 300px" className="object-cover transition duration-300 group-hover:scale-105" />
       ) : (
         <div className="flex h-full items-center justify-center text-4xl" aria-hidden>
           🍲
@@ -20,7 +20,7 @@ export function DishPhoto({ dish, className = "" }: { dish: Pick<Dish, "photo_ur
 export function DishCard({ dish, showCook = true }: { dish: Dish | DishWithCook; showCook?: boolean }) {
   const cook = "cook" in dish ? dish.cook : null;
   return (
-    <Link href={`/dish/${dish.id}`} className="card group block overflow-hidden">
+    <Link href={`/dish/${dish.id}`} className="card listing group block overflow-hidden">
       <DishPhoto dish={dish} className="aspect-square" />
       <div className="p-3">
         <div className="flex items-start justify-between gap-2">

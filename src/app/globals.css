@@ -6,6 +6,7 @@
   --color-surface: #ffffff;
   --color-brand: #c8553d;
   --color-brand-dark: #a8432e;
+  --color-brand-darker: #8f3826;
   --color-brand-soft: #f6e4df;
   --color-sage: #6b8f71;
   --color-sage-soft: #e6eee7;
@@ -13,6 +14,9 @@
   --color-muted: #7a746d;
   --color-line: #ece6dd;
   --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1eb257;
+  --color-whatsapp-darker: #189a4b;
+  --color-press: #f3ede4;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -24,17 +28,30 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Anything you can tap: eases in on hover and pushes in slightly when pressed, like a real button. */
+@utility pressable {
+  @apply transition duration-150 ease-out active:translate-y-px active:scale-[0.97] disabled:pointer-events-none;
+}
+/* Tappable cards and list rows: warm highlight behind them on hover. */
+@utility listing {
+  @apply transition duration-150 ease-out hover:border-brand/30 hover:bg-brand-soft/40 hover:shadow-sm active:translate-y-px active:scale-[0.985];
+}
+
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition active:scale-[0.98] disabled:opacity-50;
+  @apply pressable inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-sm active:shadow-none disabled:opacity-50;
 }
 @utility btn-primary {
-  @apply btn bg-brand text-white hover:bg-brand-dark;
+  @apply btn bg-brand text-white hover:bg-brand-dark active:bg-brand-darker;
 }
 @utility btn-secondary {
-  @apply btn border border-line bg-surface text-ink hover:border-muted;
+  @apply btn border border-line bg-surface text-ink hover:border-muted hover:bg-press active:bg-line;
 }
 @utility btn-whatsapp {
-  @apply btn bg-whatsapp text-white hover:brightness-95;
+  @apply btn bg-whatsapp text-white hover:bg-whatsapp-dark active:bg-whatsapp-darker;
+}
+/* Low-key text buttons (Cancel, Sign out, header links). */
+@utility btn-ghost {
+  @apply pressable rounded-full px-3 py-2 font-medium text-muted hover:bg-press hover:text-ink active:bg-line;
 }
 @utility card {
   @apply rounded-2xl border border-line bg-surface;

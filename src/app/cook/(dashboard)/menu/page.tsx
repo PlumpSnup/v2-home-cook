@@ -39,8 +39,8 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
       ) : (
         <ul className="space-y-2">
           {dishes.map((d) => (
-            <li key={d.id} className="card flex items-center gap-3 p-2 pr-4">
-              <Link href={`/cook/menu/${d.id}`} className="flex min-w-0 flex-1 items-center gap-3">
+            <li key={d.id} className="card flex items-center gap-3 p-2 pr-4 transition hover:border-brand/30 hover:bg-brand-soft/40 hover:shadow-sm">
+              <Link href={`/cook/menu/${d.id}`} className="pressable flex min-w-0 flex-1 items-center gap-3 rounded-xl">
                 <DishPhoto dish={d} className="h-16 w-16 shrink-0 rounded-xl" />
                 <div className="min-w-0">
                   <p className={`truncate font-semibold ${d.available ? "" : "text-muted"}`}>{d.name}</p>
