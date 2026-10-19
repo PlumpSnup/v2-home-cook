@@ -20,8 +20,8 @@ export function CategoryTabs({ active, q, basePath = "/" }: { active?: string; q
             key={t.label}
             href={href(t.value)}
             scroll={false}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition ${
-              isActive ? "bg-ink text-white" : "border border-line bg-surface text-ink hover:border-muted"
+            className={`pressable shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
+              isActive ? "bg-ink text-white" : "border border-line bg-surface text-ink hover:border-muted hover:bg-press"
             }`}
           >
             {t.label}

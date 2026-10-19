@@ -31,7 +31,7 @@ export default async function CookHome() {
         <h1 className="font-display text-2xl font-semibold">{kitchenName(cook)}</h1>
       </div>
 
-      <Link href="/cook/orders" className="card flex items-center justify-between bg-brand p-5 text-white">
+      <Link href="/cook/orders" className="card pressable flex items-center justify-between bg-brand p-5 text-white hover:bg-brand-dark active:bg-brand-darker">
         <div>
           <p className="text-sm text-white/80">Active orders</p>
           <p className="text-3xl font-semibold">{activeCount ?? 0}</p>
@@ -40,12 +40,12 @@ export default async function CookHome() {
       </Link>
 
       <div className="grid grid-cols-2 gap-3">
-        <Link href="/cook/sales?period=today" className="card p-4">
+        <Link href="/cook/sales?period=today" className="card listing p-4">
           <p className="text-xs font-medium text-muted">Today</p>
           <p className="mt-1 text-xl font-semibold">{money(today.revenueCents)}</p>
           <p className="text-xs text-muted">{today.meals} meals sold</p>
         </Link>
-        <Link href="/cook/sales?period=week" className="card p-4">
+        <Link href="/cook/sales?period=week" className="card listing p-4">
           <p className="text-xs font-medium text-muted">This week</p>
           <p className="mt-1 text-xl font-semibold">{money(week.revenueCents)}</p>
           <p className="text-xs text-muted">{week.meals} meals sold</p>

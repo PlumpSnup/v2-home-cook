@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { saveCookProfile } from "@/app/actions/cook";
+import { CITIES } from "@/lib/cities";
 import type { Profile } from "@/lib/types";
 
 type Props = { profile: Profile; onboarding?: boolean; stripeAvailable: boolean };
@@ -28,9 +29,7 @@ export function CookProfileForm({ profile, onboarding, stripeAvailable }: Props)
         <Field label="WhatsApp number" hint="Orders are sent to this number">
           <input name="whatsapp" type="tel" inputMode="tel" className="input" required placeholder="416 555 1234" defaultValue={profile.whatsapp ?? ""} />
         </Field>
-        <Field label="Neighbourhood or city" hint="Optional — helps nearby buyers find you">
-          <input name="area" className="input" maxLength={60} placeholder="Scarborough, Toronto" defaultValue={profile.area ?? ""} />
-        </Field>
+        <CityField defaultValue={profile.area ?? ""} />
         <Field label="About your cooking" hint="Optional">
           <textarea
             name="bio"
@@ -99,6 +98,63 @@ export function CookProfileForm({ profile, onboarding, stripeAvailable }: Props)
   );
 }
 
+const OTHER = "__other";
+
+/** City dropdown, with an "Other" option for cities not on the list. */
+function CityField({ defaultValue }: { defaultValue: string }) {
+  const known = !defaultValue || CITIES.includes(defaultValue);
+  const [choice, setChoice] = useState(known ? defaultValue : OTHER);
+  const [other, setOther] = useState(known ? "" : defaultValue);
+  const value = choice === OTHER ? other.trim() : choice;
+
+  return (
+    <div>
+      <label htmlFor="city" className="label">
+        City
+      </label>
+      <input type="hidden" name="area" value={value} />
+      <div className="relative">
+        <select
+          id="city"
+          value={choice}
+          onChange={(e) => setChoice(e.target.value)}
+          className={`input cursor-pointer appearance-none pr-10 transition hover:border-muted ${choice ? "" : "text-muted"}`}
+        >
+          <option value="">Choose your city</option>
+          {CITIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+          <option value={OTHER}>Other…</option>
+        </select>
+        <svg
+          className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          aria-hidden
+        >
+          <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      {choice === OTHER && (
+        <input
+          aria-label="Your city"
+          className="input mt-2"
+          maxLength={60}
+          placeholder="Type your city"
+          value={other}
+          onChange={(e) => setOther(e.target.value)}
+          required
+        />
+      )}
+      <span className="mt-1 block text-xs text-muted">Optional — helps nearby buyers find you</span>
+    </div>
+  );
+}
+
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <label className="block">
@@ -123,7 +179,7 @@ function Toggle({
   onChange?: (v: boolean) => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3">
+    <label className="pressable flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 hover:border-brand/30 hover:bg-brand-soft/30">
       <span>
         <span className="block font-medium">{label}</span>
         {hint && <span className="block text-xs text-muted">{hint}</span>}

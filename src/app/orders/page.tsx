@@ -42,7 +42,7 @@ export default async function MyOrdersPage() {
         <ul className="space-y-2">
           {orders.map((o) => (
             <li key={o.id}>
-              <Link href={`/order/${o.id}${o.payment_method === "card" && !o.paid ? "?paid=1" : ""}`} className="card flex items-center justify-between gap-3 p-4">
+              <Link href={`/order/${o.id}${o.payment_method === "card" && !o.paid ? "?paid=1" : ""}`} className="card listing flex items-center justify-between gap-3 p-4">
                 <div className="min-w-0">
                   <p className="truncate font-semibold">
                     {o.quantity} × {o.dish_name}

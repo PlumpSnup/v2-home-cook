@@ -150,8 +150,8 @@ function Choice({
 }) {
   return (
     <label
-      className={`flex cursor-pointer flex-col rounded-xl border px-4 py-3 transition ${
-        checked ? "border-brand bg-brand-soft/50" : "border-line bg-surface"
+      className={`pressable flex cursor-pointer flex-col rounded-xl border px-4 py-3 ${
+        checked ? "border-brand bg-brand-soft/50" : "border-line bg-surface hover:border-brand/30 hover:bg-brand-soft/30"
       }`}
     >
       <input type="radio" name={name} value={value} checked={checked} onChange={onChange} className="sr-only" />

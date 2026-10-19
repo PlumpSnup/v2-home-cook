@@ -51,7 +51,7 @@ export function DishForm({ dish }: { dish?: Dish }) {
       <button
         type="button"
         onClick={() => fileInput.current?.click()}
-        className="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface"
+        className="pressable relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface hover:border-brand/40 hover:bg-brand-soft/30 active:scale-[0.99]"
       >
         {photoUrl ? (
           <Image src={photoUrl} alt="" fill sizes="600px" className="object-cover" />
@@ -104,7 +104,7 @@ export function DishForm({ dish }: { dish?: Dish }) {
                 defaultChecked={(dish?.category ?? "main") === c.value}
                 className="peer sr-only"
               />
-              <span className="block rounded-xl border border-line bg-surface px-4 py-3 text-center text-sm font-medium peer-checked:border-brand peer-checked:bg-brand-soft/60">
+              <span className="pressable block rounded-xl border border-line bg-surface px-4 py-3 text-center text-sm font-medium hover:border-brand/30 hover:bg-brand-soft/30 peer-checked:border-brand peer-checked:bg-brand-soft/60">
                 {c.label}
               </span>
             </label>

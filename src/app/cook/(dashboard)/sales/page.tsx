@@ -35,8 +35,8 @@ export default async function SalesPage({ searchParams }: { searchParams: Promis
           <Link
             key={p.value}
             href={`/cook/sales?period=${p.value}`}
-            className={`flex-1 rounded-full py-2 text-center text-sm font-medium ${
-              p.value === period ? "bg-ink text-white" : "text-muted"
+            className={`pressable flex-1 rounded-full py-2 text-center text-sm font-medium ${
+              p.value === period ? "bg-ink text-white" : "text-muted hover:bg-press hover:text-ink"
             }`}
           >
             {p.label}

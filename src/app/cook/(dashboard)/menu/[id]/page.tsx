@@ -18,7 +18,7 @@ export default async function EditDishPage({ params }: { params: Promise<{ id: s
       <h1 className="font-display text-2xl font-semibold">Edit dish</h1>
       <DishForm dish={dish} />
       <form action={deleteDish.bind(null, dish.id)}>
-        <button type="submit" className="w-full py-3 text-sm font-medium text-muted hover:text-brand-dark">
+        <button type="submit" className="btn-ghost w-full py-3 text-sm hover:text-brand-dark">
           Delete this dish
         </button>
       </form>
