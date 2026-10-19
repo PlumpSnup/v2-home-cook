@@ -32,8 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ) : (
           <>
             <Header />
-            <main className="mx-auto w-full max-w-3xl px-4 pb-16">{children}</main>
-            <footer className="mx-auto flex w-full max-w-3xl justify-center gap-4 px-4 pb-8 text-xs text-muted">
+            <main className="mx-auto w-full max-w-5xl px-4 pb-16">{children}</main>
+            <footer className="mx-auto flex w-full max-w-5xl justify-center gap-4 px-4 pb-8 text-xs text-muted">
               <Link href="/privacy" className="hover:text-ink">
                 Privacy
               </Link>

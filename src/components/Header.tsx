@@ -7,7 +7,7 @@ export async function Header() {
 
   return (
     <header className="sticky top-0 z-20 border-b border-line bg-cream/90 backdrop-blur">
-      <div className="mx-auto flex h-14 w-full max-w-3xl items-center justify-between px-4">
+      <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
         <Link href="/" className="pressable font-display text-xl font-semibold text-brand hover:text-brand-dark">
           {APP_NAME}
         </Link>

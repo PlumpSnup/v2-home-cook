@@ -41,7 +41,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
     .join("\n");
 
   return (
-    <div className="space-y-5 pt-8">
+    <div className="mx-auto max-w-3xl space-y-5 pt-8">
       <div className="text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-2xl text-sage">
           ✓
