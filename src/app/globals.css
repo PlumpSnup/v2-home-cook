@@ -66,35 +66,22 @@ body {
   }
 }
 
-/* Tappable cards: solid edge underneath, float up with a playful tilt on hover, press down on tap. */
+/* Cards: solid edge underneath, push in slightly on hover and all the way on tap. */
 @utility listing {
   --edge: var(--color-line);
-  --tilt: -0.75deg;
   box-shadow: 0 4px 0 var(--edge), 0 8px 18px rgb(43 43 43 / 0.06);
   transition-property: transform, box-shadow, background-color, border-color;
   transition-duration: 150ms;
   &:hover {
-    transform: translateY(-3px) rotate(var(--tilt));
+    transform: translateY(2px);
     border-color: color-mix(in oklab, var(--color-brand) 35%, transparent);
-    box-shadow: 0 7px 0 var(--edge), 0 14px 26px rgb(43 43 43 / 0.1);
+    box-shadow: 0 2px 0 var(--edge), 0 4px 10px rgb(43 43 43 / 0.06);
   }
   /* Pressing a button inside the card (e.g. Add) presses just that button, not the whole card. */
   &:active:not(:has([data-nested]:active)) {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 var(--edge), 0 2px 4px rgb(43 43 43 / 0.08);
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--edge), 0 2px 4px rgb(43 43 43 / 0.08);
     transition-duration: 50ms;
-  }
-}
-
-/* Info cards that sit at a slight angle (set --tilt) and tilt a little more on hover. */
-@utility tilt-card {
-  --edge: var(--color-line);
-  transform: rotate(var(--tilt, 0deg));
-  box-shadow: 0 5px 0 var(--edge), 0 10px 22px rgb(43 43 43 / 0.06);
-  transition: transform 150ms, box-shadow 150ms;
-  &:hover {
-    transform: translateY(-3px) rotate(calc(var(--tilt, 0deg) - 1deg));
-    box-shadow: 0 8px 0 var(--edge), 0 16px 28px rgb(43 43 43 / 0.1);
   }
 }
 
@@ -160,8 +147,6 @@ body {
   }
   .listing:hover,
   .raised:hover,
-  .tilt-card,
-  .tilt-card:hover,
   .btn:hover,
   .pressable:hover {
     transform: none;
