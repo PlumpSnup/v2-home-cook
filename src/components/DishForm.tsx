@@ -84,17 +84,18 @@ export function DishForm({ dish }: { dish?: Dish }) {
         <legend className="label">Category</legend>
         <div className="grid grid-cols-2 gap-2">
           {CATEGORIES.map((c) => (
-            <label key={c.value} className="cursor-pointer">
+            <label
+              key={c.value}
+              className="raised block cursor-pointer rounded-xl border border-line bg-surface px-4 py-3 text-center text-sm font-medium hover:border-brand/30 hover:bg-brand-soft/30 has-checked:border-brand has-checked:bg-brand-soft/60"
+            >
               <input
                 type="radio"
                 name="category"
                 value={c.value}
                 defaultChecked={(dish?.category ?? "main") === c.value}
-                className="peer sr-only"
+                className="sr-only"
               />
-              <span className="pressable block rounded-xl border border-line bg-surface px-4 py-3 text-center text-sm font-medium hover:border-brand/30 hover:bg-brand-soft/30 peer-checked:border-brand peer-checked:bg-brand-soft/60">
-                {c.label}
-              </span>
+              {c.label}
             </label>
           ))}
         </div>

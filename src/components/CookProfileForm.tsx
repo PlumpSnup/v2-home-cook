@@ -175,7 +175,7 @@ function CuisineField({ defaultValue }: { defaultValue: string[] }) {
           return (
             <label
               key={c}
-              className={`pressable cursor-pointer rounded-full border px-3 py-1.5 text-sm font-medium ${
+              className={`raised cursor-pointer rounded-full border px-3 py-1.5 text-sm font-medium ${
                 on ? "border-brand bg-brand-soft text-brand-dark" : "border-line bg-surface hover:border-muted hover:bg-press"
               } ${!on && full ? "pointer-events-none opacity-40" : ""}`}
             >
@@ -280,7 +280,7 @@ function Toggle({
   onChange?: (v: boolean) => void;
 }) {
   return (
-    <label className="pressable flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 hover:border-brand/30 hover:bg-brand-soft/30">
+    <label className="raised flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-line bg-surface px-4 py-3 hover:border-brand/30 hover:bg-brand-soft/30">
       <span>
         <span className="block font-medium">{label}</span>
         {hint && <span className="block text-xs text-muted">{hint}</span>}

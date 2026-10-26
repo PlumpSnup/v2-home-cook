@@ -31,7 +31,7 @@ export default async function CookHome() {
         <h1 className="font-display text-2xl font-semibold">{kitchenName(cook)}</h1>
       </div>
 
-      <Link href="/cook/orders" className="card pressable flex items-center justify-between bg-brand p-5 text-white hover:bg-brand-dark active:bg-brand-darker">
+      <Link href="/cook/orders" className="card listing flex items-center justify-between border-brand bg-brand p-5 text-white [--edge:var(--color-brand-darker)] hover:bg-brand-dark">
         <div>
           <p className="text-sm text-white/80">Active orders</p>
           <p className="text-3xl font-semibold">{activeCount ?? 0}</p>

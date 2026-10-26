@@ -90,7 +90,8 @@ export function CuisineChips({ cuisines }: { cuisines: string[] }) {
             key={c.label}
             href={hrefWith(params, "cuisine", c.value)}
             scroll={false}
-            className={`pressable shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
+            aria-current={isActive ? "page" : undefined}
+            className={`raised shrink-0 rounded-full px-4 py-2 text-sm font-medium ${
               isActive ? "bg-ink text-white" : "border border-line bg-surface text-ink hover:border-muted hover:bg-press"
             }`}
           >

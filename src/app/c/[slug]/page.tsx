@@ -67,7 +67,7 @@ export default async function Storefront({ params }: Props) {
           {cook.cuisines.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {cook.cuisines.map((c) => (
-                <Link key={c} href={`/?cuisine=${encodeURIComponent(c)}`} className="chip pressable hover:bg-press hover:text-ink">
+                <Link key={c} href={`/?cuisine=${encodeURIComponent(c)}`} className="chip raised hover:bg-press hover:text-ink">
                   {c}
                 </Link>
               ))}
@@ -97,7 +97,7 @@ export default async function Storefront({ params }: Props) {
             <a
               key={s.value}
               href={`#${s.value}`}
-              className="pressable shrink-0 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium hover:border-muted hover:bg-press"
+              className="raised shrink-0 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium hover:border-muted hover:bg-press"
             >
               {s.label}
             </a>

@@ -23,25 +23,27 @@ export function DishPhoto({ dish, className = "" }: { dish: Pick<Dish, "photo_ur
 export function MenuItem({ dish, kitchen }: { dish: Dish; kitchen: CartKitchen }) {
   return (
     <article
-      className={`card group flex gap-3 p-3 transition hover:border-brand/30 hover:bg-brand-soft/40 hover:shadow-sm ${
+      className={`card listing group flex gap-3 p-3 ${
         dish.available ? "" : "opacity-60"
       }`}
     >
       <div className="flex min-w-0 flex-1 flex-col">
-        <Link href={`/dish/${dish.id}`} className="pressable block rounded-lg">
+        <Link href={`/dish/${dish.id}`} className="block rounded-lg">
           <h3 className="font-semibold leading-snug">{dish.name}</h3>
           {dish.description && <p className="mt-0.5 line-clamp-2 text-sm text-muted">{dish.description}</p>}
         </Link>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <span className="font-semibold text-brand">{money(dish.price_cents)}</span>
           {dish.available ? (
-            <AddToCart kitchen={kitchen} dish={{ id: dish.id, name: dish.name, priceCents: dish.price_cents }} />
+            <div data-nested>
+              <AddToCart kitchen={kitchen} dish={{ id: dish.id, name: dish.name, priceCents: dish.price_cents }} />
+            </div>
           ) : (
             <span className="text-xs font-medium text-muted">Not available today</span>
           )}
         </div>
       </div>
-      <Link href={`/dish/${dish.id}`} className="pressable shrink-0" tabIndex={-1} aria-hidden>
+      <Link href={`/dish/${dish.id}`} className="shrink-0" tabIndex={-1} aria-hidden>
         <DishPhoto dish={dish} className="h-24 w-24 rounded-xl sm:h-28 sm:w-28" />
       </Link>
     </article>

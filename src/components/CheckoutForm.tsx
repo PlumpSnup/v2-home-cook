@@ -201,7 +201,7 @@ function Choice({
 }) {
   return (
     <label
-      className={`pressable flex cursor-pointer flex-col rounded-xl border px-4 py-3 ${
+      className={`raised flex cursor-pointer flex-col rounded-xl border px-4 py-3 ${
         checked ? "border-brand bg-brand-soft/50" : "border-line bg-surface hover:border-brand/30 hover:bg-brand-soft/30"
       }`}
     >

@@ -38,7 +38,8 @@ export default async function CookOrdersPage({ searchParams }: { searchParams: P
           <Link
             key={f.value}
             href={`/cook/orders?show=${f.value}`}
-            className={`pressable rounded-full px-4 py-2 text-sm font-medium ${
+            aria-current={f.value === filter.value ? "page" : undefined}
+            className={`raised rounded-full px-4 py-2 text-sm font-medium ${
               f.value === filter.value ? "bg-ink text-white" : "border border-line bg-surface hover:border-muted hover:bg-press"
             }`}
           >
