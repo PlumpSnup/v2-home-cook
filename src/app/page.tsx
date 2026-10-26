@@ -2,6 +2,9 @@ import Link from "next/link";
 import { getCurrentProfile } from "@/lib/auth";
 import { stripeEnabled } from "@/lib/stripe";
 
+// Steps sit at alternating angles on wider screens, like MealBee.
+const STEP_TILTS = ["sm:[--tilt:-1.5deg]", "", "sm:[--tilt:1.5deg]"];
+
 const steps = [
   {
     emoji: "📝",
@@ -61,7 +64,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="card relative mx-auto w-full max-w-sm overflow-hidden p-5 shadow-sm" aria-hidden>
+        <div className="card tilt-card relative mx-auto w-full max-w-sm overflow-hidden p-5 sm:[--tilt:2deg]" aria-hidden>
           <div className="flex items-center gap-3">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-2xl">👩🏽‍🍳</span>
             <div>
@@ -93,7 +96,7 @@ export default async function Home() {
         <h2 className="font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
         <ol className="mt-6 grid gap-4 sm:grid-cols-3">
           {steps.map((step, i) => (
-            <li key={step.title} className="card p-5">
+            <li key={step.title} className={`card tilt-card p-5 ${STEP_TILTS[i % STEP_TILTS.length]}`}>
               <div className="flex items-center gap-3">
                 <span className="text-2xl" aria-hidden>
                   {step.emoji}

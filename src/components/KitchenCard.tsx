@@ -50,7 +50,7 @@ export function KitchenCard({ kitchen }: { kitchen: Kitchen }) {
           <ul className="relative z-10 space-y-1 rounded-xl bg-cream p-2 text-sm">
             {kitchen.matches.map((d) => (
               <li key={d.id}>
-                <Link href={`/dish/${d.id}`} className="pressable flex justify-between gap-2 rounded-lg px-2 py-1 hover:bg-brand-soft/60">
+                <Link href={`/dish/${d.id}`} data-nested className="pressable flex justify-between gap-2 rounded-lg px-2 py-1 hover:bg-brand-soft/60">
                   <span className="truncate font-medium">{d.name}</span>
                   <span className="shrink-0 text-muted">{money(d.price_cents)}</span>
                 </Link>

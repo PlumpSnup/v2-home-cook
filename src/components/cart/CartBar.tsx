@@ -17,7 +17,7 @@ export function CartBar() {
     <div className="fixed inset-x-0 bottom-0 z-30 px-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
       <Link
         href={`/checkout?k=${cart.kitchen.slug}`}
-        className="btn-primary mx-auto w-full max-w-md justify-between rounded-2xl px-5 py-4 text-base shadow-lg"
+        className="btn-primary mx-auto w-full max-w-md justify-between rounded-2xl px-5 py-4 text-base"
       >
         <span className="flex items-center gap-2">
           <span className="flex h-7 min-w-7 items-center justify-center rounded-full bg-white/20 px-2 text-sm">{count}</span>

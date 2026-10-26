@@ -19,6 +19,7 @@ export function AvailabilitySwitch({ id, available }: { id: string; available: b
           await setDishAvailable(id, !optimistic);
         })
       }
+      data-nested
       className={`pressable relative h-7 w-12 shrink-0 rounded-full hover:brightness-95 ${optimistic ? "bg-sage" : "bg-line"}`}
     >
       <span
