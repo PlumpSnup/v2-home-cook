@@ -43,13 +43,13 @@ export default async function Home() {
       <section className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="chip border-brand/20 bg-brand-soft text-brand">For home cooks</p>
-          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight sm:text-5xl">
-            Turn your home cooking
+          <h1 className="mt-4 font-display text-4xl font-bold leading-tight sm:text-5xl">
+            Bring Your Food
             <br />
-            into <span className="text-brand">orders.</span>
+            to <span className="text-brand">More Tables</span>
           </h1>
-          <p className="mt-4 max-w-md text-lg text-muted">
-            Put your dishes online, share one link and take orders from neighbours, friends and family. Free to start.
+          <p className="mt-4 max-w-md text-lg font-bold text-muted">
+            Create your online shop in minutes, share one link, and start taking orders. Free to start.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link href={start.href} className="btn-primary px-6">
