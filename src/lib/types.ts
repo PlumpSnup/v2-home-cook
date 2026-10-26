@@ -61,8 +61,6 @@ export type KitchenCard = {
   offers_pickup: boolean;
   offers_delivery: boolean;
   cover: string | null;
-  min_price: number;
-  max_price: number;
   popular: Pick<Dish, "id" | "name" | "price_cents">[];
   matches: Pick<Dish, "id" | "name" | "price_cents">[] | null;
 };

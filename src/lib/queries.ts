@@ -28,8 +28,6 @@ export async function searchKitchens({ q, city, cuisine }: { q?: string; city?: 
         select m.photo_url from menu m where m.cook_id = p.id and m.photo_url is not null
         order by m.sold desc, m.created_at desc limit 1
       )) as cover,
-      (select min(m.price_cents) from menu m where m.cook_id = p.id)::int as min_price,
-      (select max(m.price_cents) from menu m where m.cook_id = p.id)::int as max_price,
       (select coalesce(json_agg(x), '[]') from (
         select m.id, m.name, m.price_cents from menu m where m.cook_id = p.id
         order by m.sold desc, m.created_at desc limit 3

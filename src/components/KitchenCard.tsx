@@ -5,10 +5,6 @@ import { kitchenName } from "@/lib/cook";
 import { money } from "@/lib/format";
 import type { KitchenCard as Kitchen } from "@/lib/types";
 
-function priceRange(min: number, max: number) {
-  return min === max ? money(min) : `${money(min)}–${money(max)}`.replace(/\.00/g, "");
-}
-
 export function KitchenCard({ kitchen }: { kitchen: Kitchen }) {
   const name = kitchenName(kitchen);
   const href = `/c/${kitchen.slug}`;
@@ -48,7 +44,6 @@ export function KitchenCard({ kitchen }: { kitchen: Kitchen }) {
             </h3>
             {details && <p className="truncate text-sm text-muted">{details}</p>}
           </div>
-          <span className="shrink-0 text-sm font-semibold text-brand">{priceRange(kitchen.min_price, kitchen.max_price)}</span>
         </div>
 
         {kitchen.matches && kitchen.matches.length > 0 ? (
