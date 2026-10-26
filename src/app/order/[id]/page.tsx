@@ -6,22 +6,23 @@ import { kitchenName } from "@/lib/cook";
 import { money, PAYMENT_LABELS, whatsappLink } from "@/lib/format";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { db } from "@/lib/db";
-import { getOrder, getProfile } from "@/lib/queries";
+import { ClearCart } from "@/components/cart/ClearCart";
+import { getOrder, getOrderItems, getProfile } from "@/lib/queries";
 import type { Order } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Your order", robots: { index: false } };
 
-type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ paid?: string }> };
+type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ paid?: string; new?: string }> };
 
 export default async function OrderPage({ params, searchParams }: Props) {
   const { id } = await params;
-  const { paid: returnedFromStripe } = await searchParams;
+  const { paid: returnedFromStripe, new: justPlaced } = await searchParams;
 
   // The order id is an unguessable UUID shared only with the buyer, so it acts as the access key.
   const order = await getOrder(id);
   if (!order) notFound();
   if (order.payment_method === "card" && !order.paid) order.paid = await syncCardPayment(order);
-  const cook = await getProfile(order.cook_id);
+  const [cook, items] = await Promise.all([getProfile(order.cook_id), getOrderItems(order.id)]);
   if (!cook) notFound();
 
   const name = kitchenName(cook);
@@ -31,7 +32,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
 
   const message = [
     `Hi ${name}! I just ordered on ${APP_NAME} 🙌`,
-    `Order #${ref}: ${order.quantity} × ${order.dish_name}`,
+    `Order #${ref}:`,
+    ...items.map((i) => `• ${i.quantity} × ${i.dish_name}`),
     `Total: ${money(order.total_cents)} (${PAYMENT_LABELS[order.payment_method]}${order.paid ? ", paid" : ""})`,
     `${order.fulfillment === "delivery" ? "Delivery" : "Pickup"}`,
     order.note ? `Note: ${order.note}` : null,
@@ -42,6 +44,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-5 pt-8">
+      {/* The order went through, so empty the cart it came from. */}
+      {justPlaced && <ClearCart />}
       <div className="text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-2xl text-sage">
           ✓
@@ -55,7 +59,9 @@ export default async function OrderPage({ params, searchParams }: Props) {
       </div>
 
       <section className="card divide-y divide-line">
-        <Row label={`${order.quantity} × ${order.dish_name}`} value={money(order.unit_price_cents * order.quantity)} />
+        {items.map((i) => (
+          <Row key={i.id} label={`${i.quantity} × ${i.dish_name}`} value={money(i.unit_price_cents * i.quantity)} />
+        ))}
         {order.delivery_fee_cents > 0 && <Row label="Delivery" value={money(order.delivery_fee_cents)} />}
         <Row label="Total" value={money(order.total_cents)} strong />
         <Row label="Payment" value={`${PAYMENT_LABELS[order.payment_method]}${order.paid ? " · Paid" : ""}`} />

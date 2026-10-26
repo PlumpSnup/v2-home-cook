@@ -2,22 +2,10 @@
 
 import Image from "next/image";
 import { useActionState, useRef, useState } from "react";
-import { saveDish, uploadDishPhoto } from "@/app/actions/cook";
+import { saveDish, uploadPhoto } from "@/app/actions/cook";
 import { CATEGORIES } from "@/lib/format";
+import { resizeImage } from "@/lib/image";
 import type { Dish } from "@/lib/types";
-
-/** Shrinks a phone photo to a ~1200px JPEG so uploads are fast on mobile data. */
-async function resizeImage(file: File, max = 1200): Promise<Blob> {
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.round(bitmap.width * scale);
-  canvas.height = Math.round(bitmap.height * scale);
-  canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("resize failed"))), "image/jpeg", 0.82),
-  );
-}
 
 export function DishForm({ dish }: { dish?: Dish }) {
   const [state, action, pending] = useActionState(saveDish, {});
@@ -33,7 +21,7 @@ export function DishForm({ dish }: { dish?: Dish }) {
     try {
       const form = new FormData();
       form.append("photo", await resizeImage(file), "photo.jpg");
-      const result = await uploadDishPhoto(form);
+      const result = await uploadPhoto(form);
       if (!result.url) throw new Error(result.error);
       setPhotoUrl(result.url);
     } catch {

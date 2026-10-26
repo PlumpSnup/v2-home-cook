@@ -23,6 +23,8 @@ export type Profile = {
   delivery_fee_cents: number;
   stripe_account_id: string | null;
   stripe_charges_enabled: boolean;
+  cover_url: string | null;
+  cuisines: string[];
   created_at: string;
 };
 
@@ -38,8 +40,31 @@ export type Dish = {
   created_at: string;
 };
 
-export type DishWithCook = Dish & {
-  cook: Pick<Profile, "kitchen_name" | "slug" | "area" | "avatar_url"> | null;
+export type OrderItem = {
+  id: string;
+  order_id: string;
+  dish_id: string | null;
+  dish_name: string;
+  unit_price_cents: number;
+  quantity: number;
+};
+
+/** A kitchen as shown on the home page. */
+export type KitchenCard = {
+  id: string;
+  slug: string;
+  kitchen_name: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  area: string | null;
+  cuisines: string[];
+  offers_pickup: boolean;
+  offers_delivery: boolean;
+  cover: string | null;
+  min_price: number;
+  max_price: number;
+  popular: Pick<Dish, "id" | "name" | "price_cents">[];
+  matches: Pick<Dish, "id" | "name" | "price_cents">[] | null;
 };
 
 export type Order = {
@@ -47,8 +72,9 @@ export type Order = {
   cook_id: string;
   dish_id: string | null;
   buyer_id: string | null;
+  /** Short summary of what was ordered, e.g. "2 × Chicken Adobo, 1 × Leche Flan". */
   dish_name: string;
-  unit_price_cents: number;
+  /** Total number of meals in the order. */
   quantity: number;
   delivery_fee_cents: number;
   total_cents: number;
@@ -63,3 +89,5 @@ export type Order = {
   created_at: string;
   completed_at: string | null;
 };
+
+export type OrderWithItems = Order & { items: OrderItem[] };

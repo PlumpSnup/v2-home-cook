@@ -4,9 +4,8 @@ import { notFound } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
 import { CookBadges } from "@/components/CookBadges";
 import { DishPhoto } from "@/components/DishCard";
-import { OrderForm } from "@/components/OrderForm";
-import { getCurrentProfile } from "@/lib/auth";
-import { acceptedPayments, fulfillmentOptions, kitchenName } from "@/lib/cook";
+import { AddToCart } from "@/components/cart/AddToCart";
+import { kitchenName } from "@/lib/cook";
 import { categoryLabel, money, whatsappLink } from "@/lib/format";
 import { getDish, getProfile } from "@/lib/queries";
 
@@ -35,7 +34,6 @@ export default async function DishPage({ params }: Props) {
   const data = await load((await params).id);
   if (!data) notFound();
   const { dish, cook } = data;
-  const viewer = await getCurrentProfile();
   const name = kitchenName(cook);
 
   return (
@@ -63,18 +61,8 @@ export default async function DishPage({ params }: Props) {
 
         <CookBadges cook={cook} />
 
-        {dish.available ? (
-          <section className="card p-4">
-            <h2 className="mb-4 font-display text-lg font-semibold">Order</h2>
-            <OrderForm
-              dishId={dish.id}
-              priceCents={dish.price_cents}
-              payments={acceptedPayments(cook)}
-              fulfillments={fulfillmentOptions(cook)}
-              deliveryFeeCents={cook.delivery_fee_cents}
-              defaultName={viewer?.full_name ?? undefined}
-            />
-          </section>
+        {dish.available && cook.slug ? (
+          <AddToCart kitchen={{ id: cook.id, slug: cook.slug, name }} dish={{ id: dish.id, name: dish.name, priceCents: dish.price_cents }} size="lg" />
         ) : (
           <p className="card p-4 text-center text-muted">This dish isn’t available right now.</p>
         )}

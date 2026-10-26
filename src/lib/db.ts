@@ -96,6 +96,34 @@ create table if not exists orders (
 );
 create index if not exists orders_cook_created_idx on orders (cook_id, created_at desc);
 create index if not exists orders_buyer_idx on orders (buyer_id);
+
+-- v2: storefronts (cover photo, cuisines) and multi-dish orders ---------------
+alter table profiles add column if not exists cover_url text;
+alter table profiles add column if not exists cuisines text[] not null default '{}';
+
+create table if not exists order_items (
+  id uuid primary key default gen_random_uuid(),
+  order_id uuid not null references orders (id) on delete cascade,
+  dish_id uuid references dishes (id) on delete set null,
+  dish_name text not null,
+  unit_price_cents integer not null,
+  quantity integer not null check (quantity between 1 and 50)
+);
+create index if not exists order_items_order_idx on order_items (order_id);
+create index if not exists order_items_dish_idx on order_items (dish_id);
+
+-- Orders placed before carts had one dish each; copy them into order_items once.
+insert into order_items (order_id, dish_id, dish_name, unit_price_cents, quantity)
+select o.id, o.dish_id, o.dish_name, o.unit_price_cents, o.quantity
+from orders o
+where o.unit_price_cents is not null
+  and not exists (select 1 from order_items i where i.order_id = o.id);
+
+-- On orders, dish_name is now a short summary and quantity the total number of meals.
+alter table orders alter column unit_price_cents drop not null;
+update orders set dish_name = quantity || ' × ' || dish_name, unit_price_cents = null
+where unit_price_cents is not null;
+alter table orders drop constraint if exists orders_quantity_check;
 `;
 
 async function ensureSchema() {

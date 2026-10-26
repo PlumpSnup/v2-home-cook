@@ -27,6 +27,11 @@ export async function saveCookProfile(_prev: FormState, form: FormData): Promise
   const area = String(form.get("area") ?? "").trim().slice(0, 60);
   const whatsapp = normalizePhone(String(form.get("whatsapp") ?? ""));
   const bio = String(form.get("bio") ?? "").trim().slice(0, 300) || null;
+  const otherCuisine = String(form.get("cuisine_other") ?? "").trim().slice(0, 30);
+  const cuisines = [
+    ...new Set([...form.getAll("cuisines").map((c) => String(c).trim().slice(0, 30)), otherCuisine].filter(Boolean)),
+  ].slice(0, 5);
+  const coverUrl = String(form.get("cover_url") ?? "") || null;
   const acceptsCash = form.get("accepts_cash") === "on";
   const acceptsEtransfer = form.get("accepts_etransfer") === "on";
   const acceptsCard = form.get("accepts_card") === "on";
@@ -42,6 +47,7 @@ export async function saveCookProfile(_prev: FormState, form: FormData): Promise
   if (acceptsEtransfer && !etransferEmail?.includes("@")) return { error: "Add the email you receive e-Transfers on." };
   if (!offersPickup && !offersDelivery) return { error: "Choose pickup, delivery or both." };
   if (deliveryFee === null) return { error: "Delivery fee should be a number, like 5 or 4.50." };
+  if (coverUrl && !isOwnPhoto(coverUrl, userId)) return { error: "Please upload the cover photo again." };
 
   const [existing] = await sql<{ slug: string | null }[]>`select slug from profiles where id = ${userId}`;
   const slug = existing?.slug ?? (await uniqueSlug(sql, kitchenName));
@@ -55,6 +61,8 @@ export async function saveCookProfile(_prev: FormState, form: FormData): Promise
         area: area || null,
         whatsapp,
         bio,
+        cuisines,
+        cover_url: coverUrl,
         accepts_cash: acceptsCash,
         accepts_etransfer: acceptsEtransfer,
         accepts_card: acceptsCard,
@@ -87,7 +95,8 @@ async function uniqueSlug(sql: Awaited<ReturnType<typeof db>>, name: string) {
 
 const CATEGORY_VALUES: Category[] = ["main", "appetizer", "soup", "dessert"];
 
-export async function uploadDishPhoto(form: FormData): Promise<{ url?: string; error?: string }> {
+/** Uploads a dish or cover photo (already resized in the browser) and returns its URL. */
+export async function uploadPhoto(form: FormData): Promise<{ url?: string; error?: string }> {
   const { userId } = await currentUser();
   const file = form.get("photo");
   if (!(file instanceof Blob) || file.size === 0) return { error: "No photo received." };

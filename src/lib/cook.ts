@@ -1,5 +1,5 @@
 import { stripeEnabled } from "./stripe";
-import type { Fulfillment, PaymentMethod, Profile } from "./types";
+import type { Dish, Fulfillment, PaymentMethod, Profile } from "./types";
 
 export function acceptedPayments(cook: Profile): PaymentMethod[] {
   const list: PaymentMethod[] = [];
@@ -18,4 +18,9 @@ export function fulfillmentOptions(cook: Profile): Fulfillment[] {
 
 export function kitchenName(cook: Pick<Profile, "kitchen_name" | "full_name">) {
   return cook.kitchen_name || cook.full_name || "Home kitchen";
+}
+
+/** The cook's own cover photo, or their best dish photo (dishes are passed best-first). */
+export function coverPhoto(cook: Pick<Profile, "cover_url">, dishes: Pick<Dish, "photo_url" | "available">[]) {
+  return cook.cover_url ?? dishes.find((d) => d.available && d.photo_url)?.photo_url ?? dishes.find((d) => d.photo_url)?.photo_url ?? null;
 }

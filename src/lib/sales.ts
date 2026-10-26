@@ -1,4 +1,4 @@
-import type { Order } from "./types";
+import type { Order, OrderItem } from "./types";
 
 export const TIMEZONE = process.env.NEXT_PUBLIC_TIMEZONE ?? "America/Toronto";
 
@@ -25,13 +25,17 @@ export function periodStart(period: Period, now = new Date()) {
   return shiftDay(today, -((weekday + 6) % 7)); // weeks start on Monday
 }
 
-type Sale = Pick<Order, "quantity" | "total_cents" | "completed_at" | "dish_name">;
+export type Sale = Pick<Order, "quantity" | "total_cents" | "completed_at"> & {
+  items: Pick<OrderItem, "dish_name" | "quantity">[];
+};
 
 export function summarize(orders: Sale[], period: Period, now = new Date()) {
   const start = periodStart(period, now);
   const inPeriod = orders.filter((o) => o.completed_at && dayKey(o.completed_at) >= start);
   const byDish = new Map<string, number>();
-  for (const o of inPeriod) byDish.set(o.dish_name, (byDish.get(o.dish_name) ?? 0) + o.quantity);
+  for (const o of inPeriod) {
+    for (const item of o.items) byDish.set(item.dish_name, (byDish.get(item.dish_name) ?? 0) + item.quantity);
+  }
 
   return {
     orders: inPeriod.length,

@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { updateOrder } from "@/app/actions/cook";
 import { money, PAYMENT_LABELS, whatsappLink } from "@/lib/format";
-import type { Order, OrderStatus } from "@/lib/types";
+import type { OrderStatus, OrderWithItems } from "@/lib/types";
 
 const STATUS_STYLE: Record<OrderStatus, string> = {
   pending: "bg-brand-soft text-brand-dark",
@@ -18,7 +18,7 @@ const STATUS_LABEL: Record<OrderStatus, string> = {
   cancelled: "Cancelled",
 };
 
-export function CookOrderCard({ order, kitchen }: { order: Order; kitchen: string }) {
+export function CookOrderCard({ order, kitchen }: { order: OrderWithItems; kitchen: string }) {
   const [pending, start] = useTransition();
   const act = (change: Parameters<typeof updateOrder>[1]) => start(() => updateOrder(order.id, change));
   const ref = order.id.slice(0, 6).toUpperCase();
@@ -34,17 +34,26 @@ export function CookOrderCard({ order, kitchen }: { order: Order; kitchen: strin
     <li className={`card space-y-3 p-4 ${pending ? "opacity-60" : ""}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="font-semibold">
-            {order.quantity} × {order.dish_name}
-          </p>
+          <p className="font-semibold">{order.buyer_name}</p>
           <p className="text-sm text-muted">
-            {order.buyer_name} · #{ref} · {created}
+            #{ref} · {created}
           </p>
         </div>
         <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLE[order.status]}`}>
           {STATUS_LABEL[order.status]}
         </span>
       </div>
+
+      <ul className="divide-y divide-line rounded-xl bg-cream text-sm">
+        {order.items.map((i) => (
+          <li key={i.id} className="flex justify-between gap-3 px-3 py-2">
+            <span>
+              <strong>{i.quantity} ×</strong> {i.dish_name}
+            </span>
+            <span className="shrink-0 text-muted">{money(i.unit_price_cents * i.quantity)}</span>
+          </li>
+        ))}
+      </ul>
 
       <div className="flex flex-wrap gap-1.5 text-xs">
         <span className="chip font-semibold text-ink">{money(order.total_cents)}</span>
@@ -56,7 +65,7 @@ export function CookOrderCard({ order, kitchen }: { order: Order; kitchen: strin
 
       <div className="flex flex-wrap gap-2">
         <a
-          href={whatsappLink(order.buyer_phone, `Hi ${order.buyer_name}! It’s ${kitchen} about your order #${ref} (${order.quantity} × ${order.dish_name}).`)}
+          href={whatsappLink(order.buyer_phone, `Hi ${order.buyer_name}! It’s ${kitchen} about your order #${ref} (${order.dish_name}).`)}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-whatsapp px-4 py-2"

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { money } from "@/lib/format";
-import type { Dish, DishWithCook } from "@/lib/types";
+import { AddToCart } from "@/components/cart/AddToCart";
+import type { CartKitchen } from "@/components/cart/CartProvider";
+import type { Dish } from "@/lib/types";
 
 export function DishPhoto({ dish, className = "" }: { dish: Pick<Dish, "photo_url" | "name">; className?: string }) {
   return (
@@ -17,34 +19,31 @@ export function DishPhoto({ dish, className = "" }: { dish: Pick<Dish, "photo_ur
   );
 }
 
-export function DishCard({ dish, showCook = true }: { dish: Dish | DishWithCook; showCook?: boolean }) {
-  const cook = "cook" in dish ? dish.cook : null;
+/** A dish row on a kitchen's menu: photo, name, price and an Add button. */
+export function MenuItem({ dish, kitchen }: { dish: Dish; kitchen: CartKitchen }) {
   return (
-    <Link href={`/dish/${dish.id}`} className="card listing group block overflow-hidden">
-      <DishPhoto dish={dish} className="aspect-square" />
-      <div className="p-3">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="line-clamp-2 text-sm font-semibold leading-snug">{dish.name}</h3>
-          <span className="shrink-0 text-sm font-semibold text-brand">{money(dish.price_cents)}</span>
+    <article
+      className={`card group flex gap-3 p-3 transition hover:border-brand/30 hover:bg-brand-soft/40 hover:shadow-sm ${
+        dish.available ? "" : "opacity-60"
+      }`}
+    >
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Link href={`/dish/${dish.id}`} className="pressable block rounded-lg">
+          <h3 className="font-semibold leading-snug">{dish.name}</h3>
+          {dish.description && <p className="mt-0.5 line-clamp-2 text-sm text-muted">{dish.description}</p>}
+        </Link>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+          <span className="font-semibold text-brand">{money(dish.price_cents)}</span>
+          {dish.available ? (
+            <AddToCart kitchen={kitchen} dish={{ id: dish.id, name: dish.name, priceCents: dish.price_cents }} />
+          ) : (
+            <span className="text-xs font-medium text-muted">Not available today</span>
+          )}
         </div>
-        {showCook && cook?.kitchen_name && (
-          <p className="mt-1 truncate text-xs text-muted">
-            {cook.kitchen_name}
-            {cook.area ? ` · ${cook.area}` : ""}
-          </p>
-        )}
-        {!dish.available && <p className="mt-1 text-xs font-medium text-muted">Not available today</p>}
       </div>
-    </Link>
-  );
-}
-
-export function DishGrid({ dishes, showCook }: { dishes: (Dish | DishWithCook)[]; showCook?: boolean }) {
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-      {dishes.map((d) => (
-        <DishCard key={d.id} dish={d} showCook={showCook} />
-      ))}
-    </div>
+      <Link href={`/dish/${dish.id}`} className="pressable shrink-0" tabIndex={-1} aria-hidden>
+        <DishPhoto dish={dish} className="h-24 w-24 rounded-xl sm:h-28 sm:w-28" />
+      </Link>
+    </article>
   );
 }

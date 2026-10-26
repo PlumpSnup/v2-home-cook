@@ -44,9 +44,7 @@ export default async function MyOrdersPage() {
             <li key={o.id}>
               <Link href={`/order/${o.id}${o.payment_method === "card" && !o.paid ? "?paid=1" : ""}`} className="card listing flex items-center justify-between gap-3 p-4">
                 <div className="min-w-0">
-                  <p className="truncate font-semibold">
-                    {o.quantity} × {o.dish_name}
-                  </p>
+                  <p className="truncate font-semibold">{o.dish_name}</p>
                   <p className="truncate text-sm text-muted">
                     {o.kitchen_name} · {new Date(o.created_at).toLocaleDateString("en-CA", { month: "short", day: "numeric" })}
                   </p>
