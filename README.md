@@ -3,11 +3,11 @@
 HomeCook is a mobile-first marketplace where home cooks list their dishes and buyers order from them. Cooks are paid by cash, Interac e-Transfer or card (through Stripe).
 
 - **Cooks:** sign in with Gmail and set up a kitchen in about a minute. Add a dish with a photo, a name and a price. Switch dishes on or off, and manage orders. A sales dashboard shows meals sold and money made today, this week and this month. Cooks share their storefront with a link, on WhatsApp, on Instagram (bio, story or QR code) or as a printable QR code.
-- **Buyers:** search dishes or browse by category (Main Meals, Appetizers, Soups, Desserts). Buyers order as a guest with a name and phone number, or sign in to see past orders. After ordering, one tap sends the order to the cook on WhatsApp.
+- **Buyers:** the home page lists kitchens (storefronts), filterable by city and cuisine. Searching a dish ("biryani") shows the kitchens that sell it. Buyers add dishes from one kitchen to a cart and check out once, as a guest with a name and phone number or signed in to see past orders. After ordering, one tap sends the whole order to the cook on WhatsApp.
 
 Stack: Next.js 15 (App Router) + Tailwind CSS 4, Postgres on Neon, Auth.js (Google login), Vercel Blob (photos), Stripe Connect Express.
 
-To rename the app, change `src/lib/brand.ts`. The brand colours are in `src/app/globals.css`.
+To rename the app, change `src/lib/brand.ts`. The brand colours are in `src/app/globals.css`. The city and cuisine lists cooks pick from are in `src/lib/cities.ts` and `src/lib/cuisines.ts`.
 
 ## Run locally
 
@@ -37,7 +37,7 @@ The app creates its tables the first time it connects, so there's no SQL to run.
 
 ## How orders work
 
-1. A buyer picks a dish, a quantity, pickup or delivery, and a payment method the cook accepts. The order is saved on the server, which takes prices from the database.
+1. A buyer adds dishes from one kitchen to their cart (saved in the browser), then at checkout picks pickup or delivery and a payment method the cook accepts. The order and its dishes (`order_items`) are saved on the server, which takes prices and availability from the database.
 2. **Card:** the buyer pays with Stripe Checkout. The money goes to the cook's connected Stripe account, minus `PLATFORM_FEE_PERCENT` if you set one. An unpaid card order is hidden from the cook until payment succeeds.
 3. **Cash or e-Transfer:** the confirmation page shows how to pay, and a WhatsApp button sends the order details to the cook.
 4. The cook confirms the order, then marks it completed. Completed orders count towards the sales dashboard.

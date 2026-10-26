@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import Link from "next/link";
+import { CartBar } from "@/components/cart/CartBar";
+import { CartProvider } from "@/components/cart/CartProvider";
 import { Header } from "@/components/Header";
 import { APP_NAME, APP_TAGLINE } from "@/lib/brand";
 import { missingEnv } from "@/lib/env";
@@ -30,9 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {missing.length > 0 ? (
           <SetupNeeded missing={missing} />
         ) : (
-          <>
+          <CartProvider>
             <Header />
-            <main className="mx-auto w-full max-w-5xl px-4 pb-16">{children}</main>
+            <main className="mx-auto w-full max-w-5xl px-4 pb-24">{children}</main>
             <footer className="mx-auto flex w-full max-w-5xl justify-center gap-4 px-4 pb-8 text-xs text-muted">
               <Link href="/privacy" className="hover:text-ink">
                 Privacy
@@ -41,7 +43,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Terms
               </Link>
             </footer>
-          </>
+            <CartBar />
+          </CartProvider>
         )}
       </body>
     </html>

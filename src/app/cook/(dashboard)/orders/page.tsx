@@ -4,7 +4,7 @@ import { CookOrderCard } from "@/components/CookOrderCard";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
 import { db } from "@/lib/db";
-import type { Order } from "@/lib/types";
+import type { OrderWithItems } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Orders" };
 
@@ -20,8 +20,9 @@ export default async function CookOrdersPage({ searchParams }: { searchParams: P
   const filter = FILTERS.find((f) => f.value === show) ?? FILTERS[0];
 
   const sql = await db();
-  const orders = await sql<Order[]>`
-    select * from orders
+  const orders = await sql<OrderWithItems[]>`
+    select o.*, coalesce((select json_agg(i order by i.dish_name) from order_items i where i.order_id = o.id), '[]') as items
+    from orders o
     where cook_id = ${cook.id}
       and status in ${sql([...filter.statuses])}
       -- card orders only count once the buyer has actually paid
