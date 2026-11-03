@@ -96,7 +96,7 @@ export default async function Home() {
           {steps.map((step, i) => (
             <li key={step.title} className="card listing p-5">
               <div className="flex items-center gap-3">
-                <Image src={step.icon} alt="" width={56} height={56} className="h-14 w-14" />
+                <Image src={step.icon} alt="" width={28} height={28} className="h-7 w-7" />
                 <span className="text-sm font-medium text-brand">Step {i + 1}</span>
               </div>
               <h3 className="mt-3 font-semibold">{step.title}</h3>
