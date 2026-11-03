@@ -1,20 +1,21 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getCurrentProfile } from "@/lib/auth";
 import { stripeEnabled } from "@/lib/stripe";
 
 const steps = [
   {
-    emoji: "📝",
+    icon: "/steps/menu.png",
     title: "Set up your kitchen",
     body: "Sign in with Gmail, name your kitchen and choose pickup, delivery or both. Takes about a minute.",
   },
   {
-    emoji: "📸",
+    icon: "/steps/camera.png",
     title: "Add your dishes",
     body: "Snap a photo, set a price and you’re listed. Switch a dish off when it sells out.",
   },
   {
-    emoji: "📲",
+    icon: "/steps/share.png",
     title: "Share your link",
     body: "One menu link for WhatsApp, Instagram and your neighbours. Print the QR code for your door.",
   },
@@ -95,9 +96,7 @@ export default async function Home() {
           {steps.map((step, i) => (
             <li key={step.title} className="card listing p-5">
               <div className="flex items-center gap-3">
-                <span className="text-2xl" aria-hidden>
-                  {step.emoji}
-                </span>
+                <Image src={step.icon} alt="" width={56} height={56} className="h-14 w-14" />
                 <span className="text-sm font-medium text-brand">Step {i + 1}</span>
               </div>
               <h3 className="mt-3 font-semibold">{step.title}</h3>
