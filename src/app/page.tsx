@@ -43,8 +43,7 @@ export default async function Home() {
     <div className="space-y-16 pt-8 sm:pt-14">
       <section className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <p className="chip border-brand/20 bg-brand-soft text-brand">For home cooks</p>
-          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight sm:text-5xl">
+          <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
             Bring Your Food
             <br />
             to <span className="text-brand">More Tables</span>
