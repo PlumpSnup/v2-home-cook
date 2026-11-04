@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BunIllustration, Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
+import { HeroDoodles } from "@/components/HeroDoodles";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
 import { getCurrentProfile } from "@/lib/auth";
@@ -52,7 +53,7 @@ export default async function Home() {
       {/* Full-bleed and full-height: fills the first screen below the header, edge to edge. */}
       <section className="relative mx-[calc(50%-50vw)] flex min-h-[calc(100svh-3.5rem)] flex-col">
         <div className="relative flex flex-1 items-center overflow-hidden bg-brand-soft pb-6 pt-10 sm:pt-14">
-          <Doodles className="text-brand/10" />
+          <HeroDoodles />
           <ScrollFade className="relative mx-auto grid w-full max-w-5xl items-center gap-8 px-4 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
