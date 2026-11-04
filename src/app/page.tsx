@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BunIllustration, Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
+import { Reveal } from "@/components/Reveal";
 import { getCurrentProfile } from "@/lib/auth";
 import { stripeEnabled } from "@/lib/stripe";
 
@@ -102,11 +103,11 @@ export default async function Home() {
         <WaveEdge className="-mt-px h-12 text-brand-soft sm:h-20" line="var(--color-brand)" />
       </section>
 
-      <section id="how-it-works" className="scroll-mt-20">
-        <h2 className="font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
+      <Reveal id="how-it-works" className="scroll-mt-20">
+        <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
         <ol className="mt-6 grid gap-4 sm:grid-cols-3">
           {steps.map((step, i) => (
-            <li key={step.title} className="card listing p-5">
+            <li key={step.title} className="card listing reveal p-5" style={{ "--i": i + 1 } as React.CSSProperties}>
               <div className="flex items-center gap-3">
                 <Image src={step.icon} alt="" width={28} height={28} className="h-7 w-7" />
                 <span className="text-sm font-medium text-brand">Step {i + 1}</span>
@@ -116,13 +117,13 @@ export default async function Home() {
             </li>
           ))}
         </ol>
-      </section>
+      </Reveal>
 
-      <section>
-        <h2 className="font-display text-2xl font-semibold sm:text-3xl">Everything your kitchen needs</h2>
+      <Reveal>
+        <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Everything your kitchen needs</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
-          {features.map((f) => (
-            <div key={f.title} className="flex gap-4">
+          {features.map((f, i) => (
+            <div key={f.title} className="reveal flex gap-4" style={{ "--i": i + 1 } as React.CSSProperties}>
               <IconBadge icon={f.icon} className="border-brand/30 text-brand" />
               <div>
                 <h3 className="font-semibold">{f.title}</h3>
@@ -131,19 +132,21 @@ export default async function Home() {
             </div>
           ))}
         </div>
-      </section>
+      </Reveal>
 
-      <section className="relative flex flex-col items-start justify-between gap-4 overflow-hidden rounded-[2.5rem] bg-brand-soft p-6 sm:flex-row sm:items-center sm:p-10">
-        <Doodles className="text-brand/10" />
-        <BunIllustration className="pointer-events-none absolute bottom-3 right-6 hidden w-36 text-brand/25 md:block" />
-        <div className="relative">
-          <p className="font-display text-2xl font-semibold">Your kitchen, your menu, your prices.</p>
-          <p className="mt-1 text-muted">Open your kitchen today and share it with the people who already love your food.</p>
-        </div>
-        <Link href={start.href} className="btn-primary relative shrink-0 px-6 md:mr-40">
-          {start.label}
-        </Link>
-      </section>
+      <Reveal>
+        <section className="reveal relative flex flex-col items-start justify-between gap-4 overflow-hidden rounded-[2.5rem] bg-brand-soft p-6 sm:flex-row sm:items-center sm:p-10">
+          <Doodles className="text-brand/10" />
+          <BunIllustration className="pointer-events-none absolute bottom-3 right-6 hidden w-36 text-brand/25 md:block" />
+          <div className="relative">
+            <p className="font-display text-2xl font-semibold">Your kitchen, your menu, your prices.</p>
+            <p className="mt-1 text-muted">Open your kitchen today and share it with the people who already love your food.</p>
+          </div>
+          <Link href={start.href} className="btn-primary relative shrink-0 px-6 md:mr-40">
+            {start.label}
+          </Link>
+        </section>
+      </Reveal>
     </div>
   );
 }
