@@ -1,60 +1,45 @@
 import Image from "next/image";
 
-const DOODLES = [
-  { src: "/doodles/cake.png", width: 153, height: 120 },
-  { src: "/doodles/cupcake.png", width: 138, height: 143 },
-  { src: "/doodles/dumpling.png", width: 164, height: 121 },
-  { src: "/doodles/noodles.png", width: 240, height: 168 },
-  { src: "/doodles/pot.png", width: 240, height: 209 },
+const DOODLES = {
+  cake: { src: "/doodles/cake.png", width: 153, height: 120 },
+  cupcake: { src: "/doodles/cupcake.png", width: 138, height: 143 },
+  dumpling: { src: "/doodles/dumpling.png", width: 164, height: 121 },
+  noodles: { src: "/doodles/noodles.png", width: 240, height: 168 },
+  pot: { src: "/doodles/pot.png", width: 240, height: 209 },
+};
+
+/**
+ * Where each drawing sits: its centre as a percentage of the hero's width (x) and height (y),
+ * its width as a percentage of the screen width (w), and its tilt in degrees.
+ */
+const LAYOUT: { doodle: keyof typeof DOODLES; x: number; y: number; w: number; turn: number }[] = [
+  // top row
+  { doodle: "dumpling", x: 28.3, y: 13.5, w: 4.1, turn: -10 },
+  { doodle: "cupcake", x: 47, y: 9, w: 3.4, turn: 0 },
+  { doodle: "noodles", x: 57.9, y: 13.5, w: 7.8, turn: 0 },
+  { doodle: "cake", x: 72, y: 8.5, w: 4.5, turn: -10 },
+  { doodle: "pot", x: 96.9, y: 11.8, w: 6.3, turn: 0 },
+  // middle
+  { doodle: "pot", x: 6, y: 26.4, w: 4.6, turn: 20 },
+  { doodle: "cake", x: 37.8, y: 39.2, w: 3.3, turn: -10 },
+  { doodle: "noodles", x: 88.9, y: 36.8, w: 5.2, turn: 0 },
+  { doodle: "cake", x: 8.8, y: 51.7, w: 4.8, turn: -10 },
+  { doodle: "noodles", x: 26.4, y: 56.9, w: 5.2, turn: 0 },
+  { doodle: "pot", x: 71.6, y: 76.1, w: 5.2, turn: 0 },
+  // bottom row
+  { doodle: "dumpling", x: 24.6, y: 81.9, w: 4.1, turn: -25 },
+  { doodle: "cupcake", x: 48, y: 85.4, w: 3.1, turn: 0 },
+  { doodle: "noodles", x: 55.2, y: 91, w: 6.3, turn: 0 },
+  { doodle: "pot", x: 8.8, y: 91, w: 7.4, turn: 0 },
+  { doodle: "cake", x: 93.6, y: 84.4, w: 3.9, turn: -10 },
 ];
 
-const COLS = 6;
-const ROWS = 3;
-
-/**
- * Picks a drawing for every grid cell so that no two cells side by side, above and below, or
- * diagonal hold the same one. Filling row by row, a cell only has four filled neighbours and
- * there are five drawings, so there is always a choice left. Among the allowed ones it takes a
- * least-used drawing, picked at random, so each shows up about equally often.
- */
-function arrange() {
-  const grid: number[] = [];
-  const used = DOODLES.map(() => 0);
-  for (let i = 0; i < COLS * ROWS; i++) {
-    const col = i % COLS;
-    const neighbours = new Set<number>();
-    if (col > 0) neighbours.add(grid[i - 1]);
-    if (i >= COLS) {
-      neighbours.add(grid[i - COLS]);
-      if (col > 0) neighbours.add(grid[i - COLS - 1]);
-      if (col < COLS - 1) neighbours.add(grid[i - COLS + 1]);
-    }
-    const allowed = DOODLES.map((_, k) => k).filter((k) => !neighbours.has(k));
-    const fewest = Math.min(...allowed.map((k) => used[k]));
-    const options = allowed.filter((k) => used[k] === fewest);
-    const pick = options[Math.floor(Math.random() * options.length)];
-    grid.push(pick);
-    used[pick]++;
-  }
-  return grid.map((k) => DOODLES[k]);
-}
-
-/**
- * Food doodles scattered across the hero in new spots on every visit. Each one lands somewhere
- * random inside its own cell of a 6 × 3 grid, so they spread out instead of piling up.
- */
+/** Food drawings scattered across the hero, always in the same places. */
 export function HeroDoodles() {
-  const picks = arrange();
   return (
     <div className="pointer-events-none absolute inset-0 opacity-60" aria-hidden>
-      {picks.map((d, i) => {
-        const col = i % COLS;
-        const row = Math.floor(i / COLS);
-        const left = ((col + 0.1 + Math.random() * 0.8) / COLS) * 100;
-        const top = ((row + 0.1 + Math.random() * 0.8) / ROWS) * 100;
-        // bigger drawings (the bowl, the pot) stay a little bigger than the small ones
-        const size = ((0.75 + Math.random() * 0.5) * d.width) / 180;
-        const turn = Math.round(Math.random() * 50 - 25);
+      {LAYOUT.map(({ doodle, x, y, w, turn }, i) => {
+        const d = DOODLES[doodle];
         return (
           <Image
             key={i}
@@ -63,12 +48,7 @@ export function HeroDoodles() {
             width={d.width}
             height={d.height}
             className="absolute h-auto -translate-x-1/2 -translate-y-1/2"
-            style={{
-              left: `${left}%`,
-              top: `${top}%`,
-              width: `calc(${size.toFixed(2)} * clamp(32px, 5vw, 76px))`,
-              rotate: `${turn}deg`,
-            }}
+            style={{ left: `${x}%`, top: `${y}%`, width: `max(28px, ${w}vw)`, rotate: `${turn}deg` }}
           />
         );
       })}
