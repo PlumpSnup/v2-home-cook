@@ -71,12 +71,12 @@ export function Doodles({ className = "" }: { className?: string }) {
   return (
     <svg className={`pointer-events-none absolute inset-0 h-full w-full ${className}`} aria-hidden>
       <defs>
-        <pattern id={id} width="220" height="200" patternUnits="userSpaceOnUse">
+        <pattern id={id} width="420" height="360" patternUnits="userSpaceOnUse">
           <g fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <g transform="translate(14 20) rotate(-12 24 24) scale(1.2)">{DOODLES.muffin}</g>
-            <g transform="translate(130 40) rotate(10 24 24)">{DOODLES.bun}</g>
-            <g transform="translate(60 120) rotate(8 24 24)">{DOODLES.bowl}</g>
-            <g transform="translate(160 130) rotate(-20 24 24) scale(0.8)">{DOODLES.leaf}</g>
+            <g transform="translate(30 30) rotate(-12 24 24) scale(1.2)">{DOODLES.muffin}</g>
+            <g transform="translate(260 90) rotate(10 24 24)">{DOODLES.bun}</g>
+            <g transform="translate(110 230) rotate(8 24 24)">{DOODLES.bowl}</g>
+            <g transform="translate(340 280) rotate(-20 24 24) scale(0.8)">{DOODLES.leaf}</g>
           </g>
         </pattern>
       </defs>
