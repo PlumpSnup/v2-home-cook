@@ -124,11 +124,10 @@ export function CheckoutTile() {
           </p>
         </div>
         <div className="mt-2 rounded-xl border border-line p-2">
-          <p className="text-muted">Pickup time</p>
+          <p className="text-muted">How do you want it?</p>
           <div className="mt-1.5 flex gap-1">
-            <span className="rounded border border-line px-1.5 py-0.5">5pm</span>
-            <span className="rounded bg-ink px-1.5 py-0.5 text-white">6pm</span>
-            <span className="rounded border border-line px-1.5 py-0.5">7pm</span>
+            <span className="rounded bg-ink px-1.5 py-0.5 text-white">Pickup</span>
+            <span className="rounded border border-line px-1.5 py-0.5">Delivery</span>
           </div>
         </div>
       </div>
@@ -177,18 +176,30 @@ export function StoreTile() {
   );
 }
 
-/** A plain phone outline. The "chaos vs. HomeCook" animation will go inside later. */
-export function PhonePlaceholder({ tone }: { tone: "chaos" | "calm" }) {
-  const bg = tone === "chaos" ? "from-brand-darker to-ink" : "from-sage to-[#2f4a34]";
+/**
+ * A phone with placeholder message rows. "messy" rows come from different apps and sit unevenly;
+ * "tidy" rows are all HomeCook orders. The before/after animation will go inside later.
+ */
+export function PhonePlaceholder({ tone }: { tone: "messy" | "tidy" }) {
+  const dots = tone === "messy" ? ["bg-[#d62976]", "bg-whatsapp", "bg-muted", "bg-whatsapp"] : Array(4).fill("bg-brand");
   return (
-    <div className={`overflow-hidden rounded-[2.5rem] bg-gradient-to-b ${bg} px-8 pt-10`} aria-hidden>
-      <div className="mx-auto h-72 max-w-xs space-y-3 sm:h-80">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="flex items-center gap-3 rounded-2xl bg-white/15 p-3">
-            <span className="h-9 w-9 shrink-0 rounded-full bg-white/25" />
+    <div
+      className="mx-auto w-60 overflow-hidden rounded-[2.75rem] border-[10px] border-ink bg-cream shadow-[0_24px_50px_rgb(43_43_43/0.25)]"
+      aria-hidden
+    >
+      <div className="mx-auto mt-2 h-5 w-20 rounded-full bg-ink" />
+      <div className="h-96 space-y-2.5 px-3 pt-6">
+        {dots.map((dot, i) => (
+          <div
+            key={i}
+            className={`flex items-center gap-2.5 rounded-2xl bg-surface p-2.5 shadow-sm ${
+              tone === "messy" ? ["rotate-[-2deg]", "ml-3 rotate-[1.5deg]", "-ml-1", "ml-2 rotate-[-1deg]"][i] : ""
+            }`}
+          >
+            <span className={`h-8 w-8 shrink-0 rounded-full ${dot}`} />
             <span className="flex-1 space-y-1.5">
-              <span className="block h-2.5 w-1/2 rounded-full bg-white/40" />
-              <span className="block h-2 w-4/5 rounded-full bg-white/25" />
+              <span className="block h-2 w-1/2 rounded-full bg-ink/25" />
+              <span className="block h-2 w-4/5 rounded-full bg-ink/10" />
             </span>
           </div>
         ))}

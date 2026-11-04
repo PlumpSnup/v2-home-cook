@@ -13,31 +13,31 @@ import { APP_NAME } from "@/lib/brand";
 import { getCurrentProfile } from "@/lib/auth";
 
 const features = [
-  { tile: CheckoutTile, title: "A checkout that turns visits into orders", tag: "Simple checkout" },
-  { tile: HandoffTile, title: "Reach more neighbours with pickup and delivery", tag: "Pickup & delivery" },
-  { tile: StoreTile, title: "Set up and start selling in minutes", tag: "Easy storefront" },
+  { tile: CheckoutTile, title: "Orders arrive complete: what, how many and how they’ll pay", tag: "Ordering" },
+  { tile: HandoffTile, title: "Pickup, delivery or both — you decide", tag: "Your rules" },
+  { tile: StoreTile, title: "Your menu online before the kettle boils", tag: "Your storefront" },
 ];
 
 export default async function Home() {
   const profile = await getCurrentProfile();
   const start = profile?.is_cook
     ? { href: "/cook", label: "Go to my kitchen" }
-    : { href: profile ? "/cook/onboarding" : "/login?next=/cook", label: "Get started" };
+    : { href: profile ? "/cook/onboarding" : "/login?next=/cook", label: "Open your kitchen" };
 
   return (
     <div className="space-y-28 pb-8 sm:space-y-36">
       <section className="mx-auto max-w-3xl pt-20 text-center sm:pt-28">
-        <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
-          The easiest way to sell your home cooking online.
+        <h1 className="font-display text-5xl font-semibold leading-[1.05] sm:text-7xl">
+          Bring your food to <span className="text-brand">more tables.</span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-ink/80 sm:text-xl">
-          Join the home cooks, bakers and caterers who share one link and take orders from their neighbourhood with{" "}
-          {APP_NAME}.
+          A menu page for your home kitchen. Share one link with neighbours, friends and family, and let the orders
+          come to you.
         </p>
         <Link href={start.href} className="btn-primary mx-auto mt-10 w-full max-w-md rounded-2xl py-4 text-lg">
           {start.label}
         </Link>
-        <p className="mt-4 text-sm text-muted">Free to start. No app to download.</p>
+        <p className="mt-4 text-sm text-muted">Free to start · Ready in about a minute</p>
       </section>
 
       <Reveal className="grid gap-10 md:grid-cols-3 md:gap-8">
@@ -46,7 +46,7 @@ export default async function Home() {
             <div className="aspect-square overflow-hidden rounded-2xl">
               <Tile />
             </div>
-            <h2 className="mt-6 text-2xl font-medium leading-snug tracking-tight">{title}</h2>
+            <h2 className="mt-6 font-display text-2xl font-semibold leading-snug">{title}</h2>
             <p className="mt-3 inline-block rounded-full border border-ink px-4 py-1.5 text-sm font-medium uppercase">
               {tag}
             </p>
@@ -63,38 +63,38 @@ export default async function Home() {
       {/* Fades from the page colour into the brand colour behind the comparison. */}
       <section className="mx-[calc(50%-50vw)] bg-gradient-to-b from-cream via-brand-soft to-brand px-4 pb-24 pt-8">
         <Reveal className="mx-auto max-w-4xl">
-          <p className="reveal text-3xl font-medium leading-tight tracking-tight text-ink/85 sm:text-5xl">
-            Managing orders on Instagram
-            <InstagramBadge />, WhatsApp
-            <WhatsAppBadge />, the phone 💬 — plus payments and pickup times — is a lot for one cook.
+          <p className="reveal font-display text-3xl font-semibold leading-tight text-ink/85 sm:text-5xl">
+            Orders in your DMs
+            <InstagramBadge />, your chats
+            <WhatsAppBadge /> and your missed calls 📞, and you still have to cook.
           </p>
           <p
-            className="reveal mt-8 text-3xl font-medium tracking-tight text-ink/85 sm:text-5xl"
+            className="reveal mt-8 font-display text-3xl font-semibold text-brand-darker sm:text-5xl"
             style={{ "--i": 1 } as React.CSSProperties}
           >
-            Make things easier with {APP_NAME}.
+            {APP_NAME} keeps every order in one place.
           </p>
         </Reveal>
 
         <Reveal className="mx-auto mt-20 grid max-w-5xl items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
           <div className="reveal" style={{ "--i": 0 } as React.CSSProperties}>
-            <PhonePlaceholder tone="chaos" />
-            <p className="mt-5 text-center text-xl font-medium">Absolute chaos</p>
+            <PhonePlaceholder tone="messy" />
+            <p className="mt-5 text-center text-xl font-medium">Before: messages everywhere</p>
           </div>
           <p className="reveal text-center text-xl font-semibold" style={{ "--i": 1 } as React.CSSProperties}>
-            vs.
+            →
           </p>
           <div className="reveal" style={{ "--i": 2 } as React.CSSProperties}>
-            <PhonePlaceholder tone="calm" />
+            <PhonePlaceholder tone="tidy" />
             <p className="mt-5 text-center text-xl font-medium text-white">
-              Powered by <span className="font-display font-semibold">{APP_NAME}</span>
+              After: every order in <span className="font-display font-semibold">{APP_NAME}</span>
             </p>
           </div>
         </Reveal>
       </section>
 
       <Reveal className="mx-auto max-w-2xl text-center">
-        <h2 className="reveal text-4xl font-semibold tracking-tight sm:text-5xl">Your kitchen, your menu, your prices.</h2>
+        <h2 className="reveal font-display text-4xl font-semibold sm:text-5xl">Your kitchen, your menu, your prices.</h2>
         <p className="reveal mt-4 text-lg text-muted" style={{ "--i": 1 } as React.CSSProperties}>
           Open your kitchen today and share it with the people who already love your food.
         </p>
