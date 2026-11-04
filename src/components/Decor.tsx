@@ -106,15 +106,3 @@ export function IconBadge({ icon, className = "" }: { icon: IconName; className?
     </span>
   );
 }
-
-/** A thick-lined bun on a plate with steam rising, for empty corners. */
-export function BunIllustration({ className = "" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 160" className={className} fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M70 34C62 26 76 18 68 8M100 30C92 22 106 14 98 4M130 34C122 26 136 18 128 8" strokeWidth="5" />
-      <path d="M38 112C38 62 162 62 162 112Z" />
-      <path d="M86 72 112 98M112 72 86 98" />
-      <path d="M14 116H186C186 132 170 144 150 144H50C30 144 14 132 14 116Z" />
-    </svg>
-  );
-}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BunIllustration, Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
+import { Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
+import { PhoneMockup } from "@/components/PhoneMockup";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
 import { getCurrentProfile } from "@/lib/auth";
@@ -106,44 +107,60 @@ export default async function Home() {
 
       <Reveal id="how-it-works" className="scroll-mt-20">
         <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
-        <ol className="mt-6 grid gap-4 sm:grid-cols-3">
-          {steps.map((step, i) => (
-            <li key={step.title} className="card listing reveal p-5" style={{ "--i": i + 1 } as React.CSSProperties}>
-              <div className="flex items-center gap-3">
-                <Image src={step.icon} alt="" width={28} height={28} className="h-7 w-7" />
-                <span className="text-sm font-medium text-brand">Step {i + 1}</span>
-              </div>
-              <h3 className="mt-3 font-semibold">{step.title}</h3>
-              <p className="mt-1 text-sm text-muted">{step.body}</p>
-            </li>
-          ))}
-        </ol>
-      </Reveal>
-
-      <Reveal>
-        <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Everything your kitchen needs</h2>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2">
-          {features.map((f, i) => (
-            <div key={f.title} className="reveal flex gap-4" style={{ "--i": i + 1 } as React.CSSProperties}>
-              <IconBadge icon={f.icon} className="border-brand/30 text-brand" />
-              <div>
-                <h3 className="font-semibold">{f.title}</h3>
-                <p className="mt-0.5 text-sm text-muted">{f.body}</p>
-              </div>
-            </div>
-          ))}
+        <div className="mt-6 grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
+          <ol className="grid gap-4">
+            {steps.map((step, i) => (
+              <li key={step.title} className="card listing reveal p-5" style={{ "--i": i + 1 } as React.CSSProperties}>
+                <div className="flex items-center gap-3">
+                  <Image src={step.icon} alt="" width={28} height={28} className="h-7 w-7" />
+                  <span className="text-sm font-medium text-brand">Step {i + 1}</span>
+                </div>
+                <h3 className="mt-3 font-semibold">{step.title}</h3>
+                <p className="mt-1 text-sm text-muted">{step.body}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="reveal md:mr-24" style={{ "--i": steps.length + 1 } as React.CSSProperties}>
+            <PhoneMockup />
+          </div>
         </div>
       </Reveal>
+
+      {/* Full-bleed sage band with wavy edges top and bottom. */}
+      <section className="mx-[calc(50%-50vw)]">
+        <WaveEdge className="h-12 -scale-y-100 text-sage-soft sm:h-20" />
+        <div className="relative -my-px overflow-hidden bg-sage-soft py-10">
+          <Doodles className="text-sage/10" />
+          <Reveal className="relative mx-auto w-full max-w-5xl px-4">
+            <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Everything your kitchen needs</h2>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {features.map((f, i) => (
+                <div
+                  key={f.title}
+                  className="reveal flex gap-4 rounded-3xl bg-surface/70 p-5"
+                  style={{ "--i": i + 1 } as React.CSSProperties}
+                >
+                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-sage" />
+                  <div>
+                    <h3 className="font-semibold">{f.title}</h3>
+                    <p className="mt-0.5 text-sm text-muted">{f.body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+        <WaveEdge className="h-12 text-sage-soft sm:h-20" />
+      </section>
 
       <Reveal>
         <section className="reveal relative flex flex-col items-start justify-between gap-4 overflow-hidden rounded-[2.5rem] bg-brand-soft p-6 sm:flex-row sm:items-center sm:p-10">
           <Doodles className="text-brand/10" />
-          <BunIllustration className="pointer-events-none absolute bottom-3 right-6 hidden w-36 text-brand/25 md:block" />
           <div className="relative">
             <p className="font-display text-2xl font-semibold">Your kitchen, your menu, your prices.</p>
             <p className="mt-1 text-muted">Open your kitchen today and share it with the people who already love your food.</p>
           </div>
-          <Link href={start.href} className="btn-primary relative shrink-0 px-6 md:mr-40">
+          <Link href={start.href} className="btn-primary relative shrink-0 px-6">
             {start.label}
           </Link>
         </section>
