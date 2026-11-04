@@ -29,6 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
       <body className="min-h-dvh font-sans antialiased">
+        <noscript>
+          <style>{`[data-reveal] .reveal { opacity: 1 !important; }`}</style>
+        </noscript>
         {missing.length > 0 ? (
           <SetupNeeded missing={missing} />
         ) : (
