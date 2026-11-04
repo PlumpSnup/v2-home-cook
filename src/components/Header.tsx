@@ -26,7 +26,7 @@ export async function Header() {
               Orders
             </Link>
           ) : (
-            <Link href="/login" className="btn-ghost">
+            <Link href="/login" className="btn-ghost hover:not-active:transform-none">
               Log in
             </Link>
           )}
