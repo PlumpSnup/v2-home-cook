@@ -50,61 +50,124 @@ export default async function Home() {
   ];
 
   return (
-    <div className="space-y-16">
-      {/* Full-bleed and full-height: fills the first screen below the header, edge to edge. */}
-      <section className="relative mx-[calc(50%-50vw)] flex min-h-[calc(100svh-3.5rem)] flex-col">
-        <div className="relative flex flex-1 items-center overflow-hidden bg-brand-soft pb-6 pt-10 sm:pt-14">
+    <div className="space-y-20">
+      {/* Inset hero card: nearly full-bleed with a small margin, filling the first screen. */}
+      <section className="mx-[calc(50%-50vw)] px-2 pt-2 sm:px-3 sm:pt-3">
+        <div className="relative flex min-h-[calc(100svh-3.5rem-1rem)] flex-col overflow-hidden rounded-[2rem] bg-brand-soft sm:min-h-[calc(100svh-3.5rem-1.5rem)] sm:rounded-[2.5rem]">
           <HeroDoodles />
-          <ScrollFade className="relative mx-auto grid w-full max-w-5xl items-center gap-8 px-4 md:grid-cols-[1.1fr_0.9fr]">
-            <div>
-              <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
-                Bring Your Food
-                <br />
-                to <span className="text-brand">More Tables</span>
-              </h1>
-              <p className="mt-4 max-w-md text-lg text-muted">
-                Create your online shop in minutes, share one link, and start taking orders. Free to start.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href={start.href} className="btn-primary px-6">
-                  {start.label}
-                </Link>
-                <a href="#how-it-works" className="btn-secondary px-6">
-                  How it works
-                </a>
+          <ScrollFade className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col px-5 pb-5 pt-6 sm:px-10 sm:pb-6 sm:pt-8">
+            <p className="w-fit rounded-full border border-brand/25 bg-surface/60 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-brand backdrop-blur">
+              Homemade · Local · Fresh
+            </p>
+            <h1 className="mt-6 max-w-3xl font-display text-[2.6rem] font-semibold leading-[1.05] sm:mt-8 sm:text-7xl">
+              Bring your food
+              <br />
+              to <span className="text-brand">more tables</span>
+            </h1>
+            <p className="mt-4 max-w-md text-lg text-muted">
+              Create your online shop in minutes, share one link, and start taking orders. Free to start.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link href={start.href} className="btn-primary pl-6 pr-2">
+                {start.label}
+                <Arrow />
+              </Link>
+              <a href="#how-it-works" className="btn-secondary px-6">
+                How it works
+              </a>
+            </div>
+
+            <div className="mt-auto grid gap-6 pt-10 sm:grid-cols-[1fr_auto] sm:items-end">
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-3" aria-hidden>
+                  {["👩🏽‍🍳", "🧑🏻‍🍳", "👨🏾‍🍳"].map((cook) => (
+                    <span
+                      key={cook}
+                      className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-brand-soft bg-surface text-xl"
+                    >
+                      {cook}
+                    </span>
+                  ))}
+                </div>
+                <p className="max-w-[15rem] text-sm text-muted">Home cooks are opening kitchens in their neighbourhoods.</p>
+              </div>
+
+              <div className="hidden w-72 rounded-3xl border border-white/70 bg-surface/55 p-4 shadow-[0_12px_30px_rgb(43_43_43/0.08)] backdrop-blur-md sm:block">
+                <p className="font-medium leading-snug">Your whole menu, one link to share</p>
+                <div className="mt-3 flex h-24 items-center justify-center gap-3 rounded-2xl bg-brand/10 text-4xl" aria-hidden>
+                  <span>🍛</span>
+                  <span>🥟</span>
+                  <span>🍮</span>
+                </div>
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <p className="text-xs text-muted">Send it on WhatsApp, Instagram or print the QR code.</p>
+                  <Link
+                    href={start.href}
+                    aria-label={start.label}
+                    className="pressable flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ink text-white"
+                  >
+                    →
+                  </Link>
+                </div>
               </div>
             </div>
 
-            <div className="card listing relative mx-auto w-full max-w-sm overflow-hidden p-5" aria-hidden>
-              <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-2xl">👩🏽‍🍳</span>
-                <div>
-                  <p className="font-display text-lg font-semibold">Amma’s Kitchen</p>
-                  <p className="text-xs text-muted">Pickup · Delivery</p>
-                </div>
-              </div>
-              <ul className="mt-4 divide-y divide-line text-sm">
-                {[
-                  ["🍛", "Chicken biryani", "$14"],
-                  ["🥟", "Vegetable samosas (6)", "$8"],
-                  ["🍮", "Mango kulfi", "$5"],
-                ].map(([emoji, name, price]) => (
-                  <li key={name} className="flex items-center gap-3 py-3">
-                    <span className="text-xl">{emoji}</span>
-                    <span className="flex-1 font-medium">{name}</span>
-                    <span className="font-semibold text-brand">{price}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-2 flex items-center justify-between rounded-xl bg-sage-soft px-3 py-2 text-sm">
-                <span className="font-medium text-sage">New order · 2 dishes</span>
-                <span className="font-semibold">$22</span>
-              </div>
+            <div className="mt-5 flex justify-between border-t border-brand/20 pt-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">
+              <span>[ Home cooked ]</span>
+              <span>[ Order on WhatsApp ]</span>
             </div>
           </ScrollFade>
         </div>
-        <WaveEdge className="-mt-px h-12 text-brand-soft sm:h-20" line="var(--color-brand)" />
       </section>
+
+      <Reveal className="grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:gap-0 md:divide-x md:divide-line">
+        <div className="relative overflow-hidden md:pr-10">
+          <p className="reveal text-xs font-medium uppercase tracking-[0.18em] text-muted">{"// About HomeCook"}</p>
+          <p
+            className="pointer-events-none mt-4 select-none font-display text-8xl font-semibold leading-none text-brand-soft lg:text-9xl"
+            aria-hidden
+          >
+            Fresh
+          </p>
+          <div
+            className="reveal relative mt-4 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[2rem] bg-brand-soft"
+            style={{ "--i": 1 } as React.CSSProperties}
+            aria-hidden
+          >
+            <Doodles className="text-brand/15" />
+            <span className="relative text-8xl">🍲</span>
+            <span className="absolute bottom-4 left-4 rounded-full bg-surface/80 px-3 py-1 text-xs font-medium backdrop-blur">
+              Cooked at home, shared nearby
+            </span>
+          </div>
+        </div>
+        <div className="md:pl-12">
+          <h2
+            className="reveal font-display text-3xl font-semibold leading-snug sm:text-4xl"
+            style={{ "--i": 1 } as React.CSSProperties}
+          >
+            Helping home cooks share their food with neighbours, friends and family
+          </h2>
+          <div className="reveal mt-6 space-y-4 text-muted" style={{ "--i": 2 } as React.CSSProperties}>
+            <p>
+              Some of the best food in town is cooked in someone’s home kitchen. HomeCook gives home cooks a simple
+              online menu, so the people around them can find their dishes and order in a tap.
+            </p>
+            <p>
+              No app to download and nothing complicated to set up. Share one link, take orders for pickup or
+              delivery, and get paid the way that works for you.
+            </p>
+          </div>
+          <Link
+            href={start.href}
+            className="btn-primary reveal mt-8 pl-6 pr-2"
+            style={{ "--i": 3 } as React.CSSProperties}
+          >
+            {start.label}
+            <Arrow />
+          </Link>
+        </div>
+      </Reveal>
 
       <Reveal id="how-it-works" className="scroll-mt-20">
         <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
@@ -167,5 +230,14 @@ export default async function Home() {
         </section>
       </Reveal>
     </div>
+  );
+}
+
+/** The arrow in a little round box at the end of a primary button. */
+function Arrow() {
+  return (
+    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/20" aria-hidden>
+      →
+    </span>
   );
 }
