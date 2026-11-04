@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
 import { CookBadges } from "@/components/CookBadges";
 import { DishPhoto } from "@/components/DishCard";
+import { DishGallery } from "@/components/DishGallery";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { kitchenName } from "@/lib/cook";
 import { categoryLabel, money, whatsappLink } from "@/lib/format";
@@ -38,7 +39,11 @@ export default async function DishPage({ params }: Props) {
 
   return (
     <div className="-mx-4 sm:mx-auto sm:max-w-3xl sm:pt-5">
-      <DishPhoto dish={dish} className="aspect-[4/3] sm:rounded-2xl" />
+      {dish.photo_urls.length > 1 ? (
+        <DishGallery photos={dish.photo_urls} name={dish.name} className="aspect-[4/3] sm:rounded-2xl" />
+      ) : (
+        <DishPhoto dish={dish} className="aspect-[4/3] sm:rounded-2xl" />
+      )}
 
       <div className="space-y-6 px-4 pt-5 sm:px-0">
         <div>

@@ -124,6 +124,10 @@ alter table orders alter column unit_price_cents drop not null;
 update orders set dish_name = quantity || ' × ' || dish_name, unit_price_cents = null
 where unit_price_cents is not null;
 alter table orders drop constraint if exists orders_quantity_check;
+
+-- v3: up to five photos per dish. photo_url stays as the first one (the cover) for cards.
+alter table dishes add column if not exists photo_urls text[] not null default '{}';
+update dishes set photo_urls = array[photo_url] where photo_url is not null and cardinality(photo_urls) = 0;
 `;
 
 async function ensureSchema() {
