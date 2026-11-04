@@ -11,13 +11,32 @@ const DOODLES = [
 const COLS = 6;
 const ROWS = 3;
 
-function shuffle<T>(list: T[]) {
-  const a = [...list];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+/**
+ * Picks a drawing for every grid cell so that no two cells side by side, above and below, or
+ * diagonal hold the same one. Filling row by row, a cell only has four filled neighbours and
+ * there are five drawings, so there is always a choice left. Among the allowed ones it takes a
+ * least-used drawing, picked at random, so each shows up about equally often.
+ */
+function arrange() {
+  const grid: number[] = [];
+  const used = DOODLES.map(() => 0);
+  for (let i = 0; i < COLS * ROWS; i++) {
+    const col = i % COLS;
+    const neighbours = new Set<number>();
+    if (col > 0) neighbours.add(grid[i - 1]);
+    if (i >= COLS) {
+      neighbours.add(grid[i - COLS]);
+      if (col > 0) neighbours.add(grid[i - COLS - 1]);
+      if (col < COLS - 1) neighbours.add(grid[i - COLS + 1]);
+    }
+    const allowed = DOODLES.map((_, k) => k).filter((k) => !neighbours.has(k));
+    const fewest = Math.min(...allowed.map((k) => used[k]));
+    const options = allowed.filter((k) => used[k] === fewest);
+    const pick = options[Math.floor(Math.random() * options.length)];
+    grid.push(pick);
+    used[pick]++;
   }
-  return a;
+  return grid.map((k) => DOODLES[k]);
 }
 
 /**
@@ -25,8 +44,7 @@ function shuffle<T>(list: T[]) {
  * random inside its own cell of a 6 × 3 grid, so they spread out instead of piling up.
  */
 export function HeroDoodles() {
-  // fill every cell, using each drawing about the same number of times
-  const picks = shuffle(Array.from({ length: COLS * ROWS }, (_, i) => DOODLES[i % DOODLES.length]));
+  const picks = arrange();
   return (
     <div className="pointer-events-none absolute inset-0 opacity-60" aria-hidden>
       {picks.map((d, i) => {
