@@ -5,22 +5,22 @@ import { useId } from "react";
  * outline icon badges. Everything draws in currentColor so it picks up the theme colours.
  */
 
-// One wavy edge, left to right. The fill and the looping line share it; the line ties a loop at 620,70.
+// One wavy edge, left to right. The fill and the line along it share it.
 const EDGE = "C80,60 170,55 280,82 C400,112 520,100 620,70";
 const EDGE_REST = "C760,28 900,30 1000,55 C1080,75 1150,60 1200,40";
 const EDGE_REVERSED = "C1150,60 1080,75 1000,55 C900,30 760,28 620,70 C520,100 400,112 280,82 C170,55 80,60 0,90";
 
 /**
  * Wavy bottom edge for a coloured panel. Place it straight after the panel and give it the
- * panel's colour as text colour; `line` sets the colour of the looping line along the edge.
+ * panel's colour as text colour and a height; `line` sets the colour of the line along the edge.
  */
 export function WaveEdge({ className = "", line }: { className?: string; line?: string }) {
   return (
-    <svg viewBox="0 0 1200 130" className={`block h-auto w-full ${className}`} aria-hidden>
+    <svg viewBox="0 0 1200 130" preserveAspectRatio="none" className={`block w-full ${className}`} aria-hidden>
       <path d={`M0,0 H1200 V40 ${EDGE_REVERSED} Z`} fill="currentColor" />
       {line && (
         <path
-          d={`M0,90 ${EDGE} C700,-20 540,-20 620,70 ${EDGE_REST}`}
+          d={`M0,90 ${EDGE} ${EDGE_REST}`}
           fill="none"
           stroke={line}
           strokeWidth="4"
@@ -86,9 +86,6 @@ export function Doodles({ className = "" }: { className?: string }) {
 }
 
 const ICONS = {
-  wheat: "M12 21V9M12 13C9 13 7 11 7 8 10 8 12 10 12 13ZM12 13C15 13 17 11 17 8 14 8 12 10 12 13ZM12 9C9 9 7 7 7 4 10 4 12 6 12 9ZM12 9C15 9 17 7 17 4 14 4 12 6 12 9Z",
-  leaf: "M5 19C5 10 11 5 19 5 19 13 14 19 5 19ZM5 19 13 11",
-  heart: "M12 20C6 15 3 12 3 8.5 3 6 5 4 7.5 4 9.5 4 11 5.5 12 7 13 5.5 14.5 4 16.5 4 19 4 21 6 21 8.5 21 12 18 15 12 20Z",
   shop: "M4 10V20H20V10M3 10 5 4H19L21 10ZM3 10C3 12 6 12 6 10 6 12 9.5 12 9.5 10 9.5 12 14.5 12 14.5 10 14.5 12 18 12 18 10 18 12 21 12 21 10M10 20V15H14V20",
   bag: "M5 8H19L18 20H6ZM9 8C9 3 15 3 15 8",
   cash: "M3 7H21V17H3ZM12 14.5A2.5 2.5 0 1 0 12 9.5 2.5 2.5 0 0 0 12 14.5ZM6 10V14M18 10V14",

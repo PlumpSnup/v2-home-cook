@@ -22,12 +22,6 @@ const steps = [
   },
 ];
 
-const promises: { icon: IconName; label: string }[] = [
-  { icon: "wheat", label: "Homemade" },
-  { icon: "leaf", label: "Cooked fresh" },
-  { icon: "heart", label: "Made with love" },
-];
-
 export default async function Home() {
   const profile = await getCurrentProfile();
   const start = profile?.is_cook
@@ -52,11 +46,12 @@ export default async function Home() {
   ];
 
   return (
-    <div className="space-y-16 sm:pt-8">
-      <section className="relative -mx-4 overflow-hidden sm:mx-0 sm:rounded-[2.5rem] sm:border sm:border-line sm:bg-surface">
-        <div className="relative bg-brand-soft px-5 pb-6 pt-10 sm:px-10 sm:pt-14">
+    <div className="space-y-16">
+      {/* Full-bleed: stretches past the page's max width to both edges of the screen. */}
+      <section className="relative mx-[calc(50%-50vw)]">
+        <div className="relative overflow-hidden bg-brand-soft pb-6 pt-10 sm:pt-14">
           <Doodles className="text-brand/10" />
-          <div className="relative grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr]">
+          <div className="relative mx-auto grid w-full max-w-5xl items-center gap-8 px-4 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
                 Bring Your Food
@@ -104,15 +99,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
-        <WaveEdge className="-mt-px text-brand-soft" line="var(--color-brand)" />
-        <ul className="grid grid-cols-3 gap-2 px-5 pb-6 pt-2 text-xs sm:flex sm:gap-x-5 sm:text-sm font-medium text-muted sm:px-10 sm:pb-8">
-          {promises.map((p) => (
-            <li key={p.label} className="flex flex-col items-center gap-1.5 text-center sm:flex-row sm:gap-2">
-              <IconBadge icon={p.icon} className="h-10 w-10 border-muted/40 text-muted" />
-              {p.label}
-            </li>
-          ))}
-        </ul>
+        <WaveEdge className="-mt-px h-12 text-brand-soft sm:h-20" line="var(--color-brand)" />
       </section>
 
       <section id="how-it-works" className="scroll-mt-20">

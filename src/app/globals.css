@@ -23,6 +23,8 @@
 }
 
 body {
+  /* Full-bleed sections use 100vw, which includes the scrollbar; don't let that scroll sideways. */
+  overflow-x: clip;
   background: var(--color-cream);
   color: var(--color-ink);
   -webkit-tap-highlight-color: transparent;
