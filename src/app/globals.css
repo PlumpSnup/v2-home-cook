@@ -124,7 +124,7 @@ body {
   @apply pressable rounded-full px-3 py-2 font-medium text-muted hover:bg-press hover:text-ink active:bg-line;
 }
 @utility card {
-  @apply rounded-2xl border border-line bg-surface;
+  @apply rounded-3xl border border-line bg-surface;
 }
 @utility input {
   @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-base outline-none placeholder:text-muted/70 focus:border-brand;

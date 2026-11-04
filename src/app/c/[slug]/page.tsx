@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
 import { CookBadges } from "@/components/CookBadges";
+import { WaveOverlay } from "@/components/Decor";
 import { MenuItem } from "@/components/DishCard";
 import { ShareButton } from "@/components/ShareButton";
 import { coverPhoto, kitchenName } from "@/lib/cook";
@@ -47,7 +48,7 @@ export default async function Storefront({ params }: Props) {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <section>
-        <div className="relative -mx-4 aspect-[3/1] overflow-hidden bg-brand-soft sm:mx-0 sm:mt-5 sm:rounded-2xl">
+        <div className="relative -mx-4 aspect-[3/1] overflow-hidden bg-brand-soft sm:mx-0 sm:mt-5 sm:rounded-t-[2.5rem]">
           {cover ? (
             <Image src={cover} alt="" fill priority sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
           ) : (
@@ -55,6 +56,7 @@ export default async function Storefront({ params }: Props) {
               🍲
             </div>
           )}
+          <WaveOverlay className="absolute inset-x-0 -bottom-px h-8 text-cream sm:h-12" />
         </div>
         <div className="relative space-y-4 px-1">
           <div>
