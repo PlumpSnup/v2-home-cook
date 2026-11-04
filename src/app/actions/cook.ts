@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { normalizePhone, parseMoney, slugify } from "@/lib/format";
+import { MAX_DISH_PHOTOS, normalizePhone, parseMoney, slugify } from "@/lib/format";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isUuid } from "@/lib/queries";
@@ -115,18 +115,19 @@ export async function saveDish(_prev: FormState, form: FormData): Promise<FormSt
   const description = String(form.get("description") ?? "").trim().slice(0, 300) || null;
   const category = String(form.get("category") ?? "") as Category;
   const price = parseMoney(String(form.get("price") ?? ""));
-  const photoUrl = String(form.get("photo_url") ?? "") || null;
+  const photoUrls = [...new Set(form.getAll("photo_urls").map(String).filter(Boolean))];
 
   if (!name) return { error: "What’s the dish called?" };
   if (!CATEGORY_VALUES.includes(category)) return { error: "Pick a category." };
   if (!price) return { error: "Add a price, like 15 or 12.50." };
-  if (photoUrl && !isOwnPhoto(photoUrl, userId)) return { error: "Please upload the photo again." };
+  if (photoUrls.length > MAX_DISH_PHOTOS) return { error: `A dish can have up to ${MAX_DISH_PHOTOS} photos.` };
+  if (photoUrls.some((url) => !isOwnPhoto(url, userId))) return { error: "Please upload the photos again." };
   if (id && !isUuid(id)) return { error: "Couldn’t find that dish." };
 
   const [cook] = await sql`select 1 from profiles where id = ${userId} and is_cook`;
   if (!cook) redirect("/cook/onboarding");
 
-  const values = { name, description, category, price_cents: price, photo_url: photoUrl };
+  const values = { name, description, category, price_cents: price, photo_url: photoUrls[0] ?? null, photo_urls: photoUrls };
   try {
     if (id) await sql`update dishes set ${sql(values)} where id = ${id} and cook_id = ${userId}`;
     else await sql`insert into dishes ${sql({ ...values, cook_id: userId })}`;

@@ -36,6 +36,8 @@ export type Dish = {
   category: Category;
   price_cents: number;
   photo_url: string | null;
+  /** All photos in order; the first is also photo_url. */
+  photo_urls: string[];
   available: boolean;
   created_at: string;
 };

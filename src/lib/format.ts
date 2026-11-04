@@ -1,5 +1,8 @@
 import type { Category, PaymentMethod } from "./types";
 
+/** How many photos a dish can have. */
+export const MAX_DISH_PHOTOS = 5;
+
 export const CATEGORIES: { value: Category; label: string }[] = [
   { value: "main", label: "Main Meals" },
   { value: "appetizer", label: "Appetizers" },
