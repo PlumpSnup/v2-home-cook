@@ -9,7 +9,8 @@ import { useEffect, useRef, useState } from "react";
  * Everything is driven by one clock, `t` = milliseconds into the loop. Decorative only.
  */
 
-const LOOP = 10500;
+// Holds on the confirmed order for 3 s before starting again.
+const LOOP = 11550;
 const T = {
   tapKitchen: 750,
   dashboard: 950,
@@ -234,10 +235,14 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
             <p className="mt-3 rounded-xl bg-press p-2 text-[11px] text-ink/80">“Extra raita please!”</p>
           </div>
           <div className="mt-4 grid grid-cols-2 gap-2">
-            <div className="rounded-full bg-whatsapp py-2.5 text-center text-xs font-semibold text-white shadow-[0_3px_0_var(--color-whatsapp-darker)]">
+            <div
+              className={`rounded-full bg-whatsapp py-2.5 text-center text-xs font-semibold text-white shadow-[0_3px_0_var(--color-whatsapp-darker)] ${
+                confirmed ? "col-span-2" : ""
+              }`}
+            >
               WhatsApp
             </div>
-            <Button pressed={near(t, T.tapConfirm)}>{confirmed ? "Mark completed" : "Confirm"}</Button>
+            {!confirmed && <Button pressed={near(t, T.tapConfirm)}>Confirm</Button>}
           </div>
         </Screen>
 
