@@ -97,7 +97,7 @@ export default async function Home() {
                 ))}
               </ul>
               <div className="mt-2 flex items-center justify-between rounded-xl bg-sage-soft px-3 py-2 text-sm">
-                <span className="font-medium text-sage">New order · 2 dishes</span>
+                <span className="font-medium text-brand-dark">New order · 2 dishes</span>
                 <span className="font-semibold">$22</span>
               </div>
             </div>

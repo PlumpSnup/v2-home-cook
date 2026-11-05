@@ -106,7 +106,7 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
           <p className="text-xs text-muted">Good morning</p>
           <p className="font-display text-xl font-semibold">Hi Amma 👋</p>
           <div className="mt-4 rounded-2xl bg-sage-soft p-3 text-xs">
-            <p className="font-semibold text-sage">● Your kitchen is open</p>
+            <p className="font-semibold text-brand-dark">● Your kitchen is open</p>
             <p className="mt-1 text-muted">Buyers can order from your menu.</p>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
@@ -295,7 +295,7 @@ function DishRow({ emoji, name, price, isNew }: { emoji: string; name: string; p
         <span className="block truncate font-semibold">{name}</span>
         <span className="text-brand">{price}</span>
       </span>
-      {isNew && <span className="rounded-full bg-sage-soft px-2 py-0.5 text-[10px] font-semibold text-sage">New</span>}
+      {isNew && <span className="rounded-full bg-sage-soft px-2 py-0.5 text-[10px] font-semibold text-brand-dark">New</span>}
     </div>
   );
 }
