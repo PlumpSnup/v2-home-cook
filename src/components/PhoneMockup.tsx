@@ -8,24 +8,23 @@ import { useEffect, useRef, useState } from "react";
  * Everything is driven by one clock, `t` = milliseconds into the loop. Decorative only.
  */
 
-const LOOP = 19000;
+const LOOP = 13000;
 const T = {
-  tapKitchen: 1300,
-  dashboard: 1800,
-  tapAdd: 3300,
-  form: 3800,
-  dragStart: 4500,
-  dragEnd: 6000,
-  nameStart: 6300,
-  nameEnd: 7500,
-  descStart: 7700,
-  descEnd: 9500,
-  tapSave: 10000,
-  menu: 10500,
-  newDish: 11000,
-  notifications: [12800, 14200, 15600],
+  tapKitchen: 1100,
+  dashboard: 1400,
+  tapAdd: 2500,
+  form: 2800,
+  dragStart: 3200,
+  dragEnd: 4300,
+  nameStart: 4500,
+  nameEnd: 5300,
+  descStart: 5450,
+  descEnd: 6700,
+  tapSave: 7100,
+  menu: 7400,
+  newDish: 7800,
+  notifications: [8900, 9900],
 };
-const TICK = 100;
 
 const NAME = "Chicken biryani";
 const DESCRIPTION = "Slow-cooked basmati rice with saffron and fried onions.";
@@ -33,7 +32,6 @@ const DESCRIPTION = "Slow-cooked basmati rice with saffron and fried onions.";
 const NOTIFICATIONS = [
   { title: "New order 🎉", body: "Priya: 2× Chicken biryani · Pickup" },
   { title: "New order 🎉", body: "Sam: 1× Chicken biryani, 1× Mango kulfi · Delivery" },
-  { title: "Payment received", body: "$28.00 by e-transfer from Priya" },
 ];
 
 const MENU = [
@@ -41,9 +39,17 @@ const MENU = [
   { emoji: "🍮", name: "Mango kulfi", price: "$5" },
 ];
 
+function progress(t: number, start: number, end: number) {
+  return Math.min(1, Math.max(0, (t - start) / (end - start)));
+}
+
+/** Ease in and out, so movements start and stop gently. */
+function ease(p: number) {
+  return p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
+}
+
 function typed(text: string, t: number, start: number, end: number) {
-  if (t <= start) return "";
-  return text.slice(0, Math.ceil(Math.min(1, (t - start) / (end - start)) * text.length));
+  return text.slice(0, Math.round(progress(t, start, end) * text.length));
 }
 
 /** The loop clock. Runs only while the phone is on screen; frozen on the menu for reduced motion. */
@@ -59,15 +65,26 @@ function useLoopClock() {
       setT(T.notifications[0] + 1000);
       return;
     }
-    let timer: ReturnType<typeof setInterval> | undefined;
-    const observer = new IntersectionObserver(([entry]) => {
-      clearInterval(timer);
-      if (entry.isIntersecting) timer = setInterval(() => setT((v) => (v + TICK) % LOOP), TICK);
-    }, { threshold: 0.5 });
+    // Advance on every animation frame (smooth typing and dragging), only while on screen.
+    let frame = 0;
+    let last = 0;
+    const step = (now: number) => {
+      if (last) setT((v) => (v + Math.min(now - last, 100)) % LOOP);
+      last = now;
+      frame = requestAnimationFrame(step);
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        cancelAnimationFrame(frame);
+        last = 0;
+        if (entry.isIntersecting) frame = requestAnimationFrame(step);
+      },
+      { threshold: 0.5 },
+    );
     observer.observe(el);
     return () => {
       observer.disconnect();
-      clearInterval(timer);
+      cancelAnimationFrame(frame);
     };
   }, []);
 
@@ -77,6 +94,7 @@ function useLoopClock() {
 export function PhoneMockup({ className = "" }: { className?: string }) {
   const { ref, t } = useLoopClock();
   const screen = t < T.dashboard ? "home" : t < T.form ? "dashboard" : t < T.menu ? "form" : "menu";
+  const drag = ease(progress(t, T.dragStart, T.dragEnd));
 
   return (
     <div ref={ref} className={`relative mx-auto w-64 ${className}`} aria-hidden>
@@ -134,7 +152,7 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
               t >= T.dragEnd ? "border-transparent bg-brand-soft" : t >= T.dragStart ? "border-brand bg-brand-soft/60 text-brand" : "border-line text-muted"
             }`}
           >
-            {t >= T.dragEnd ? <span className="text-5xl">🍛</span> : "Drag a photo here"}
+            {t >= T.dragEnd ? <span className="animate-[pop_300ms_ease-out] text-5xl">🍛</span> : "Drag a photo here"}
           </div>
           <Field label="Name" value={typed(NAME, t, T.nameStart, T.nameEnd)} typing={t > T.nameStart && t < T.nameEnd} />
           <Field
@@ -150,13 +168,13 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
 
           {/* The photo being dragged in from the bottom corner. */}
           <div
-            className="absolute flex h-20 w-24 items-center justify-center rounded-xl bg-brand-soft text-4xl shadow-[0_12px_24px_rgb(43_43_43/0.25)] transition-all ease-in-out"
+            className="absolute flex h-20 w-24 items-center justify-center rounded-xl bg-brand-soft text-4xl shadow-[0_12px_24px_rgb(43_43_43/0.25)]"
             style={{
-              left: t >= T.dragStart ? 64 : 150,
-              top: t >= T.dragStart ? 78 : 400,
-              rotate: t >= T.dragStart ? "-3deg" : "8deg",
-              opacity: t >= T.dragStart - 400 && t < T.dragEnd ? 1 : 0,
-              transitionDuration: `${T.dragEnd - T.dragStart - 200}ms`,
+              left: 150 - 86 * drag,
+              top: 400 - 322 * drag,
+              rotate: `${8 - 11 * drag}deg`,
+              scale: 1 + 0.08 * Math.sin(drag * Math.PI),
+              opacity: progress(t, T.dragStart - 300, T.dragStart) * (1 - progress(t, T.dragEnd - 150, T.dragEnd)),
             }}
           >
             🍛
@@ -173,7 +191,7 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
           <p className="text-[11px] text-muted">Pickup · Delivery</p>
           <ul className="mt-3 text-xs">
             <li
-              className={`grid transition-all duration-500 ${t >= T.newDish ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+              className={`grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${t >= T.newDish ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
             >
               <div className="overflow-hidden">
                 <DishRow emoji="🍛" name={NAME} price="$14" isNew />
@@ -194,7 +212,7 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
             return (
               <div
                 key={i}
-                className={`flex gap-2 rounded-2xl bg-surface/90 p-2.5 text-[11px] shadow-[0_8px_20px_rgb(43_43_43/0.15)] backdrop-blur transition-all duration-500 ${
+                className={`flex gap-2 rounded-2xl bg-surface/90 p-2.5 text-[11px] shadow-[0_8px_20px_rgb(43_43_43/0.15)] backdrop-blur transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
                   shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
                 }`}
               >
@@ -225,8 +243,9 @@ function near(t: number, at: number) {
 function Screen({ show, children }: { show: boolean; children: React.ReactNode }) {
   return (
     <div
-      className={`absolute inset-0 px-4 pt-10 transition-all duration-500 ${
-        show ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-6 opacity-0"
+      // The old screen fades out quickly, then the new one slides in, so they don't jumble together.
+      className={`absolute inset-0 px-4 pt-10 transition-all ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        show ? "translate-x-0 opacity-100 delay-150 duration-500" : "pointer-events-none -translate-x-3 opacity-0 duration-150"
       }`}
     >
       {children}
@@ -262,7 +281,7 @@ function Field({ label, value, typing, tall }: { label: string; value: string; t
         }`}
       >
         {value}
-        {typing && <span className="ml-px inline-block h-3 w-px translate-y-0.5 animate-pulse bg-ink" />}
+        {typing && <span className="ml-px inline-block h-3 w-px translate-y-0.5 bg-ink" />}
       </div>
     </div>
   );
