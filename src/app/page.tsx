@@ -121,7 +121,7 @@ export default async function Home() {
               </li>
             ))}
           </ol>
-          <div className="reveal" style={{ "--i": steps.length + 1 } as React.CSSProperties}>
+          <div className="reveal" style={{ "--i": 1 } as React.CSSProperties}>
             <PhoneMockup />
           </div>
         </div>
