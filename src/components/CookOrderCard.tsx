@@ -7,7 +7,7 @@ import type { OrderStatus, OrderWithItems } from "@/lib/types";
 
 const STATUS_STYLE: Record<OrderStatus, string> = {
   pending: "bg-brand-soft text-brand-dark",
-  confirmed: "bg-sage-soft text-sage",
+  confirmed: "bg-sage-soft text-brand-dark",
   completed: "bg-line text-muted",
   cancelled: "bg-line text-muted line-through",
 };
@@ -58,7 +58,7 @@ export function CookOrderCard({ order, kitchen }: { order: OrderWithItems; kitch
       <div className="flex flex-wrap gap-1.5 text-xs">
         <span className="chip font-semibold text-ink">{money(order.total_cents)}</span>
         <span className="chip">{PAYMENT_LABELS[order.payment_method]}</span>
-        <span className={`chip ${order.paid ? "border-sage/30 bg-sage-soft text-sage" : ""}`}>{order.paid ? "Paid" : "Not paid yet"}</span>
+        <span className={`chip ${order.paid ? "border-sage/30 bg-sage-soft text-brand-dark" : ""}`}>{order.paid ? "Paid" : "Not paid yet"}</span>
         <span className="chip capitalize">{order.fulfillment}</span>
       </div>
       {order.note && <p className="rounded-xl bg-cream px-3 py-2 text-sm">“{order.note}”</p>}

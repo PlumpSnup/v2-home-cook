@@ -20,7 +20,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         <section className="card space-y-3 p-4">
           <h2 className="font-semibold">Card payments</h2>
           {cook.stripe_charges_enabled ? (
-            <p className="text-sm text-sage">✓ Connected. Card payments go straight to your bank account.</p>
+            <p className="text-sm text-brand-dark">✓ Connected. Card payments go straight to your bank account.</p>
           ) : (
             <>
               <p className="text-sm text-muted">

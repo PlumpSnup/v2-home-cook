@@ -97,7 +97,7 @@ export default async function Home() {
                 ))}
               </ul>
               <div className="mt-2 flex items-center justify-between rounded-xl bg-sage-soft px-3 py-2 text-sm">
-                <span className="font-medium text-sage">New order · 2 dishes</span>
+                <span className="font-medium text-brand-dark">New order · 2 dishes</span>
                 <span className="font-semibold">$22</span>
               </div>
             </div>
@@ -141,7 +141,7 @@ export default async function Home() {
                   className="reveal flex gap-4 rounded-3xl bg-surface/70 p-5"
                   style={{ "--i": i + 1 } as React.CSSProperties}
                 >
-                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-sage" />
+                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-brand-dark" />
                   <div>
                     <h3 className="font-semibold">{f.title}</h3>
                     <p className="mt-0.5 text-sm text-muted">{f.body}</p>
