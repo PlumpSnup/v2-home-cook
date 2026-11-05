@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
-/* Brand colours — warm, homey and minimal. */
+/* Brand colours — fresh greens on a warm cream base (6A994E, A7C957, F2E8CF). */
 @theme {
-  --color-cream: #faf7f2;
+  --color-cream: #f2e8cf;
   --color-surface: #ffffff;
-  --color-brand: #c8553d;
-  --color-brand-dark: #a8432e;
-  --color-brand-darker: #8f3826;
-  --color-brand-soft: #f6e4df;
-  --color-sage: #6b8f71;
-  --color-sage-soft: #e6eee7;
+  --color-brand: #6a994e;
+  --color-brand-dark: #5a8442;
+  --color-brand-darker: #4b6f37;
+  --color-brand-soft: #e4edd8;
+  --color-sage: #a7c957;
+  --color-sage-soft: #edf3d9;
   --color-ink: #2b2b2b;
   --color-muted: #7a746d;
-  --color-line: #ece6dd;
+  --color-line: #e4d8b9;
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #1eb257;
   --color-whatsapp-darker: #189a4b;
-  --color-press: #f3ede4;
+  --color-press: #ebe0c4;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
@@ -115,7 +115,7 @@ body {
 }
 @utility btn-secondary {
   @apply btn border border-line bg-surface text-ink hover:bg-press;
-  --edge: #d8cdbf;
+  --edge: #d6c69d;
 }
 @utility btn-whatsapp {
   @apply btn bg-whatsapp text-white hover:bg-whatsapp-dark;

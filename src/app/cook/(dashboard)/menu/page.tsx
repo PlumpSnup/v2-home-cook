@@ -25,7 +25,7 @@ export default async function MenuPage({ searchParams }: { searchParams: Promise
       {added && (
         <div className="card flex items-center justify-between gap-3 bg-sage-soft p-4 text-sm">
           <span>Dish added! Share your menu so people can order.</span>
-          <Link href="/cook/share" className="shrink-0 font-semibold text-sage">
+          <Link href="/cook/share" className="shrink-0 font-semibold text-brand-dark">
             Share →
           </Link>
         </div>

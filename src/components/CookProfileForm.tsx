@@ -94,7 +94,7 @@ export function CookProfileForm({ profile, onboarding, stripeAvailable }: Props)
       </fieldset>
 
       {state.error && <p className="rounded-xl bg-brand-soft px-4 py-3 text-sm text-brand-dark">{state.error}</p>}
-      {state.ok && <p className="rounded-xl bg-sage-soft px-4 py-3 text-sm text-sage">Saved.</p>}
+      {state.ok && <p className="rounded-xl bg-sage-soft px-4 py-3 text-sm text-brand-dark">Saved.</p>}
 
       <button type="submit" className="btn-primary w-full py-4 text-base" disabled={pending}>
         {pending ? "Saving…" : onboarding ? "Open my kitchen" : "Save"}

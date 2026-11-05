@@ -141,7 +141,7 @@ export default async function Home() {
                   className="reveal flex gap-4 rounded-3xl bg-surface/70 p-5"
                   style={{ "--i": i + 1 } as React.CSSProperties}
                 >
-                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-sage" />
+                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-brand-dark" />
                   <div>
                     <h3 className="font-semibold">{f.title}</h3>
                     <p className="mt-0.5 text-sm text-muted">{f.body}</p>

@@ -47,7 +47,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
       {/* The order went through, so empty the cart it came from. */}
       {justPlaced && <ClearCart />}
       <div className="text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-2xl text-sage">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-2xl text-brand-dark">
           ✓
         </div>
         <h1 className="mt-3 font-display text-2xl font-semibold">
