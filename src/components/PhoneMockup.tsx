@@ -4,35 +4,37 @@ import { useEffect, useRef, useState } from "react";
 
 /*
  * A looping walkthrough on a phone: the cook opens her kitchen, adds a dish (drags in a photo,
- * types a name and description, taps Add), sees it on her menu, then order notifications arrive.
+ * types a name and description, taps Add), sees it on her menu, then an order notification arrives;
+ * she taps it, sees the order and confirms it.
  * Everything is driven by one clock, `t` = milliseconds into the loop. Decorative only.
  */
 
-const LOOP = 13000;
+// Holds on the confirmed order for 3 s before starting again.
+const LOOP = 11550;
 const T = {
-  tapKitchen: 1100,
-  dashboard: 1400,
-  tapAdd: 2500,
-  form: 2800,
-  dragStart: 3200,
-  dragEnd: 4300,
-  nameStart: 4500,
-  nameEnd: 5300,
-  descStart: 5450,
-  descEnd: 6700,
-  tapSave: 7100,
-  menu: 7400,
-  newDish: 7800,
-  notifications: [8900, 9900],
+  tapKitchen: 750,
+  dashboard: 950,
+  tapAdd: 1650,
+  form: 1850,
+  dragStart: 2100,
+  dragEnd: 2850,
+  nameStart: 3000,
+  nameEnd: 3550,
+  descStart: 3650,
+  descEnd: 4450,
+  tapSave: 4750,
+  menu: 4950,
+  newDish: 5250,
+  notification: 5950,
+  tapNotification: 6900,
+  order: 7100,
+  tapConfirm: 8400,
+  confirmed: 8550,
 };
 
 const NAME = "Chicken biryani";
 const DESCRIPTION = "Slow-cooked basmati rice with saffron and fried onions.";
 
-const NOTIFICATIONS = [
-  { title: "New order 🎉", body: "Priya: 2× Chicken biryani · Pickup" },
-  { title: "New order 🎉", body: "Sam: 1× Chicken biryani, 1× Mango kulfi · Delivery" },
-];
 
 const MENU = [
   { emoji: "🥟", name: "Vegetable samosas (6)", price: "$8" },
@@ -52,17 +54,16 @@ function typed(text: string, t: number, start: number, end: number) {
   return text.slice(0, Math.round(progress(t, start, end) * text.length));
 }
 
-/** The loop clock. Runs only while the phone is on screen; frozen on the menu for reduced motion. */
-function useLoopClock() {
+/** The loop clock. Runs only while the phone is on screen; frozen on the order for reduced motion. */
+function useLoopClock(at?: number) {
   const ref = useRef<HTMLDivElement>(null);
-  // Start a little before zero so the first screen is still there once the phone has faded in.
-  const [t, setT] = useState(-2000);
+  const [t, setT] = useState(0);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setT(T.notifications[0] + 1000);
+    if (at !== undefined || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setT(at ?? T.confirmed + 500);
       return;
     }
     // Advance on every animation frame (smooth typing and dragging), only while on screen.
@@ -79,21 +80,24 @@ function useLoopClock() {
         last = 0;
         if (entry.isIntersecting) frame = requestAnimationFrame(step);
       },
-      { threshold: 0.5 },
+      { threshold: 0.15 },
     );
     observer.observe(el);
     return () => {
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [at]);
 
   return { ref, t };
 }
 
-export function PhoneMockup({ className = "" }: { className?: string }) {
-  const { ref, t } = useLoopClock();
-  const screen = t < T.dashboard ? "home" : t < T.form ? "dashboard" : t < T.menu ? "form" : "menu";
+/** `at` freezes the walkthrough at that moment (ms), for previews. */
+export function PhoneMockup({ className = "", at }: { className?: string; at?: number }) {
+  const { ref, t } = useLoopClock(at);
+  const screen =
+    t < T.dashboard ? "home" : t < T.form ? "dashboard" : t < T.menu ? "form" : t < T.order ? "menu" : "order";
+  const confirmed = t >= T.confirmed;
   const drag = ease(progress(t, T.dragStart, T.dragEnd));
 
   return (
@@ -205,31 +209,67 @@ export function PhoneMockup({ className = "" }: { className?: string }) {
           </ul>
         </Screen>
 
-        {/* Notifications dropping in over the menu. */}
-        <div className="absolute inset-x-2 top-9 z-20 space-y-1.5">
-          {NOTIFICATIONS.map((n, i) => {
-            const shown = screen === "menu" && t >= T.notifications[i];
-            return (
-              <div
-                key={i}
-                className={`flex gap-2 rounded-2xl bg-surface/90 p-2.5 text-[11px] shadow-[0_8px_20px_rgb(43_43_43/0.15)] backdrop-blur transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
-                  shown ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
-                }`}
-              >
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand font-display text-xs font-bold text-white">
-                  H
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex justify-between text-[10px] text-muted">
-                    <span>HomeCook</span>
-                    <span>now</span>
-                  </span>
-                  <span className="block font-semibold text-ink">{n.title}</span>
-                  <span className="block truncate text-ink/80">{n.body}</span>
-                </span>
-              </div>
-            );
-          })}
+        <Screen show={screen === "order"}>
+          <p className="text-[11px] text-muted">← Orders</p>
+          <div className="mt-2 flex items-center justify-between">
+            <p className="font-display text-xl font-semibold">Priya S.</p>
+            <span
+              className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors duration-300 ${
+                confirmed ? "bg-sage-soft text-sage" : "bg-brand-soft text-brand-dark"
+              }`}
+            >
+              {confirmed ? "Confirmed" : "New"}
+            </span>
+          </div>
+          <p className="text-[11px] text-muted">Order #A7K2 · just now</p>
+          <div className="mt-4 rounded-2xl border border-line bg-surface p-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-soft text-lg">🍛</span>
+              <span className="flex-1 font-semibold">2× {NAME}</span>
+              <span className="font-semibold">$28</span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted">🚶 Pickup</span>
+              <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted">Cash</span>
+            </div>
+            <p className="mt-3 rounded-xl bg-press p-2 text-[11px] text-ink/80">“Extra raita please!”</p>
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div
+              className={`rounded-full bg-whatsapp py-2.5 text-center text-xs font-semibold text-white shadow-[0_3px_0_var(--color-whatsapp-darker)] ${
+                confirmed ? "col-span-2" : ""
+              }`}
+            >
+              WhatsApp
+            </div>
+            {!confirmed && <Button pressed={near(t, T.tapConfirm)}>Confirm</Button>}
+          </div>
+        </Screen>
+
+        {/* The order notification dropping in over the menu; tapping it opens the order. */}
+        <div
+          className={`absolute inset-x-2 top-9 z-20 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            screen === "menu" && t >= T.notification ? "translate-y-0 opacity-100" : "-translate-y-6 opacity-0"
+          }`}
+        >
+          <div
+            className={`relative flex gap-2 rounded-2xl bg-surface/90 p-2.5 text-[11px] shadow-[0_8px_20px_rgb(43_43_43/0.15)] backdrop-blur transition-transform duration-150 ${
+              near(t, T.tapNotification) ? "scale-[0.97]" : ""
+            }`}
+          >
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand font-display text-xs font-bold text-white">
+              H
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="flex justify-between text-[10px] text-muted">
+                <span>HomeCook</span>
+                <span>now</span>
+              </span>
+              <span className="block font-semibold text-ink">New order 🎉</span>
+              <span className="block truncate text-ink/80">Priya: 2× {NAME} · Pickup</span>
+            </span>
+            <Tap pressed={near(t, T.tapNotification)} />
+          </div>
         </div>
       </div>
     </div>
@@ -262,12 +302,19 @@ function Button({ pressed, className = "", children }: { pressed: boolean; class
       } ${className}`}
     >
       {children}
-      <span
-        className={`absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-ink/30 transition-all duration-200 ${
-          pressed ? "scale-100 opacity-100" : "scale-150 opacity-0"
-        }`}
-      />
+      <Tap pressed={pressed} />
     </div>
+  );
+}
+
+/** The fingertip circle shown while something is being tapped. */
+function Tap({ pressed }: { pressed: boolean }) {
+  return (
+    <span
+      className={`pointer-events-none absolute left-1/2 top-1/2 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-ink/30 transition-all duration-200 ${
+        pressed ? "scale-100 opacity-100" : "scale-150 opacity-0"
+      }`}
+    />
   );
 }
 
