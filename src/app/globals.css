@@ -148,6 +148,14 @@ body {
 [data-reveal="hidden"] .reveal {
   opacity: 0;
 }
+/* A little pop for things that land, like the photo dropped into the phone mockup. */
+@keyframes pop {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+
 /* Fill only "backwards" so the animation lets go of transform afterwards and card hovers still work. */
 [data-reveal="shown"] .reveal {
   animation: reveal-in 1000ms cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
