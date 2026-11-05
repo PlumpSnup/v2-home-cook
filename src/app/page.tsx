@@ -58,9 +58,9 @@ export default async function Home() {
           <ScrollFade className="relative mx-auto grid w-full max-w-5xl items-center gap-8 px-4 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
-                Bring Your Food
+                <SlideUpWords words={["bring", "your", "food"]} />
                 <br />
-                to <span className="text-brand">More Tables</span>
+                <SlideUpWords words={["to"]} start={3} /> <SlideUpWords words={["more", "tables"]} start={4} className="text-brand" />
               </h1>
               <p className="mt-4 max-w-md text-lg text-muted">
                 Create your online shop in minutes, share one link, and start taking orders. Free to start.
@@ -167,5 +167,21 @@ export default async function Home() {
         </section>
       </Reveal>
     </div>
+  );
+}
+
+/** Words that slide up into place one after another when the page loads. */
+function SlideUpWords({ words, start = 0, className = "" }: { words: string[]; start?: number; className?: string }) {
+  return (
+    <span className={className}>
+      {words.map((word, i) => (
+        <span key={i}>
+          {i > 0 && " "}
+          <span className="word-up">
+            <span style={{ "--i": start + i } as React.CSSProperties}>{word}</span>
+          </span>
+        </span>
+      ))}
+    </span>
   );
 }
