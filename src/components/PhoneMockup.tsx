@@ -339,7 +339,7 @@ function Field({ label, value, typing, tall }: { label: string; value: string; t
 function DishPhoto({ className = "" }: { className?: string }) {
   return (
     <span className={`relative block overflow-hidden ${className}`}>
-      <Image src="/dishes/chicken-biryani.webp" alt="" fill sizes="120px" className="object-cover" />
+      <Image src="/dishes/chicken-biryani.webp" alt="" fill sizes="(min-width: 768px) 260px, 70vw" quality={85} className="object-cover" />
     </span>
   );
 }
