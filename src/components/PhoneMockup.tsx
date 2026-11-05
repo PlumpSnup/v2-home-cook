@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 /*
@@ -152,11 +153,11 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
         <Screen show={screen === "form"}>
           <p className="font-display text-xl font-semibold">New dish</p>
           <div
-            className={`mt-3 flex h-28 items-center justify-center rounded-2xl border-2 border-dashed text-xs transition-colors duration-300 ${
+            className={`mt-3 flex h-28 items-center overflow-hidden justify-center rounded-2xl border-2 border-dashed text-xs transition-colors duration-300 ${
               t >= T.dragEnd ? "border-transparent bg-brand-soft" : t >= T.dragStart ? "border-brand bg-brand-soft/60 text-brand" : "border-line text-muted"
             }`}
           >
-            {t >= T.dragEnd ? <span className="animate-[pop_300ms_ease-out] text-5xl">🍛</span> : "Drag a photo here"}
+            {t >= T.dragEnd ? <DishPhoto className="h-full w-full animate-[pop_300ms_ease-out] rounded-2xl" /> : "Drag a photo here"}
           </div>
           <Field label="Name" value={typed(NAME, t, T.nameStart, T.nameEnd)} typing={t > T.nameStart && t < T.nameEnd} />
           <Field
@@ -172,7 +173,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
 
           {/* The photo being dragged in from the bottom corner. */}
           <div
-            className="absolute flex h-20 w-24 items-center justify-center rounded-xl bg-brand-soft text-4xl shadow-[0_12px_24px_rgb(43_43_43/0.25)]"
+            className="absolute flex h-20 w-24 items-center justify-center rounded-xl bg-brand-soft shadow-[0_12px_24px_rgb(43_43_43/0.25)]"
             style={{
               left: 150 - 86 * drag,
               top: 400 - 322 * drag,
@@ -181,7 +182,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               opacity: progress(t, T.dragStart - 300, T.dragStart) * (1 - progress(t, T.dragEnd - 150, T.dragEnd)),
             }}
           >
-            🍛
+            <DishPhoto className="h-full w-full rounded-xl" />
             <span className="absolute -bottom-2 -right-2 h-7 w-7 rounded-full border-2 border-white bg-ink/30" />
           </div>
         </Screen>
@@ -198,7 +199,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               className={`grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${t >= T.newDish ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
             >
               <div className="overflow-hidden">
-                <DishRow emoji="🍛" name={NAME} price="$14" isNew />
+                <DishRow photo name={NAME} price="$14" isNew />
               </div>
             </li>
             {MENU.map((d) => (
@@ -224,7 +225,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
           <p className="text-[11px] text-muted">Order #A7K2 · just now</p>
           <div className="mt-4 rounded-2xl border border-line bg-surface p-3 text-xs">
             <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-soft text-lg">🍛</span>
+              <DishPhoto className="h-9 w-9 shrink-0 rounded-xl" />
               <span className="flex-1 font-semibold">2× {NAME}</span>
               <span className="font-semibold">$28</span>
             </div>
@@ -334,10 +335,25 @@ function Field({ label, value, typing, tall }: { label: string; value: string; t
   );
 }
 
-function DishRow({ emoji, name, price, isNew }: { emoji: string; name: string; price: string; isNew?: boolean }) {
+/** The chicken biryani photo, cropped to fill whatever box it's given. */
+function DishPhoto({ className = "" }: { className?: string }) {
+  return (
+    <span className={`relative block overflow-hidden ${className}`}>
+      <Image src="/dishes/chicken-biryani.webp" alt="" fill sizes="120px" className="object-cover" />
+    </span>
+  );
+}
+
+type DishRowProps = { emoji?: string; photo?: boolean; name: string; price: string; isNew?: boolean };
+
+function DishRow({ emoji, photo, name, price, isNew }: DishRowProps) {
   return (
     <div className={`mb-2 flex items-center gap-2 rounded-2xl border bg-surface p-2 ${isNew ? "border-brand" : "border-line"}`}>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-lg">{emoji}</span>
+      {photo ? (
+        <DishPhoto className="h-9 w-9 shrink-0 rounded-xl" />
+      ) : (
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-lg">{emoji}</span>
+      )}
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold">{name}</span>
         <span className="text-brand">{price}</span>
