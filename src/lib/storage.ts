@@ -1,6 +1,6 @@
 import "server-only";
-import { put } from "@vercel/blob";
-import { mkdir, writeFile } from "fs/promises";
+import { del, put } from "@vercel/blob";
+import { mkdir, rm, writeFile } from "fs/promises";
 import path from "path";
 
 const BLOB_HOST = ".public.blob.vercel-storage.com";
@@ -34,5 +34,17 @@ export function isOwnPhoto(url: string, userId: string) {
     return parsed.protocol === "https:" && parsed.hostname.endsWith(BLOB_HOST) && parsed.pathname.startsWith(folder);
   } catch {
     return false;
+  }
+}
+
+/** Deletes photos this user uploaded (others are skipped). Best effort: failures are ignored. */
+export async function deletePhotos(urls: string[], userId: string) {
+  const own = urls.filter((url) => isOwnPhoto(url, userId));
+  if (own.length === 0) return;
+  try {
+    if (process.env.BLOB_READ_WRITE_TOKEN) await del(own);
+    else await rm(path.join(LOCAL_UPLOAD_DIR, "dish-photos", userId), { recursive: true, force: true });
+  } catch {
+    // A leftover photo isn't worth failing the delete over.
   }
 }

@@ -55,8 +55,9 @@ export default function PrivacyPage() {
 
       <h2>Keeping and deleting your information</h2>
       <p>
-        We keep your information while your account is active. Cooks can delete dishes at any time. To delete your account
-        and its information, contact us using the details below and we’ll remove it, except for records we must keep for
+        We keep your information while your account is active. Cooks can delete dishes at any time, and can delete their
+        whole account from Settings, which removes their kitchen, menu, photos and the orders placed with them. You can
+        also contact us using the details below and we’ll remove your information, except for records we must keep for
         legal or accounting reasons.
       </p>
     </LegalPage>

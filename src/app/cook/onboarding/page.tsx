@@ -14,7 +14,6 @@ export default async function OnboardingPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 pt-6">
       <div>
-        <p className="text-sm font-medium text-brand">Step 1 of 2</p>
         <h1 className="mt-1 font-display text-2xl font-semibold">Set up your kitchen</h1>
         <p className="mt-1 text-muted">Takes about a minute. You can change this any time.</p>
       </div>
