@@ -230,7 +230,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               <span className="font-semibold">$28</span>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted">🚶 Pickup</span>
+              <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted">Pickup</span>
               <span className="rounded-full border border-line px-2 py-0.5 text-[10px] text-muted">Cash</span>
             </div>
             <p className="mt-3 rounded-xl bg-press p-2 text-[11px] text-ink/80">“Extra raita please!”</p>
