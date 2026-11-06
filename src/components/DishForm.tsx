@@ -136,7 +136,7 @@ export function DishForm({ dish }: { dish?: Dish }) {
       </label>
 
       <label className="block">
-        <span className="label">Price (per plate)</span>
+        <span className="label">Price</span>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted">$</span>
           <input
