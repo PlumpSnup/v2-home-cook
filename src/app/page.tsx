@@ -79,7 +79,7 @@ export default async function Home() {
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-2xl">👩🏽‍🍳</span>
                 <div>
-                  <p className="font-display text-lg font-semibold">Amma’s Kitchen</p>
+                  <p className="font-display text-lg font-semibold">Fatema’s Kitchen</p>
                   <p className="text-xs text-muted">Pickup · Delivery</p>
                 </div>
               </div>
