@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Privacy policy" };
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy policy" updated="October 2026">
+    <LegalPage title="Privacy policy" updated="November 2026">
       <p>
         {APP_NAME} connects home cooks with people who want to order their food. This page explains what information we
         collect and how we use it.
@@ -42,9 +42,6 @@ export default function PrivacyPage() {
         <li>
           <strong>Cooks</strong> see the details of orders placed with them. A cook’s kitchen name, area, WhatsApp number
           and e-Transfer email are shown publicly on their storefront so buyers can reach and pay them.
-        </li>
-        <li>
-          <strong>Stripe</strong> processes card payments. Card details go straight to Stripe and never reach {APP_NAME}.
         </li>
         <li>
           <strong>WhatsApp</strong>: when you tap a WhatsApp button, the message is sent through WhatsApp under its own
