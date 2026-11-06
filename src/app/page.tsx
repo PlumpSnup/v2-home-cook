@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ClayChili, ClayLemon, ClayPea, ClayTomato } from "@/components/Clay";
 import { Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
 import { HeroDoodles } from "@/components/HeroDoodles";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
 import { TryIt } from "@/components/TryIt";
+import { UseCases } from "@/components/UseCases";
 import { getCurrentProfile } from "@/lib/auth";
 import { siteUrl } from "@/lib/format";
 import { stripeEnabled } from "@/lib/stripe";
@@ -20,28 +20,28 @@ export default async function Home() {
         label: "Open your kitchen",
       };
 
-  const features: { icon: IconName; title: string; body: string }[] = [
+  const reasons: { icon: IconName; title: string; body: string }[] = [
     {
-      icon: "shop",
-      title: "Your own storefront",
-      body: "A menu page with your cover photo and dishes grouped by category.",
+      icon: "phone",
+      title: "Buyers don’t need an app",
+      body: "They tap your link and order in their browser. No downloads, no passwords.",
     },
     {
-      icon: "bag",
-      title: "Orders in one place",
-      body: "See who ordered what, for pickup or delivery, and message buyers on WhatsApp.",
+      icon: "chat",
+      title: "Works with WhatsApp",
+      body: "Keep chatting with buyers the way you already do. Every order has a message button.",
     },
     {
-      icon: "cash",
-      title: stripeEnabled ? "Get paid your way" : "Cash or e-transfer",
+      icon: "sliders",
+      title: "You stay in charge",
+      body: "Your prices, your hours, pickup or delivery. Switch a dish off the moment it sells out.",
+    },
+    {
+      icon: "check",
+      title: stripeEnabled ? "Free to start" : "Free to start, paid your way",
       body: stripeEnabled
-        ? "Take cards with payouts straight to your bank, or accept cash and e-transfer."
-        : "Buyers pay you directly when they pick up or you deliver.",
-    },
-    {
-      icon: "chart",
-      title: "Track your sales",
-      body: "See what you’ve earned today, this week and this month.",
+        ? "Open your kitchen in about a minute and take cards, cash or e-transfer."
+        : "Open your kitchen in about a minute. Buyers pay you directly with cash or e-transfer.",
     },
   ];
 
@@ -72,12 +72,6 @@ export default async function Home() {
             </div>
 
             <div className="relative mx-auto w-full max-w-sm">
-              {/* 3D clay food floating around the menu card. */}
-              <ClayTomato className="absolute -right-1 -top-10 z-10 h-16 w-16 sm:-right-12 sm:h-24 sm:w-24" />
-              <ClayLemon className="absolute -bottom-8 -left-1 z-10 h-12 w-16 sm:-left-14 sm:h-14 sm:w-20" delay={1.5} />
-              <ClayPea className="absolute -left-10 top-6 hidden h-10 w-10 md:block" delay={0.8} />
-              <ClayPea className="absolute -bottom-6 right-10 z-10 h-7 w-7" delay={2.2} />
-              <ClayChili className="absolute -right-24 bottom-20 hidden h-12 w-20 md:block" delay={3} />
               <div className="card listing relative overflow-hidden" aria-hidden>
                 <div className="relative h-32">
                   <Image
@@ -135,34 +129,78 @@ export default async function Home() {
         <TryIt host={siteUrl().replace(/^https?:\/\//, "")} startHref={start.href} startLabel={start.label} />
       </Reveal>
 
+      <Reveal>
+        <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">Why HomeCook</p>
+        <h2
+          className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
+          style={{ "--i": 1 } as React.CSSProperties}
+        >
+          Less time in your DMs, more time cooking
+        </h2>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {reasons.map((r, i) => (
+            <div key={r.title} className="reveal card p-5" style={{ "--i": i + 2 } as React.CSSProperties}>
+              <IconBadge icon={r.icon} className="border-brand/30 text-brand" />
+              <h3 className="mt-4 font-semibold">{r.title}</h3>
+              <p className="mt-1 text-sm text-muted">{r.body}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Before and after, side by side. */}
+        <div
+          className="reveal mt-6 grid overflow-hidden rounded-3xl border border-line sm:grid-cols-2"
+          style={{ "--i": 6 } as React.CSSProperties}
+        >
+          <div className="bg-press/60 p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">Without HomeCook</p>
+            <ul className="mt-3 space-y-2 text-sm text-muted">
+              {[
+                "Orders scattered across DMs and texts",
+                "Typing out your prices in every chat",
+                "Tallying who owes what on paper",
+              ].map((line) => (
+                <li key={line} className="flex gap-2">
+                  <span aria-hidden>✕</span>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-sage-soft p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-dark">With HomeCook</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              {[
+                "One menu link with photos and prices",
+                "Every order in one list, ready to confirm",
+                "Sales added up for you",
+              ].map((line) => (
+                <li key={line} className="flex gap-2">
+                  <span className="text-brand" aria-hidden>
+                    ✓
+                  </span>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Reveal>
+
       {/* Full-bleed sage band with wavy edges top and bottom. */}
       <section className="mx-[calc(50%-50vw)]">
         <WaveEdge className="h-12 -scale-y-100 text-sage-soft sm:h-20" />
         <div className="relative -my-px overflow-hidden bg-sage-soft py-10">
           <Doodles className="text-sage/10" />
           <Reveal className="relative mx-auto w-full max-w-5xl px-4">
-            <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand-dark">What you get</p>
+            <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand-dark">What it’s for</p>
             <h2
               className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
               style={{ "--i": 1 } as React.CSSProperties}
             >
-              Simple tools, built for home kitchens
+              Use HomeCook to…
             </h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {features.map((f, i) => (
-                <div
-                  key={f.title}
-                  className="reveal flex gap-4 rounded-3xl bg-surface/70 p-5"
-                  style={{ "--i": i + 2 } as React.CSSProperties}
-                >
-                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-brand-dark" />
-                  <div>
-                    <h3 className="font-semibold">{f.title}</h3>
-                    <p className="mt-0.5 text-sm text-muted">{f.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <UseCases />
           </Reveal>
         </div>
         <WaveEdge className="h-12 text-sage-soft sm:h-20" />

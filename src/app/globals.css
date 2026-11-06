@@ -148,17 +148,6 @@ body {
 [data-reveal="hidden"] .reveal {
   opacity: 0;
 }
-/* Gentle floating for the 3D clay food. */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-12px) rotate(4deg);
-  }
-}
-
 /* A little pop for things that land, like the photo dropped into the phone mockup. */
 @keyframes pop {
   from {
