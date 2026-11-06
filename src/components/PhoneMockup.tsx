@@ -56,7 +56,7 @@ function typed(text: string, t: number, start: number, end: number) {
 }
 
 /** The loop clock. Runs only while the phone is on screen; frozen on the order for reduced motion. */
-function useLoopClock(at?: number) {
+export function useLoopClock(at?: number) {
   const ref = useRef<HTMLDivElement>(null);
   const [t, setT] = useState(0);
 
@@ -90,12 +90,22 @@ function useLoopClock(at?: number) {
     };
   }, [at]);
 
-  return { ref, t };
+  return { ref, t, seek: setT };
 }
 
-/** `at` freezes the walkthrough at that moment (ms), for previews. */
-export function PhoneMockup({ className = "", at }: { className?: string; at?: number }) {
-  const { ref, t } = useLoopClock(at);
+export type LoopClock = ReturnType<typeof useLoopClock>;
+
+/** Where each of the home page's three steps starts in the walkthrough, and where the loop ends. */
+export const STEP_STARTS = [0, T.form, T.menu];
+export const LOOP_LENGTH = LOOP;
+
+/**
+ * `at` freezes the walkthrough at that moment (ms), for previews. Pass `clock` to share the
+ * walkthrough's clock with something else on the page, like the step cards beside it.
+ */
+export function PhoneMockup({ className = "", at, clock }: { className?: string; at?: number; clock?: LoopClock }) {
+  const own = useLoopClock(at);
+  const { ref, t } = clock ?? own;
   const screen =
     t < T.dashboard ? "home" : t < T.form ? "dashboard" : t < T.menu ? "form" : t < T.order ? "menu" : "order";
   const confirmed = t >= T.confirmed;
@@ -151,13 +161,17 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
           <p className="font-display text-xl font-semibold">My kitchen</p>
           <p className="text-xs text-muted">Fatema’s Kitchen</p>
           <div className="mt-4 space-y-2 text-xs">
-            {[
-              ["📋", "Orders", "3 new"],
-              ["🍽️", "Menu", "2 dishes"],
-              ["📈", "Sales", "$54 today"],
-            ].map(([icon, label, value]) => (
+            {(
+              [
+                ["Orders", "Orders", "3 new"],
+                ["Menu", "Menu", "2 dishes"],
+                ["Sales", "Sales", "$54 today"],
+              ] as const
+            ).map(([icon, label, value]) => (
               <div key={label} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3">
-                <span className="text-lg">{icon}</span>
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-sage-soft text-brand-dark">
+                  <LineIcon d={ICON_PATHS[icon]} />
+                </span>
                 <span className="flex-1 font-semibold">{label}</span>
                 <span className="text-muted">{value}</span>
               </div>
@@ -179,7 +193,8 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
             <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold text-brand-dark">Share</span>
           </div>
           <p className="mt-2 rounded-2xl border border-dashed border-brand/40 p-2.5 text-[11px] text-muted">
-            💡 <span className="font-semibold text-ink">Tip:</span> dishes with a photo get more orders.
+            <span className="mr-1 rounded-full bg-brand px-1.5 py-px text-[9px] font-semibold uppercase text-white">Tip</span>
+            Dishes with a photo get more orders.
           </p>
         </Screen>
 
@@ -243,7 +258,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
           </ul>
           <div className="mt-1 flex items-center justify-between rounded-2xl bg-sage-soft px-3 py-2.5 text-[11px]">
             <span>
-              <span className="block font-semibold">✨ Your menu is live</span>
+              <span className="block font-semibold">Your menu is live</span>
               <span className="text-muted">Share it with your neighbours</span>
             </span>
             <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold text-brand-dark">Share</span>
@@ -304,7 +319,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
             })}
           </div>
           <p className="mt-4 rounded-2xl bg-sage-soft p-2.5 text-[11px] text-ink/80">
-            💚 <span className="font-semibold">Sarah has ordered 3 times.</span> A regular!
+            <span className="font-semibold">Sarah has ordered 3 times.</span> A regular!
           </p>
         </Screen>
 
@@ -346,6 +361,15 @@ const TABS = {
   Menu: "M6 4v16M6 4c3 0 4 2 4 5s-1 4-4 4M15 4v6a3 3 0 0 0 3 3V4m0 9v7",
   Orders: "M7 4h10l1 4H6zM6 8h12v12H6zM10 12h4",
 };
+const ICON_PATHS = { ...TABS, Sales: "M4 20h16M7 16v-5M12 16V6M17 16V9" };
+
+function LineIcon({ d }: { d: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d={d} />
+    </svg>
+  );
+}
 
 /** The app's bottom tab bar, highlighting the section the cook is in. */
 function TabBar({ active }: { active: keyof typeof TABS }) {
@@ -358,9 +382,7 @@ function TabBar({ active }: { active: keyof typeof TABS }) {
             label === active ? "text-brand" : "text-muted"
           }`}
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d={d} />
-          </svg>
+          <LineIcon d={d} />
           {label}
         </span>
       ))}
