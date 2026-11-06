@@ -257,7 +257,7 @@ function MenuPreview({ on }: { on: boolean }) {
 function OrdersPreview({ on }: { on: boolean }) {
   const orders = [
     ["Sarah S.", "2× Chicken biryani · Pickup", "New", "bg-brand-soft text-brand-dark"],
-    ["Omar K.", "2× Vegetable samosas · Delivery", "Confirmed", "bg-sage-soft text-brand-dark"],
+    ["Omar K.", "2× Vegetable samosas · Delivery", "Confirmed", "bg-success-soft text-success-dark"],
     ["Lina M.", "1× Mango kulfi · Pickup", "Completed", "bg-line text-muted"],
   ];
   return (

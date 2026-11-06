@@ -10,6 +10,9 @@
   --color-brand-soft: #d9f0ed;
   --color-sage: #f48f47;
   --color-sage-soft: #fde6d6;
+  --color-success: #2e9e5b;
+  --color-success-soft: #dcf3e3;
+  --color-success-dark: #1f7a45;
   /* A deeper orange for text, readable on the light backgrounds. */
   --color-orange-text: #c8611c;
   --color-ink: #2b2b2b;
