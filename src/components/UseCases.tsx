@@ -359,7 +359,7 @@ function SalesPreview({ on }: { on: boolean }) {
         {days.map(([d, h], i) => (
           <div key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
             <span
-              className={`w-full origin-bottom rounded-t-lg ${h === 100 ? "bg-sage" : "bg-sage-soft"} ${
+              className={`w-full origin-bottom rounded-t-lg ${h === 100 ? "bg-sage" : "bg-brand-soft"} ${
                 on ? "animate-[grow_600ms_cubic-bezier(0.2,0.7,0.3,1)_backwards]" : ""
               }`}
               style={{ height: `${h}%`, animationDelay: `${i * 70}ms` }}
