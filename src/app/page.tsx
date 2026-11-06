@@ -167,7 +167,7 @@ export default async function Home() {
               ))}
             </ul>
           </div>
-          <div className="bg-sage-soft p-6">
+          <div className="bg-brand-soft p-6">
             <p className="text-xs font-semibold uppercase tracking-wider text-brand-dark">With HomeCook</p>
             <ul className="mt-3 space-y-2 text-sm">
               {[
