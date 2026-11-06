@@ -7,7 +7,7 @@ import type { OrderStatus, OrderWithItems } from "@/lib/types";
 
 const STATUS_STYLE: Record<OrderStatus, string> = {
   pending: "bg-brand-soft text-brand-dark",
-  confirmed: "bg-sage-soft text-brand-dark",
+  confirmed: "bg-success-soft text-success-dark",
   completed: "bg-line text-muted",
   cancelled: "bg-line text-muted line-through",
 };

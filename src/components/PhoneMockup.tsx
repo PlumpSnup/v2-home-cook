@@ -140,7 +140,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
           <p className="mt-4 text-[10px] font-semibold uppercase tracking-wider text-muted">Today’s orders</p>
           <div className="mt-1.5 space-y-1.5 text-[11px]">
             {[
-              ["Omar K.", "2× Vegetable samosas", "Confirmed", "bg-sage-soft text-brand-dark"],
+              ["Omar K.", "2× Vegetable samosas", "Confirmed", "bg-success-soft text-success-dark"],
               ["Lina M.", "1× Mango kulfi", "Completed", "bg-line text-muted"],
             ].map(([who, what, status, style]) => (
               <div key={who} className="flex items-center gap-2 rounded-xl border border-line bg-surface px-2.5 py-2">
@@ -271,7 +271,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
             <p className="font-display text-xl font-semibold">Sarah S.</p>
             <span
               className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors duration-300 ${
-                confirmed ? "bg-sage-soft text-sage" : "bg-brand-soft text-brand-dark"
+                confirmed ? "bg-success-soft text-success-dark" : "bg-brand-soft text-brand-dark"
               }`}
             >
               {confirmed ? "Confirmed" : "New"}
