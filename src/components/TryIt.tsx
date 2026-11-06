@@ -70,7 +70,7 @@ export function TryIt({ host, startHref, startLabel }: { host: string; startHref
                   <Image src="/dishes/chicken-biryani.webp" alt="" fill sizes="40px" className="object-cover" />
                 </span>
                 <span className="flex-1 font-semibold">Chicken biryani</span>
-                <span className="font-semibold text-brand">$14</span>
+                <span className="font-semibold text-orange-text">$14</span>
               </div>
               <div className="flex items-center gap-3 rounded-2xl border border-dashed border-line p-2.5 text-muted">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-press text-lg">+</span>

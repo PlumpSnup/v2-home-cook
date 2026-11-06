@@ -466,7 +466,7 @@ function DishRow({ emoji, photo, name, price, isNew }: DishRowProps) {
       )}
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold">{name}</span>
-        <span className="text-brand">{price}</span>
+        <span className="font-semibold text-orange-text">{price}</span>
       </span>
       {isNew && <span className="rounded-full bg-sage-soft px-2 py-0.5 text-[10px] font-semibold text-brand-dark">New</span>}
     </div>
