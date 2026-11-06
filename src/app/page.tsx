@@ -187,17 +187,17 @@ export default async function Home() {
         </div>
       </Reveal>
 
-      {/* Full-bleed sage band with wavy edges top and bottom. */}
+      {/* Full-bleed teal band with wavy edges top and bottom. */}
       <section className="mx-[calc(50%-50vw)]">
-        <WaveEdge className="h-12 -scale-y-100 text-sage-soft sm:h-20" />
+        <WaveEdge className="h-12 -scale-y-100 text-brand-soft sm:h-20" />
         {/* overflow-clip (not hidden) so the pinned "Use HomeCook to…" can stick while scrolling. */}
-        <div className="relative -my-px overflow-clip bg-sage-soft py-10">
-          <Doodles className="text-sage/10" />
+        <div className="relative -my-px overflow-clip bg-brand-soft py-10">
+          <Doodles className="text-brand/10" />
           <Reveal className="relative mx-auto w-full max-w-5xl px-4">
             <UseCases />
           </Reveal>
         </div>
-        <WaveEdge className="h-12 text-sage-soft sm:h-20" />
+        <WaveEdge className="h-12 text-brand-soft sm:h-20" />
       </section>
 
       <Reveal>

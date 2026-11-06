@@ -129,7 +129,7 @@ export function UseCases() {
                   <IconBadge
                     icon={c.icon}
                     className={`transition-colors duration-300 ${
-                      on ? "border-brand bg-brand text-white" : "border-sage/40 bg-surface text-brand-dark"
+                      on ? "border-brand bg-brand text-white" : "border-brand/30 bg-surface text-brand-dark"
                     }`}
                   />
                   <span>
