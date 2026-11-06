@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
-/* Brand colours — fresh greens on a warm cream base (6A994E, A7C957, F2E8CF). */
+/* Brand colours — Costa Vida-style teal and orange on a warm cream base (2FACA1, F48F47, F2E8CF). */
 @theme {
   --color-cream: #f2e8cf;
   --color-surface: #ffffff;
-  --color-brand: #6a994e;
-  --color-brand-dark: #5a8442;
-  --color-brand-darker: #4b6f37;
-  --color-brand-soft: #e4edd8;
-  --color-sage: #a7c957;
-  --color-sage-soft: #edf3d9;
+  --color-brand: #2faca1;
+  --color-brand-dark: #26918a;
+  --color-brand-darker: #1f7670;
+  --color-brand-soft: #d9f0ed;
+  --color-sage: #f48f47;
+  --color-sage-soft: #fde6d6;
   --color-ink: #2b2b2b;
   --color-muted: #7a746d;
   --color-line: #e4d8b9;
