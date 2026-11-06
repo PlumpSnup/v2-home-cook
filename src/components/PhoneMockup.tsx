@@ -124,9 +124,27 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               <p className="text-lg font-semibold">3</p>
             </div>
           </div>
-          <Button pressed={near(t, T.tapKitchen)} className="mt-5">
+          <Button pressed={near(t, T.tapKitchen)} className="mt-4">
             My kitchen
           </Button>
+          <p className="mt-4 text-[10px] font-semibold uppercase tracking-wider text-muted">Today’s orders</p>
+          <div className="mt-1.5 space-y-1.5 text-[11px]">
+            {[
+              ["Omar K.", "2× Vegetable samosas", "Confirmed", "bg-sage-soft text-brand-dark"],
+              ["Lina M.", "1× Mango kulfi", "Completed", "bg-line text-muted"],
+            ].map(([who, what, status, style]) => (
+              <div key={who} className="flex items-center gap-2 rounded-xl border border-line bg-surface px-2.5 py-2">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-soft text-[10px] font-semibold text-brand-dark">
+                  {who[0]}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-semibold">{who}</span>
+                  <span className="block truncate text-muted">{what}</span>
+                </span>
+                <span className={`rounded-full px-2 py-0.5 text-[9px] font-semibold ${style}`}>{status}</span>
+              </div>
+            ))}
+          </div>
         </Screen>
 
         <Screen show={screen === "dashboard"}>
@@ -145,9 +163,24 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               </div>
             ))}
           </div>
-          <Button pressed={near(t, T.tapAdd)} className="mt-5">
+          <Button pressed={near(t, T.tapAdd)} className="mt-4">
             + Add a dish
           </Button>
+          <div className="mt-4 flex items-center gap-2.5 rounded-2xl bg-sage-soft p-2.5 text-[11px]">
+            <span className="grid h-9 w-9 shrink-0 grid-cols-3 gap-px rounded-md bg-surface p-1" aria-hidden>
+              {[1, 0, 1, 0, 1, 0, 1, 1, 0].map((on, i) => (
+                <span key={i} className={on ? "rounded-[1px] bg-ink" : ""} />
+              ))}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-semibold">Your menu link</span>
+              <span className="block truncate text-muted">homecook/c/fatema</span>
+            </span>
+            <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold text-brand-dark">Share</span>
+          </div>
+          <p className="mt-2 rounded-2xl border border-dashed border-brand/40 p-2.5 text-[11px] text-muted">
+            💡 <span className="font-semibold text-ink">Tip:</span> dishes with a photo get more orders.
+          </p>
         </Screen>
 
         <Screen show={screen === "form"}>
@@ -208,6 +241,13 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
               </li>
             ))}
           </ul>
+          <div className="mt-1 flex items-center justify-between rounded-2xl bg-sage-soft px-3 py-2.5 text-[11px]">
+            <span>
+              <span className="block font-semibold">✨ Your menu is live</span>
+              <span className="text-muted">Share it with your neighbours</span>
+            </span>
+            <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold text-brand-dark">Share</span>
+          </div>
         </Screen>
 
         <Screen show={screen === "order"}>
@@ -245,7 +285,30 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
             </div>
             {!confirmed && <Button pressed={near(t, T.tapConfirm)}>Confirm</Button>}
           </div>
+          {/* Where the order is: ordered, then confirmed (lights up on Confirm), then completed. */}
+          <div className="mt-5 flex items-center text-[10px] font-medium">
+            {["Ordered", "Confirmed", "Completed"].map((step, i) => {
+              const done = i === 0 || (i === 1 && confirmed);
+              return (
+                <div key={step} className="flex flex-1 flex-col items-center gap-1">
+                  <span
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[9px] text-white transition-colors duration-300 ${
+                      done ? "bg-brand" : "bg-line"
+                    }`}
+                  >
+                    {done ? "✓" : ""}
+                  </span>
+                  <span className={done ? "text-ink" : "text-muted"}>{step}</span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-4 rounded-2xl bg-sage-soft p-2.5 text-[11px] text-ink/80">
+            💚 <span className="font-semibold">Sarah has ordered 3 times.</span> A regular!
+          </p>
         </Screen>
+
+        <TabBar active={screen === "home" ? "Home" : screen === "order" ? "Orders" : screen === "dashboard" ? "Kitchen" : "Menu"} />
 
         {/* The order notification dropping in over the menu; tapping it opens the order. */}
         <div
@@ -273,6 +336,34 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+const TABS = {
+  Home: "M4 11 12 4l8 7v9h-5v-6H9v6H4z",
+  Kitchen: "M5 20V10l7-5 7 5v10M9 20v-5h6v5",
+  Menu: "M6 4v16M6 4c3 0 4 2 4 5s-1 4-4 4M15 4v6a3 3 0 0 0 3 3V4m0 9v7",
+  Orders: "M7 4h10l1 4H6zM6 8h12v12H6zM10 12h4",
+};
+
+/** The app's bottom tab bar, highlighting the section the cook is in. */
+function TabBar({ active }: { active: keyof typeof TABS }) {
+  return (
+    <div className="absolute inset-x-0 bottom-0 z-10 flex justify-around border-t border-line bg-surface/95 px-2 pb-4 pt-2 backdrop-blur">
+      {Object.entries(TABS).map(([label, d]) => (
+        <span
+          key={label}
+          className={`flex flex-col items-center gap-0.5 text-[9px] font-medium transition-colors duration-300 ${
+            label === active ? "text-brand" : "text-muted"
+          }`}
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d={d} />
+          </svg>
+          {label}
+        </span>
+      ))}
     </div>
   );
 }
