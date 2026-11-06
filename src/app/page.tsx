@@ -190,16 +190,10 @@ export default async function Home() {
       {/* Full-bleed sage band with wavy edges top and bottom. */}
       <section className="mx-[calc(50%-50vw)]">
         <WaveEdge className="h-12 -scale-y-100 text-sage-soft sm:h-20" />
-        <div className="relative -my-px overflow-hidden bg-sage-soft py-10">
+        {/* overflow-clip (not hidden) so the pinned "Use HomeCook to…" can stick while scrolling. */}
+        <div className="relative -my-px overflow-clip bg-sage-soft py-10">
           <Doodles className="text-sage/10" />
           <Reveal className="relative mx-auto w-full max-w-5xl px-4">
-            <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand-dark">What it’s for</p>
-            <h2
-              className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
-              style={{ "--i": 1 } as React.CSSProperties}
-            >
-              Use HomeCook to…
-            </h2>
             <UseCases />
           </Reveal>
         </div>
