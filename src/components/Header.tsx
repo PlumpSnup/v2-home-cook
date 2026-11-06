@@ -10,30 +10,30 @@ export async function Header() {
     <FloatingHeader>
       <Link href="/" className="group flex items-center gap-2" aria-label={`${APP_NAME} home`}>
         <LogoMark />
-        <span className="font-display text-xl font-semibold text-ink transition-colors group-hover:text-brand-dark">
+        <span className="font-display text-lg font-semibold text-ink transition-colors sm:text-xl group-hover:text-brand-dark">
           {APP_NAME}
         </span>
       </Link>
-      <nav className="flex items-center gap-2 text-sm">
+      <nav className="flex items-center gap-1 text-sm sm:gap-2">
         {!profile ? (
-          <Link href="/login?next=/cook" className="btn-primary px-4 py-2">
+          <Link href="/login?next=/cook" className="btn-primary whitespace-nowrap px-3.5 py-2 sm:px-4">
             Start for free
           </Link>
         ) : profile.is_cook ? (
-          <Link href="/cook" className="btn-secondary px-4 py-2">
+          <Link href="/cook" className="btn-secondary whitespace-nowrap px-3.5 py-2 sm:px-4">
             My kitchen
           </Link>
         ) : (
-          <Link href="/cook/onboarding" className="btn-secondary px-4 py-2">
+          <Link href="/cook/onboarding" className="btn-secondary whitespace-nowrap px-3.5 py-2 sm:px-4">
             Sell your food
           </Link>
         )}
         {profile ? (
-          <Link href="/orders" className="btn-ghost">
+          <Link href="/orders" className="btn-ghost whitespace-nowrap">
             Orders
           </Link>
         ) : (
-          <Link href="/login" className="btn-ghost hover:not-active:transform-none">
+          <Link href="/login" className="btn-ghost whitespace-nowrap hover:not-active:transform-none">
             Log in
           </Link>
         )}

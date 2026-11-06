@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * The top bar. Once the page is scrolled it lifts off into a rounded, floating bar. Its height
+ * The top bar. Once the page is scrolled it lifts off into a narrower, rounded, floating bar. Its height
  * never changes, so nothing on the page jumps when it does.
  */
 export function FloatingHeader({ children }: { children: React.ReactNode }) {
@@ -19,14 +19,14 @@ export function FloatingHeader({ children }: { children: React.ReactNode }) {
   return (
     <header
       className={`sticky top-0 z-20 h-14 transition-colors duration-300 ${
-        floating ? "border-b border-transparent px-2 sm:px-3" : "border-b border-line bg-cream/90 backdrop-blur"
+        floating ? "border-b border-transparent px-2 sm:px-4" : "border-b border-line bg-cream/90 backdrop-blur"
       }`}
     >
       <div
-        className={`mx-auto flex w-full max-w-5xl items-center justify-between transition-all duration-300 ${
+        className={`mx-auto flex w-full items-center justify-between transition-all duration-300 ${
           floating
-            ? "mt-1.5 h-12 rounded-full border border-line bg-surface/85 pl-3 pr-1.5 shadow-[0_12px_30px_rgb(43_43_43/0.12)] backdrop-blur"
-            : "h-14 px-4"
+            ? "mt-1.5 h-12 max-w-3xl rounded-full border border-line bg-surface/85 pl-3 pr-1.5 shadow-[0_12px_30px_rgb(43_43_43/0.12)] backdrop-blur"
+            : "h-14 max-w-5xl px-4"
         }`}
       >
         {children}
