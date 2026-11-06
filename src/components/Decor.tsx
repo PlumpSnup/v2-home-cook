@@ -90,6 +90,12 @@ const ICONS = {
   bag: "M5 8H19L18 20H6ZM9 8C9 3 15 3 15 8",
   cash: "M3 7H21V17H3ZM12 14.5A2.5 2.5 0 1 0 12 9.5 2.5 2.5 0 0 0 12 14.5ZM6 10V14M18 10V14",
   chart: "M4 20H20M7 16V11M12 16V6M17 16V9",
+  camera: "M4 8h3l2-3h6l2 3h3v11H4zM12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z",
+  share: "M7 12v7h10v-7M12 3v12M8 7l4-4 4 4",
+  sliders: "M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4",
+  phone: "M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2",
+  chat: "M4 5h16v11H10l-5 4v-4H4z",
+  check: "M5 12.5l4.5 4.5L19 7",
 };
 export type IconName = keyof typeof ICONS;
 

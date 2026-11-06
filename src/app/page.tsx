@@ -2,51 +2,47 @@ import Image from "next/image";
 import Link from "next/link";
 import { Doodles, IconBadge, type IconName, WaveEdge } from "@/components/Decor";
 import { HeroDoodles } from "@/components/HeroDoodles";
-import { PhoneMockup } from "@/components/PhoneMockup";
+import { HowItWorks } from "@/components/HowItWorks";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
+import { TryIt } from "@/components/TryIt";
+import { UseCases } from "@/components/UseCases";
 import { getCurrentProfile } from "@/lib/auth";
+import { siteUrl } from "@/lib/format";
 import { stripeEnabled } from "@/lib/stripe";
-
-const steps = [
-  {
-    icon: "/steps/menu.png",
-    title: "Set up your kitchen",
-    body: "Sign in with Gmail, name your kitchen and choose pickup, delivery or both. Takes about a minute.",
-  },
-  {
-    icon: "/steps/camera.png",
-    title: "Add your dishes",
-    body: "Snap a photo, set a price and you’re listed. Switch a dish off when it sells out.",
-  },
-  {
-    icon: "/steps/share.png",
-    title: "Share your link",
-    body: "One menu link for WhatsApp, Instagram and your neighbours. Print the QR code for your door.",
-  },
-];
 
 export default async function Home() {
   const profile = await getCurrentProfile();
   const start = profile?.is_cook
     ? { href: "/cook", label: "Go to my kitchen" }
-    : { href: profile ? "/cook/onboarding" : "/login?next=/cook", label: "Open your kitchen" };
+    : {
+        href: profile ? "/cook/onboarding" : "/login?next=/cook",
+        label: "Open your kitchen",
+      };
 
-  const features: { icon: IconName; title: string; body: string }[] = [
-    { icon: "shop", title: "Your own storefront", body: "A menu page with your cover photo and dishes grouped by category." },
+  const reasons: { icon: IconName; title: string; body: string }[] = [
     {
-      icon: "bag",
-      title: "Orders in one place",
-      body: "See who ordered what, for pickup or delivery, and message buyers on WhatsApp.",
+      icon: "phone",
+      title: "Buyers don’t need an app",
+      body: "They tap your link and order in their browser. No downloads, no passwords.",
     },
     {
-      icon: "cash",
-      title: stripeEnabled ? "Get paid your way" : "Cash or e-transfer",
+      icon: "chat",
+      title: "Works with WhatsApp",
+      body: "Keep chatting with buyers the way you already do. Every order has a message button.",
+    },
+    {
+      icon: "sliders",
+      title: "You stay in charge",
+      body: "Your prices, your hours, pickup or delivery. Switch a dish off the moment it sells out.",
+    },
+    {
+      icon: "check",
+      title: stripeEnabled ? "Free to start" : "Free to start, paid your way",
       body: stripeEnabled
-        ? "Take cards with payouts straight to your bank, or accept cash and e-transfer."
-        : "Buyers pay you directly when they pick up or you deliver.",
+        ? "Open your kitchen in about a minute and take cards, cash or e-transfer."
+        : "Open your kitchen in about a minute. Buyers pay you directly with cash or e-transfer.",
     },
-    { icon: "chart", title: "Track your sales", body: "See what you’ve earned today, this week and this month." },
   ];
 
   return (
@@ -75,30 +71,42 @@ export default async function Home() {
               </div>
             </div>
 
-            <div className="card listing relative mx-auto w-full max-w-sm overflow-hidden p-5" aria-hidden>
-              <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-2xl">👩🏽‍🍳</span>
-                <div>
-                  <p className="font-display text-lg font-semibold">Fatema’s Kitchen</p>
-                  <p className="text-xs text-muted">Pickup · Delivery</p>
+            <div className="relative mx-auto w-full max-w-sm">
+              <div className="card listing relative overflow-hidden" aria-hidden>
+                <div className="relative h-32">
+                  <Image
+                    src="/dishes/chicken-biryani.webp"
+                    alt=""
+                    fill
+                    priority
+                    sizes="384px"
+                    className="object-cover"
+                  />
                 </div>
-              </div>
-              <ul className="mt-4 divide-y divide-line text-sm">
-                {[
-                  ["🍛", "Chicken biryani", "$14"],
-                  ["🥟", "Vegetable samosas (6)", "$8"],
-                  ["🍮", "Mango kulfi", "$5"],
-                ].map(([emoji, name, price]) => (
-                  <li key={name} className="flex items-center gap-3 py-3">
-                    <span className="text-xl">{emoji}</span>
-                    <span className="flex-1 font-medium">{name}</span>
-                    <span className="font-semibold text-brand">{price}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-2 flex items-center justify-between rounded-xl bg-sage-soft px-3 py-2 text-sm">
-                <span className="font-medium text-brand-dark">New order · 2 dishes</span>
-                <span className="font-semibold">$22</span>
+                <div className="px-5 pb-5">
+                  <span className="relative -mt-6 flex h-12 w-12 items-center justify-center rounded-full border-4 border-surface bg-brand font-display text-lg font-semibold text-white">
+                    F
+                  </span>
+                  <p className="mt-1 font-display text-lg font-semibold">Fatema’s Kitchen</p>
+                  <p className="text-xs text-muted">Pickup · Delivery</p>
+                  <ul className="mt-3 divide-y divide-line text-sm">
+                    {[
+                      ["Chicken biryani", "$14"],
+                      ["Vegetable samosas (6)", "$8"],
+                      ["Mango kulfi", "$5"],
+                    ].map(([name, price]) => (
+                      <li key={name} className="flex items-center gap-3 py-2.5">
+                        <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                        <span className="flex-1 font-medium">{name}</span>
+                        <span className="font-semibold text-brand">{price}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-2 flex items-center justify-between rounded-xl bg-sage-soft px-3 py-2 text-sm">
+                    <span className="font-medium text-brand-dark">New order · 2 dishes</span>
+                    <span className="font-semibold">$22</span>
+                  </div>
+                </div>
               </div>
             </div>
           </ScrollFade>
@@ -107,22 +115,74 @@ export default async function Home() {
       </section>
 
       <Reveal id="how-it-works" className="scroll-mt-20">
-        <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Start selling in three steps</h2>
-        <div className="mt-6 grid items-center gap-10 md:grid-cols-[1fr_auto] md:gap-16">
-          <ol className="grid gap-4">
-            {steps.map((step, i) => (
-              <li key={step.title} className="card listing reveal p-5" style={{ "--i": i + 1 } as React.CSSProperties}>
-                <div className="flex items-center gap-3">
-                  <Image src={step.icon} alt="" width={28} height={28} className="h-7 w-7" />
-                  <span className="text-sm font-medium text-brand">Step {i + 1}</span>
-                </div>
-                <h3 className="mt-3 font-semibold">{step.title}</h3>
-                <p className="mt-1 text-sm text-muted">{step.body}</p>
-              </li>
-            ))}
-          </ol>
-          <div className="reveal" style={{ "--i": 1 } as React.CSSProperties}>
-            <PhoneMockup />
+        <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">How it works</p>
+        <h2
+          className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
+          style={{ "--i": 1 } as React.CSSProperties}
+        >
+          From your kitchen to their table in three steps
+        </h2>
+        <HowItWorks />
+      </Reveal>
+
+      <Reveal id="try-it" className="scroll-mt-20">
+        <TryIt host={siteUrl().replace(/^https?:\/\//, "")} startHref={start.href} startLabel={start.label} />
+      </Reveal>
+
+      <Reveal>
+        <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">Why HomeCook</p>
+        <h2
+          className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
+          style={{ "--i": 1 } as React.CSSProperties}
+        >
+          Less time in your DMs, more time cooking
+        </h2>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {reasons.map((r, i) => (
+            <div key={r.title} className="reveal card p-5" style={{ "--i": i + 2 } as React.CSSProperties}>
+              <IconBadge icon={r.icon} className="border-brand/30 text-brand" />
+              <h3 className="mt-4 font-semibold">{r.title}</h3>
+              <p className="mt-1 text-sm text-muted">{r.body}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Before and after, side by side. */}
+        <div
+          className="reveal mt-6 grid overflow-hidden rounded-3xl border border-line sm:grid-cols-2"
+          style={{ "--i": 6 } as React.CSSProperties}
+        >
+          <div className="bg-press/60 p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">Without HomeCook</p>
+            <ul className="mt-3 space-y-2 text-sm text-muted">
+              {[
+                "Orders scattered across DMs and texts",
+                "Typing out your prices in every chat",
+                "Tallying who owes what on paper",
+              ].map((line) => (
+                <li key={line} className="flex gap-2">
+                  <span aria-hidden>✕</span>
+                  {line}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-sage-soft p-6">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-dark">With HomeCook</p>
+            <ul className="mt-3 space-y-2 text-sm">
+              {[
+                "One menu link with photos and prices",
+                "Every order in one list, ready to confirm",
+                "Sales added up for you",
+              ].map((line) => (
+                <li key={line} className="flex gap-2">
+                  <span className="text-brand" aria-hidden>
+                    ✓
+                  </span>
+                  {line}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </Reveal>
@@ -130,25 +190,11 @@ export default async function Home() {
       {/* Full-bleed sage band with wavy edges top and bottom. */}
       <section className="mx-[calc(50%-50vw)]">
         <WaveEdge className="h-12 -scale-y-100 text-sage-soft sm:h-20" />
-        <div className="relative -my-px overflow-hidden bg-sage-soft py-10">
+        {/* overflow-clip (not hidden) so the pinned "Use HomeCook to…" can stick while scrolling. */}
+        <div className="relative -my-px overflow-clip bg-sage-soft py-10">
           <Doodles className="text-sage/10" />
           <Reveal className="relative mx-auto w-full max-w-5xl px-4">
-            <h2 className="reveal font-display text-2xl font-semibold sm:text-3xl">Everything your kitchen needs</h2>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {features.map((f, i) => (
-                <div
-                  key={f.title}
-                  className="reveal flex gap-4 rounded-3xl bg-surface/70 p-5"
-                  style={{ "--i": i + 1 } as React.CSSProperties}
-                >
-                  <IconBadge icon={f.icon} className="border-sage/40 bg-surface text-brand-dark" />
-                  <div>
-                    <h3 className="font-semibold">{f.title}</h3>
-                    <p className="mt-0.5 text-sm text-muted">{f.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <UseCases />
           </Reveal>
         </div>
         <WaveEdge className="h-12 text-sage-soft sm:h-20" />
@@ -159,7 +205,9 @@ export default async function Home() {
           <Doodles className="text-brand/10" />
           <div className="relative">
             <p className="font-display text-2xl font-semibold">Your kitchen, your menu, your prices.</p>
-            <p className="mt-1 text-muted">Open your kitchen today and share it with the people who already love your food.</p>
+            <p className="mt-1 text-muted">
+              Open your kitchen today and share it with the people who already love your food.
+            </p>
           </div>
           <Link href={start.href} className="btn-primary relative shrink-0 px-6">
             {start.label}
