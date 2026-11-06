@@ -318,9 +318,6 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
               );
             })}
           </div>
-          <p className="mt-4 rounded-2xl bg-sage-soft p-2.5 text-[11px] text-ink/80">
-            <span className="font-semibold">Sarah has ordered 3 times.</span> A regular!
-          </p>
         </Screen>
 
         <TabBar active={screen === "home" ? "Home" : screen === "order" ? "Orders" : screen === "dashboard" ? "Kitchen" : "Menu"} />
