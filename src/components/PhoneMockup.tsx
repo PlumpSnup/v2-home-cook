@@ -109,7 +109,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
 
         <Screen show={screen === "home"}>
           <p className="text-xs text-muted">Good morning</p>
-          <p className="font-display text-xl font-semibold">Hi Amma 👋</p>
+          <p className="font-display text-xl font-semibold">Hi Fatema 👋</p>
           <div className="mt-4 rounded-2xl bg-sage-soft p-3 text-xs">
             <p className="font-semibold text-brand-dark">● Your kitchen is open</p>
             <p className="mt-1 text-muted">Buyers can order from your menu.</p>
@@ -131,7 +131,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
 
         <Screen show={screen === "dashboard"}>
           <p className="font-display text-xl font-semibold">My kitchen</p>
-          <p className="text-xs text-muted">Amma’s Kitchen</p>
+          <p className="text-xs text-muted">Fatema’s Kitchen</p>
           <div className="mt-4 space-y-2 text-xs">
             {[
               ["📋", "Orders", "3 new"],
@@ -192,7 +192,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
           <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full border-4 border-cream bg-brand-soft text-xl">
             👩🏽‍🍳
           </span>
-          <p className="mt-1 font-display text-base font-semibold">Amma’s Kitchen</p>
+          <p className="mt-1 font-display text-base font-semibold">Fatema’s Kitchen</p>
           <p className="text-[11px] text-muted">Pickup · Delivery</p>
           <ul className="mt-3 text-xs">
             <li
@@ -213,7 +213,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
         <Screen show={screen === "order"}>
           <p className="text-[11px] text-muted">← Orders</p>
           <div className="mt-2 flex items-center justify-between">
-            <p className="font-display text-xl font-semibold">Priya S.</p>
+            <p className="font-display text-xl font-semibold">Sarah S.</p>
             <span
               className={`rounded-full px-2.5 py-1 text-[10px] font-semibold transition-colors duration-300 ${
                 confirmed ? "bg-sage-soft text-sage" : "bg-brand-soft text-brand-dark"
@@ -267,7 +267,7 @@ export function PhoneMockup({ className = "", at }: { className?: string; at?: n
                 <span>now</span>
               </span>
               <span className="block font-semibold text-ink">New order 🎉</span>
-              <span className="block truncate text-ink/80">Priya: 2× {NAME} · Pickup</span>
+              <span className="block truncate text-ink/80">Sarah: 2× {NAME} · Pickup</span>
             </span>
             <Tap pressed={near(t, T.tapNotification)} />
           </div>
