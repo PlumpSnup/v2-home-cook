@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Terms of service" };
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of service" updated="October 2026">
+    <LegalPage title="Terms of service" updated="November 2026">
       <p>By using {APP_NAME} you agree to these terms.</p>
 
       <h2>What {APP_NAME} is</h2>
@@ -26,14 +26,14 @@ export default function TermsPage() {
       <h2>For buyers</h2>
       <ul>
         <li>Give accurate contact details and mention any allergies in your order note.</li>
-        <li>Pay the cook using the method you chose: cash, e-Transfer or card.</li>
+        <li>Pay the cook using the method you chose: cash or e-Transfer.</li>
         <li>Pickup, delivery, cancellations and refunds are arranged with the cook.</li>
       </ul>
 
       <h2>Payments</h2>
       <p>
-        Card payments are processed by Stripe and paid to the cook’s Stripe account. Cash and e-Transfer payments go
-        directly between buyer and cook; {APP_NAME} never holds that money.
+        {APP_NAME} doesn’t take payments. Buyers pay cooks directly by cash or e-Transfer, so {APP_NAME} never holds,
+        processes or refunds that money.
       </p>
 
       <h2>Our part</h2>
