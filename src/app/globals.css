@@ -10,6 +10,8 @@
   --color-brand-soft: #d9f0ed;
   --color-sage: #f48f47;
   --color-sage-soft: #fde6d6;
+  /* A deeper orange for text, readable on the light backgrounds. */
+  --color-orange-text: #c8611c;
   --color-ink: #2b2b2b;
   --color-muted: #7a746d;
   --color-line: #e4d8b9;
@@ -152,6 +154,16 @@ body {
 @keyframes grow {
   from {
     transform: scaleY(0);
+  }
+}
+
+/* A line drawing itself in (set pathLength="1" and stroke-dasharray: 1 2 on the path). */
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
   }
 }
 

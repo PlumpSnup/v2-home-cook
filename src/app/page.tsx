@@ -56,7 +56,28 @@ export default async function Home() {
               <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
                 Bring Your Food
                 <br />
-                to <span className="text-brand">More Tables</span>
+                to{" "}
+                <span className="relative inline-block whitespace-nowrap text-orange-text">
+                  More Tables
+                  {/* A red, hand-drawn underline that draws itself in when the page loads. */}
+                  <svg
+                    viewBox="0 0 240 14"
+                    preserveAspectRatio="none"
+                    className="absolute -bottom-2 left-0 h-3 w-full"
+                    aria-hidden
+                  >
+                    <path
+                      d="M3 9C45 3 95 2 140 5s70 6 97-1"
+                      pathLength={1}
+                      fill="none"
+                      stroke="#e0483e"
+                      strokeWidth="4"
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                      className="animate-[draw_900ms_cubic-bezier(0.65,0,0.35,1)_500ms_both] [stroke-dasharray:1_2]"
+                    />
+                  </svg>
+                </span>
               </h1>
               <p className="mt-4 max-w-md text-lg text-muted">
                 Create your online shop in minutes, share one link, and start taking orders. Free to start.
@@ -98,7 +119,7 @@ export default async function Home() {
                       <li key={name} className="flex items-center gap-3 py-2.5">
                         <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                         <span className="flex-1 font-medium">{name}</span>
-                        <span className="font-semibold text-brand">{price}</span>
+                        <span className="font-semibold text-orange-text">{price}</span>
                       </li>
                     ))}
                   </ul>
