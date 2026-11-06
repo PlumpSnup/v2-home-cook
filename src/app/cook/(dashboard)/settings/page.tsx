@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CookProfileForm } from "@/components/CookProfileForm";
+import { DeleteAccount } from "@/components/DeleteAccount";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireCook } from "@/lib/auth";
+import { kitchenName } from "@/lib/cook";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { db } from "@/lib/db";
 import type { Profile } from "@/lib/types";
@@ -34,7 +36,7 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             </>
           )}
           {welcome && (
-            <Link href="/cook/menu/new?welcome=1" className="block text-center text-sm font-medium text-muted">
+            <Link href="/cook?welcome=1" className="block text-center text-sm font-medium text-muted">
               Skip for now — add my first dish
             </Link>
           )}
@@ -47,6 +49,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
       </section>
 
       <SignOutButton />
+
+      <DeleteAccount kitchen={kitchenName(cook)} />
     </div>
   );
 }

@@ -3,10 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { MAX_DISH_PHOTOS, normalizePhone, parseMoney, slugify } from "@/lib/format";
+import { signOut } from "@/auth";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isUuid } from "@/lib/queries";
-import { isOwnPhoto, savePhoto } from "@/lib/storage";
+import { deletePhotos, isOwnPhoto, savePhoto } from "@/lib/storage";
 import type { Category, OrderStatus } from "@/lib/types";
 
 export type FormState = { error?: string; ok?: boolean };
@@ -77,7 +78,7 @@ export async function saveCookProfile(_prev: FormState, form: FormData): Promise
   }
 
   revalidatePath("/", "layout");
-  if (isOnboarding) redirect(acceptsCard ? "/cook/settings?welcome=1" : "/cook/menu/new?welcome=1");
+  if (isOnboarding) redirect(acceptsCard ? "/cook/settings?welcome=1" : "/cook?welcome=1");
   return { ok: true };
 }
 
@@ -151,6 +152,23 @@ export async function deleteDish(id: string) {
   if (isUuid(id)) await sql`delete from dishes where id = ${id} and cook_id = ${userId}`;
   revalidatePath("/", "layout");
   redirect("/cook/menu");
+}
+
+/**
+ * Permanently deletes the signed-in cook's account: their profile, dishes and the orders placed
+ * with them (via cascade), plus their uploaded photos. Orders they placed as a buyer stay with the
+ * cook who received them, without the link to this account. Then signs them out.
+ */
+export async function deleteAccount() {
+  const { sql, userId } = await currentUser();
+  const [profile] = await sql<{ cover_url: string | null }[]>`select cover_url from profiles where id = ${userId}`;
+  const dishes = await sql<{ photo_urls: string[] | null }[]>`select photo_urls from dishes where cook_id = ${userId}`;
+  const photos = [profile?.cover_url, ...dishes.flatMap((d) => d.photo_urls ?? [])].filter((u): u is string => !!u);
+
+  await sql`delete from profiles where id = ${userId}`;
+  await deletePhotos(photos, userId);
+  revalidatePath("/", "layout");
+  await signOut({ redirectTo: "/" });
 }
 
 // Orders ------------------------------------------------------------------
