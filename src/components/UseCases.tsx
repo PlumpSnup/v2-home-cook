@@ -34,7 +34,8 @@ const LAST = CASES.length - 1;
 
 /**
  * "Use HomeCook to…". On wider screens the section pins in place while you scroll and the preview
- * cards slide through one by one, with the matching use lit up on the left. On phones it's a
+ * cards slide through one by one, with the matching use lit up on the left; stopping between two
+ * cards glides to the nearer one. On phones it's a
  * simple tap-to-switch. Each preview plays a little motion when it comes into view.
  */
 export function UseCases() {
@@ -55,8 +56,23 @@ export function UseCases() {
       const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / travel));
       setPos(p * LAST);
     };
+    // When scrolling stops between two cards, glide to the nearer one.
+    let snapTimer: ReturnType<typeof setTimeout> | undefined;
+    const snap = () => {
+      const el = outer.current;
+      if (!el || !wide.matches) return;
+      const travel = el.offsetHeight - window.innerHeight;
+      const top = el.getBoundingClientRect().top;
+      const p = -top / travel;
+      if (p <= 0 || p >= 1) return;
+      const nearest = Math.round(p * LAST);
+      if (Math.abs(p * LAST - nearest) < 0.02) return;
+      window.scrollTo({ top: top + window.scrollY + (nearest / LAST) * travel, behavior: "smooth" });
+    };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(snap, 150);
     };
     const onWidth = () => {
       setPinned(wide.matches);
@@ -69,6 +85,7 @@ export function UseCases() {
       window.removeEventListener("scroll", onScroll);
       wide.removeEventListener("change", onWidth);
       cancelAnimationFrame(frame);
+      clearTimeout(snapTimer);
     };
   }, []);
 
