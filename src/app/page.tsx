@@ -5,10 +5,8 @@ import { HeroDoodles } from "@/components/HeroDoodles";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
-import { TryIt } from "@/components/TryIt";
 import { UseCases } from "@/components/UseCases";
 import { getCurrentProfile } from "@/lib/auth";
-import { siteUrl } from "@/lib/format";
 import { stripeEnabled } from "@/lib/stripe";
 
 export default async function Home() {
@@ -144,10 +142,6 @@ export default async function Home() {
           From your kitchen to their table in three steps
         </h2>
         <HowItWorks />
-      </Reveal>
-
-      <Reveal id="try-it" className="scroll-mt-20">
-        <TryIt host={siteUrl().replace(/^https?:\/\//, "")} startHref={start.href} startLabel={start.label} />
       </Reveal>
 
       <Reveal>
