@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Young_Serif } from "next/font/google";
 import { CartBar } from "@/components/cart/CartBar";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { Header } from "@/components/Header";
@@ -10,7 +10,8 @@ import { siteUrl } from "@/lib/format";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
+// Headings: a chunky, friendly serif in the style of Recoleta (which needs a paid licence).
+const youngSerif = Young_Serif({ subsets: ["latin"], weight: "400", variable: "--font-young-serif" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -27,7 +28,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const missing = missingEnv();
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${inter.variable} ${youngSerif.variable}`}>
       <body className="min-h-dvh font-sans antialiased">
         <noscript>
           <style>{`[data-reveal] .reveal { opacity: 1 !important; }`}</style>
