@@ -7,7 +7,6 @@ const COLUMNS = [
     title: "For cooks",
     links: [
       ["How it works", "/#how-it-works"],
-      ["Try it", "/#try-it"],
       ["Open your kitchen", "/login?next=/cook"],
     ],
   },
