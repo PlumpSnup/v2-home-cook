@@ -26,10 +26,12 @@
   --color-press: #ebe0c4;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--font-young-serif), ui-serif, Georgia, serif;
 }
 
 body {
+  /* Young Serif comes in one weight: never fake a bold version of it, which looks smudgy. */
+  font-synthesis-weight: none;
   /* Full-bleed sections use 100vw, which includes the scrollbar; don't let that scroll sideways. */
   overflow-x: clip;
   background: var(--color-cream);

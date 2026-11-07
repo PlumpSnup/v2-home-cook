@@ -5,8 +5,10 @@ import { HeroDoodles } from "@/components/HeroDoodles";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Reveal } from "@/components/Reveal";
 import { ScrollFade } from "@/components/ScrollFade";
+import { TryIt } from "@/components/TryIt";
 import { UseCases } from "@/components/UseCases";
 import { getCurrentProfile } from "@/lib/auth";
+import { siteUrl } from "@/lib/format";
 import { stripeEnabled } from "@/lib/stripe";
 
 export default async function Home() {
@@ -52,11 +54,11 @@ export default async function Home() {
           <ScrollFade className="relative mx-auto grid w-full max-w-5xl items-center gap-8 px-4 md:grid-cols-[1.1fr_0.9fr]">
             <div>
               <h1 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
-                Bring Your Food
+                Bring your food
                 <br />
                 to{" "}
                 <span className="relative inline-block whitespace-nowrap text-orange-text">
-                  More Tables
+                  more tables
                   {/* A red, hand-drawn underline that draws itself in when the page loads. */}
                   <svg
                     viewBox="0 0 240 14"
@@ -142,6 +144,10 @@ export default async function Home() {
           From your kitchen to their table in three steps
         </h2>
         <HowItWorks />
+      </Reveal>
+
+      <Reveal id="try-it" className="scroll-mt-20">
+        <TryIt host={siteUrl().replace(/^https?:\/\//, "")} startHref={start.href} startLabel={start.label} />
       </Reveal>
 
       <Reveal>
