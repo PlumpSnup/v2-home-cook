@@ -38,8 +38,8 @@ const DESCRIPTION = "Slow-cooked basmati rice with saffron and fried onions.";
 
 
 const MENU = [
-  { emoji: "🥟", name: "Vegetable samosas (6)", price: "$8" },
-  { emoji: "🍮", name: "Mango kulfi", price: "$5" },
+  { src: "/dishes/vegetable-samosas.webp", name: "Vegetable samosas (6)", price: "$8" },
+  { src: "/dishes/mango-kulfi.webp", name: "Mango kulfi", price: "$5" },
 ];
 
 function progress(t: number, start: number, end: number) {
@@ -237,9 +237,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
 
         <Screen show={screen === "menu"}>
           <div className="-mx-4 -mt-10 h-20 bg-brand-soft" />
-          <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full border-4 border-cream bg-brand-soft text-xl">
-            👩🏽‍🍳
-          </span>
+          <DishPhoto src="/photos/cook-avatar.webp" className="-mt-6 h-12 w-12 rounded-full border-4 border-cream" />
           <p className="mt-1 font-display text-base font-semibold">Fatema’s Kitchen</p>
           <p className="text-[11px] text-muted">Pickup · Delivery</p>
           <ul className="mt-3 text-xs">
@@ -247,7 +245,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
               className={`grid transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${t >= T.newDish ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
             >
               <div className="overflow-hidden">
-                <DishRow photo name={NAME} price="$14" isNew />
+                <DishRow name={NAME} price="$14" isNew />
               </div>
             </li>
             {MENU.map((d) => (
@@ -445,25 +443,23 @@ function Field({ label, value, typing, tall }: { label: string; value: string; t
   );
 }
 
-/** The chicken biryani photo, cropped to fill whatever box it's given. */
-function DishPhoto({ className = "" }: { className?: string }) {
+const BIRYANI = "/dishes/chicken-biryani.webp";
+
+/** A photo (the chicken biryani unless told otherwise), cropped to fill whatever box it's given. */
+function DishPhoto({ src = BIRYANI, className = "" }: { src?: string; className?: string }) {
   return (
     <span className={`relative block overflow-hidden ${className}`}>
-      <Image src="/dishes/chicken-biryani.webp" alt="" fill sizes="(min-width: 768px) 260px, 70vw" quality={85} className="object-cover" />
+      <Image src={src} alt="" fill sizes="(min-width: 768px) 260px, 70vw" quality={85} className="object-cover" />
     </span>
   );
 }
 
-type DishRowProps = { emoji?: string; photo?: boolean; name: string; price: string; isNew?: boolean };
+type DishRowProps = { src?: string; name: string; price: string; isNew?: boolean };
 
-function DishRow({ emoji, photo, name, price, isNew }: DishRowProps) {
+function DishRow({ src, name, price, isNew }: DishRowProps) {
   return (
     <div className={`mb-2 flex items-center gap-2 rounded-2xl border bg-surface p-2 ${isNew ? "border-brand" : "border-line"}`}>
-      {photo ? (
-        <DishPhoto className="h-9 w-9 shrink-0 rounded-xl" />
-      ) : (
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-lg">{emoji}</span>
-      )}
+      <DishPhoto src={src} className="h-9 w-9 shrink-0 rounded-xl" />
       <span className="min-w-0 flex-1">
         <span className="block truncate font-semibold">{name}</span>
         <span className="font-semibold text-orange-text">{price}</span>
