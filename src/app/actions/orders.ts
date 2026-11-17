@@ -6,6 +6,7 @@ import { acceptedPayments } from "@/lib/cook";
 import { db } from "@/lib/db";
 import { normalizePhone, siteUrl } from "@/lib/format";
 import { getProfile, isUuid } from "@/lib/queries";
+import { notifyCookOfOrder } from "@/lib/push";
 import { platformFeeCents, stripe } from "@/lib/stripe";
 import type { Dish, Fulfillment, PaymentMethod } from "@/lib/types";
 
@@ -126,5 +127,7 @@ export async function placeOrder(_prev: OrderFormState, form: FormData): Promise
     redirect(session.url!);
   }
 
+  // Card orders alert the cook once Stripe confirms payment; everything else alerts now.
+  await notifyCookOfOrder({ cook_id: cook.id, id: orderId, buyer_name: buyerName, dish_name: summary, fulfillment });
   redirect(`/order/${orderId}?new=1`);
 }

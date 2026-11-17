@@ -7,6 +7,9 @@ import { money, PAYMENT_LABELS, whatsappLink } from "@/lib/format";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { db } from "@/lib/db";
 import { ClearCart } from "@/components/cart/ClearCart";
+import { PushToggle } from "@/components/PushToggle";
+import { currentUserId } from "@/lib/auth";
+import { vapidPublicKey } from "@/lib/push";
 import { getOrder, getOrderItems, getProfile } from "@/lib/queries";
 import type { Order } from "@/lib/types";
 
@@ -95,6 +98,16 @@ export default async function OrderPage({ params, searchParams }: Props) {
         </div>
       ) : (
         <p className="text-center text-sm text-muted">The cook will contact you at {order.buyer_phone}.</p>
+      )}
+
+      {/* Signed-in buyers can get a notification when the cook confirms or completes this order. */}
+      {order.buyer_id && order.buyer_id === (await currentUserId()) && (
+        <PushToggle
+          publicKey={vapidPublicKey()}
+          title="Order updates"
+          description="Get a notification on this device when the cook confirms or completes your order."
+          test={false}
+        />
       )}
 
       <div className="text-center">

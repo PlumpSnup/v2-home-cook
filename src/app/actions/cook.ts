@@ -7,6 +7,7 @@ import { signOut } from "@/auth";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isUuid } from "@/lib/queries";
+import { notifyBuyerOfStatus } from "@/lib/push";
 import { deletePhotos, isOwnPhoto, savePhoto } from "@/lib/storage";
 import type { Category, OrderStatus } from "@/lib/types";
 
@@ -187,6 +188,13 @@ export async function updateOrder(id: string, change: { status?: OrderStatus; pa
   }
   if (typeof change.paid === "boolean") values.paid = change.paid;
   if (Object.keys(values).length === 0) return;
-  await sql`update orders set ${sql(values)} where id = ${id} and cook_id = ${userId}`;
+  const [order] = await sql<{ id: string; buyer_id: string | null; dish_name: string }[]>`
+    update orders set ${sql(values)} where id = ${id} and cook_id = ${userId}
+    returning id, buyer_id, dish_name`;
   revalidatePath("/cook", "layout");
+  if (order && change.status) {
+    const [cook] = await sql<{ kitchen_name: string | null; full_name: string | null }[]>`
+      select kitchen_name, full_name from profiles where id = ${userId}`;
+    await notifyBuyerOfStatus(order, change.status, cook?.kitchen_name || cook?.full_name || "The cook");
+  }
 }

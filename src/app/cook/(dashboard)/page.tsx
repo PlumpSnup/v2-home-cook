@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PushToggle } from "@/components/PushToggle";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
+import { vapidPublicKey } from "@/lib/push";
 import { money } from "@/lib/format";
 import { db } from "@/lib/db";
 import { getRecentSales } from "@/lib/queries";
@@ -46,6 +48,14 @@ export default async function CookHome({ searchParams }: { searchParams: Promise
           </Link>
         </div>
       )}
+
+      {/* Shows only while order alerts are off in this browser. */}
+      <PushToggle
+        publicKey={vapidPublicKey()}
+        variant="banner"
+        title="Get notified of new orders"
+        description="Turn on alerts and we’ll ping this phone or computer when someone orders."
+      />
 
       <Link href="/cook/orders" className="card listing flex items-center justify-between border-brand bg-brand p-5 text-white [--edge:var(--color-brand-darker)] hover:bg-brand-dark">
         <div>
