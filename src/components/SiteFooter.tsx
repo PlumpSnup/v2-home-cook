@@ -46,7 +46,11 @@ export function SiteFooter() {
         ))}
       </div>
       <p className="mx-auto w-full max-w-5xl px-4 pb-8 text-xs text-muted">
-        © {new Date().getFullYear()} {APP_NAME}. Made for home cooks.
+        © {new Date().getFullYear()} {APP_NAME}. Made for home cooks. Photos from{" "}
+        <a href="https://www.pexels.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-ink">
+          Pexels
+        </a>
+        .
       </p>
     </footer>
   );
