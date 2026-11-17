@@ -128,6 +128,17 @@ alter table orders drop constraint if exists orders_quantity_check;
 -- v3: up to five photos per dish. photo_url stays as the first one (the cover) for cards.
 alter table dishes add column if not exists photo_urls text[] not null default '{}';
 update dishes set photo_urls = array[photo_url] where photo_url is not null and cardinality(photo_urls) = 0;
+
+-- v4: order alerts. One row per browser that turned notifications on.
+create table if not exists push_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid not null references profiles (id) on delete cascade,
+  endpoint text not null unique,
+  p256dh text not null,
+  auth text not null,
+  created_at timestamptz not null default now()
+);
+create index if not exists push_subscriptions_profile_idx on push_subscriptions (profile_id);
 `;
 
 async function ensureSchema() {

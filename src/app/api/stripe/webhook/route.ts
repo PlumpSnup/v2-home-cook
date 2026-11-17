@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { notifyCookOfOrder } from "@/lib/push";
 
 // Stripe calls this for card payments and Connect account updates.
 // Subscribe to: checkout.session.completed, account.updated (include Connect events).
@@ -23,7 +24,13 @@ export async function POST(request: Request) {
   if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object;
     if (session.payment_status === "paid") {
-      await sql`update orders set paid = true where stripe_session_id = ${session.id}`;
+      const [order] = await sql<
+        { id: string; cook_id: string; buyer_name: string; dish_name: string; fulfillment: string }[]
+      >`
+        update orders set paid = true where stripe_session_id = ${session.id} and not paid
+        returning id, cook_id, buyer_name, dish_name, fulfillment`;
+      // A card order only reaches the cook once it's paid, so this is when they hear about it.
+      if (order) await notifyCookOfOrder(order);
     }
   }
 

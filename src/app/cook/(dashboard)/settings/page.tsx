@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CookProfileForm } from "@/components/CookProfileForm";
 import { DeleteAccount } from "@/components/DeleteAccount";
+import { PushToggle } from "@/components/PushToggle";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
+import { vapidPublicKey } from "@/lib/push";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { db } from "@/lib/db";
 import type { Profile } from "@/lib/types";
@@ -42,6 +44,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           )}
         </section>
       )}
+
+      <PushToggle publicKey={vapidPublicKey()} />
 
       <section className="space-y-4">
         <h1 className="font-display text-2xl font-semibold">Kitchen settings</h1>
