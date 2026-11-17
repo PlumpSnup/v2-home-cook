@@ -32,8 +32,8 @@ const day = [
     time: "Evening",
     title: "Hand it over",
     body: "Pickup at your door or a quick delivery down the street.",
-    photo: "handing a bag of food at a door",
-    src: "/photos/doorstep-handoff.webp",
+    photo: "handing a packed meal to a customer",
+    src: "/photos/meal-handoff.webp",
   },
 ];
 
