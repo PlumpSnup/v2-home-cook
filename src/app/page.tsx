@@ -180,12 +180,6 @@ export default async function Home() {
       {/* 2. About: a big photo on the left, the story on the right. */}
       <Reveal id="about" className="grid scroll-mt-24 items-center gap-10 md:grid-cols-2 md:gap-14">
         <div className="relative">
-          <p
-            className="pointer-events-none absolute -top-14 left-0 select-none font-display text-8xl leading-none text-brand-soft lg:text-9xl"
-            aria-hidden
-          >
-            Fresh
-          </p>
           <PhotoSlot
             src="/photos/cook-at-stove.webp"
             label="a home cook at her stove"
@@ -198,8 +192,7 @@ export default async function Home() {
           />
         </div>
         <div>
-          <p className="reveal text-xs font-semibold uppercase tracking-[0.18em] text-muted">{"// About HomeCook"}</p>
-          <h2 className="reveal mt-3 font-display text-3xl leading-snug sm:text-4xl" style={order(1)}>
+          <h2 className="reveal font-display text-3xl leading-snug sm:text-4xl" style={order(1)}>
             We believe the best food in town is often cooked in someone’s home kitchen
           </h2>
           <div className="reveal mt-6 space-y-4 text-muted" style={order(2)}>
