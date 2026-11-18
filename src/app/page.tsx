@@ -77,8 +77,8 @@ export default async function Home() {
       <section className="relative mx-[calc(50%-50vw)] flex min-h-[calc(100svh-3.5rem)] flex-col">
         <div className="relative flex flex-1 items-center overflow-hidden pb-24 pt-12">
           <PhotoSlot
-            src="/photos/hero-family-table.webp"
-            label="a table of homemade dishes"
+            src="/photos/hero-stew-and-rice.webp"
+            label="a homemade stew with rice and salads"
             tone="dark"
             priority
             sizes="100vw"
