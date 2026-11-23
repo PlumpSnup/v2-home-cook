@@ -48,7 +48,6 @@ export default async function SharePage() {
 
       <section className="card flex flex-col items-center gap-3 p-6">
         <h2 className="font-semibold">Your QR code</h2>
-        <p className="text-center text-sm text-muted">Print it for your door or fridge, or post it to your story.</p>
         <QrDownload url={url} fileName={`${cook.slug}-menu-qr.png`} />
       </section>
 
