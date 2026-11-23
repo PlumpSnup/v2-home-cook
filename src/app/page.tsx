@@ -24,7 +24,7 @@ const day = [
   {
     time: "Afternoon",
     title: "Orders roll in",
-    body: "Neighbours order from your link. You confirm in a tap.",
+    body: "Your customers order from your link. You confirm in a tap.",
     photo: "packing food into containers",
     src: "/photos/packed-meals.webp",
   },
