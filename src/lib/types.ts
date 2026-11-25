@@ -18,6 +18,8 @@ export type Profile = {
   accepts_etransfer: boolean;
   accepts_card: boolean;
   etransfer_email: string | null;
+  /** Whether the cook gets an email for each new order. */
+  email_alerts: boolean;
   offers_pickup: boolean;
   offers_delivery: boolean;
   delivery_fee_cents: number;
@@ -80,6 +82,7 @@ export type Order = {
   total_cents: number;
   buyer_name: string;
   buyer_phone: string;
+  buyer_email: string | null;
   note: string | null;
   fulfillment: Fulfillment;
   payment_method: PaymentMethod;

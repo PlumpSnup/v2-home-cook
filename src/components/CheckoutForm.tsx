@@ -16,6 +16,7 @@ type Props = {
   fulfillments: Fulfillment[];
   deliveryFeeCents: number;
   defaultName?: string;
+  defaultEmail?: string;
 };
 
 const PAYMENT_HINTS: Record<PaymentMethod, string> = {
@@ -24,7 +25,7 @@ const PAYMENT_HINTS: Record<PaymentMethod, string> = {
   card: "Credit or debit card, paid now",
 };
 
-export function CheckoutForm({ kitchen, menu, payments, fulfillments, deliveryFeeCents, defaultName }: Props) {
+export function CheckoutForm({ kitchen, menu, payments, fulfillments, deliveryFeeCents, defaultName, defaultEmail }: Props) {
   const [state, action, pending] = useActionState(placeOrder, {});
   const { cart, ready, setQuantity } = useCart();
   const [fulfillment, setFulfillment] = useState<Fulfillment>(fulfillments[0] ?? "pickup");
@@ -159,6 +160,22 @@ export function CheckoutForm({ kitchen, menu, payments, fulfillments, deliveryFe
             required
             autoComplete="tel"
           />
+        </div>
+        <div>
+          <label htmlFor="buyer_email" className="label">
+            Email <span className="font-normal text-muted">(optional)</span>
+          </label>
+          <input
+            id="buyer_email"
+            name="buyer_email"
+            className="input"
+            type="email"
+            inputMode="email"
+            placeholder="you@example.com"
+            defaultValue={defaultEmail}
+            autoComplete="email"
+          />
+          <span className="mt-1 block text-xs text-muted">We’ll email you when the cook confirms your order and when it’s paid.</span>
         </div>
         <div>
           <label htmlFor="note" className="label">

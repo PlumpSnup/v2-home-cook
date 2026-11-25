@@ -7,8 +7,9 @@ import { signOut } from "@/auth";
 import { currentUserId } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isUuid } from "@/lib/queries";
+import { emailBuyer } from "@/lib/email";
 import { deletePhotos, isOwnPhoto, savePhoto } from "@/lib/storage";
-import type { Category, OrderStatus } from "@/lib/types";
+import type { Category, Order, OrderStatus } from "@/lib/types";
 
 export type FormState = { error?: string; ok?: boolean };
 
@@ -187,6 +188,29 @@ export async function updateOrder(id: string, change: { status?: OrderStatus; pa
   }
   if (typeof change.paid === "boolean") values.paid = change.paid;
   if (Object.keys(values).length === 0) return;
-  await sql`update orders set ${sql(values)} where id = ${id} and cook_id = ${userId}`;
+  const [before] = await sql<{ status: OrderStatus; paid: boolean }[]>`
+    select status, paid from orders where id = ${id} and cook_id = ${userId}`;
+  if (!before) return;
+  const [order] = await sql<Order[]>`
+    update orders set ${sql(values)} where id = ${id} and cook_id = ${userId} returning *`;
   revalidatePath("/cook", "layout");
+
+  // Email the buyer (if they left an email) about what changed.
+  const event =
+    values.status && values.status !== before.status
+      ? String(values.status)
+      : values.paid === true && !before.paid
+        ? "paid"
+        : null;
+  if (event && event !== "pending") {
+    const [cook] = await sql<{ kitchen_name: string | null; full_name: string | null }[]>`
+      select kitchen_name, full_name from profiles where id = ${userId}`;
+    await emailBuyer(event, cook?.kitchen_name || cook?.full_name || "The cook", order);
+  }
+}
+
+export async function setEmailAlerts(on: boolean) {
+  const { sql, userId } = await currentUser();
+  await sql`update profiles set email_alerts = ${on === true} where id = ${userId}`;
+  revalidatePath("/cook/settings");
 }
