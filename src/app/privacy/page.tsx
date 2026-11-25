@@ -48,6 +48,11 @@ export default function PrivacyPage() {
           privacy policy.
         </li>
         <li>
+          <strong>PostHog</strong> gives us anonymous usage statistics: which pages are visited, roughly where from
+          (city or country), and how many visits lead to orders. It doesn’t receive your name, email, phone number or
+          order details.
+        </li>
+        <li>
           <strong>Service providers</strong> that run the app for us: Vercel (hosting and photo storage), Neon (database)
           and Google (sign-in).
         </li>

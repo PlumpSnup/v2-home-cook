@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { IdentifyUser } from "@/components/Analytics";
 import { FloatingHeader } from "@/components/FloatingHeader";
 import { getCurrentProfile } from "@/lib/auth";
 import { APP_NAME } from "@/lib/brand";
@@ -8,6 +9,7 @@ export async function Header() {
 
   return (
     <FloatingHeader>
+      <IdentifyUser id={profile?.id ?? null} isCook={Boolean(profile?.is_cook)} />
       <Link href="/" className="group flex items-center gap-2" aria-label={`${APP_NAME} home`}>
         <LogoMark />
         <span className="font-display text-lg font-semibold text-ink transition-colors sm:text-xl group-hover:text-brand-dark">

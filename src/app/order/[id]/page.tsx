@@ -7,6 +7,7 @@ import { money, PAYMENT_LABELS, whatsappLink } from "@/lib/format";
 import { stripe, stripeEnabled } from "@/lib/stripe";
 import { db } from "@/lib/db";
 import { ClearCart } from "@/components/cart/ClearCart";
+import { TrackView } from "@/components/Analytics";
 import { getOrder, getOrderItems, getProfile } from "@/lib/queries";
 import type { Order } from "@/lib/types";
 
@@ -46,6 +47,20 @@ export default async function OrderPage({ params, searchParams }: Props) {
     <div className="mx-auto max-w-3xl space-y-5 pt-8">
       {/* The order went through, so empty the cart it came from. */}
       {justPlaced && <ClearCart />}
+      {justPlaced && (
+        <TrackView
+          event="order_placed"
+          onceKey={`order-${order.id}`}
+          properties={{
+            kitchen: cook.slug,
+            total: order.total_cents / 100,
+            meals: order.quantity,
+            payment_method: order.payment_method,
+            fulfillment: order.fulfillment,
+            emailed_updates: Boolean(order.buyer_email),
+          }}
+        />
+      )}
       <div className="text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-soft text-2xl text-brand-dark">
           ✓

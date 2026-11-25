@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@/components/Analytics";
 import { useCart, type CartKitchen } from "./CartProvider";
 
 type Props = {
@@ -18,7 +19,10 @@ export function AddToCart({ kitchen, dish, size = "sm" }: Props) {
     return (
       <button
         type="button"
-        onClick={() => add(kitchen, { dishId: dish.id, name: dish.name, priceCents: dish.priceCents })}
+        onClick={() => {
+          add(kitchen, { dishId: dish.id, name: dish.name, priceCents: dish.priceCents });
+          track("added_to_cart", { kitchen: kitchen.slug, dish: dish.name, price: dish.priceCents / 100 });
+        }}
         className={`btn-primary ${large ? "w-full py-4 text-base" : "px-4 py-2"}`}
         aria-label={`Add ${dish.name} to cart`}
       >
