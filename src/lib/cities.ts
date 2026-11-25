@@ -1,4 +1,4 @@
-// Cities cooks can pick from. Add more here as HomeCook grows.
+// Cities cooks can pick from. Add more here as SimpleCook grows.
 export const CITIES = [
   "Ajax",
   "Brampton",

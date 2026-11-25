@@ -17,7 +17,7 @@ export function LegalPage({ title, updated, children }: { title: string; updated
             .
           </>
         ) : (
-          "Questions? Contact the HomeCook team through the support email shown on the Google sign-in screen."
+          "Questions? Contact the SimpleCook team through the support email shown on the Google sign-in screen."
         )}
       </p>
     </article>

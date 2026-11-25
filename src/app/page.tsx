@@ -201,7 +201,7 @@ export default async function Home() {
               and notes on scraps of paper.
             </p>
             <p>
-              HomeCook gives every home kitchen a simple online menu. Share one link, take orders for pickup or
+              SimpleCook gives every home kitchen a simple online menu. Share one link, take orders for pickup or
               delivery, and get paid the way that works for you.
             </p>
           </div>
@@ -226,7 +226,7 @@ export default async function Home() {
       {/* 4. A cook's day: three tall photos running edge to edge, captions on the photos. */}
       <section>
         <Reveal>
-          <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">A day with HomeCook</p>
+          <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">A day with SimpleCook</p>
           <h2 className="reveal mt-2 font-display text-3xl sm:text-4xl" style={order(1)}>
             Cooked at home, enjoyed down the street
           </h2>
@@ -255,9 +255,9 @@ export default async function Home() {
         </Reveal>
       </section>
 
-      {/* 5. Why HomeCook (unchanged). */}
+      {/* 5. Why SimpleCook (unchanged). */}
       <Reveal>
-        <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">Why HomeCook</p>
+        <p className="reveal text-xs font-semibold uppercase tracking-wider text-brand">Why SimpleCook</p>
         <h2 className="reveal mt-2 font-display text-3xl sm:text-4xl" style={order(1)}>
           Less time in your DMs, more time cooking
         </h2>
@@ -277,7 +277,7 @@ export default async function Home() {
           style={order(6)}
         >
           <div className="bg-press/60 p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted">Without HomeCook</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">Without SimpleCook</p>
             <ul className="mt-3 space-y-2 text-sm text-muted">
               {[
                 "Orders scattered across DMs and texts",
@@ -292,7 +292,7 @@ export default async function Home() {
             </ul>
           </div>
           <div className="bg-brand-soft p-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-dark">With HomeCook</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-dark">With SimpleCook</p>
             <ul className="mt-3 space-y-2 text-sm">
               {[
                 "One menu link with photos and prices",
@@ -311,10 +311,10 @@ export default async function Home() {
         </div>
       </Reveal>
 
-      {/* 6. Use HomeCook to… (unchanged): full-bleed teal band; the section pins while its cards scroll. */}
+      {/* 6. Use SimpleCook to… (unchanged): full-bleed teal band; the section pins while its cards scroll. */}
       <section className="mx-[calc(50%-50vw)]">
         <WaveEdge className="h-12 -scale-y-100 text-brand-soft sm:h-20" />
-        {/* overflow-clip (not hidden) so the pinned "Use HomeCook to…" can stick while scrolling. */}
+        {/* overflow-clip (not hidden) so the pinned "Use SimpleCook to…" can stick while scrolling. */}
         <div className="relative -my-px overflow-clip bg-brand-soft py-10">
           <Doodles className="text-brand/10" />
           <Reveal className="relative mx-auto w-full max-w-5xl px-4">

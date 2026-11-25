@@ -1,4 +1,4 @@
-// Cuisines cooks can pick from. Add more here as HomeCook grows.
+// Cuisines cooks can pick from. Add more here as SimpleCook grows.
 export const CUISINES = [
   "Afghan",
   "Bangladeshi",

@@ -33,7 +33,7 @@ const CASES: { id: string; icon: IconName; title: string; body: string }[] = [
 const LAST = CASES.length - 1;
 
 /**
- * "Use HomeCook to…". On wider screens the section pins in place while you scroll and the preview
+ * "Use SimpleCook to…". On wider screens the section pins in place while you scroll and the preview
  * cards slide through one by one, with the matching use lit up on the left; stopping between two
  * cards glides to the nearer one. On phones it's a
  * simple tap-to-switch. Each preview plays a little motion when it comes into view.
@@ -104,11 +104,11 @@ export function UseCases() {
           className="reveal mt-2 font-display text-3xl font-semibold sm:text-4xl"
           style={{ "--i": 1 } as React.CSSProperties}
         >
-          Use HomeCook to…
+          Use SimpleCook to…
         </h2>
 
         <div className="mt-8 grid gap-6 md:grid-cols-[0.9fr_1.1fr] md:gap-10">
-          <div role="tablist" aria-label="What you can use HomeCook for" className="grid gap-2">
+          <div role="tablist" aria-label="What you can use SimpleCook for" className="grid gap-2">
             {CASES.map((c, i) => {
               const on = i === active;
               return (

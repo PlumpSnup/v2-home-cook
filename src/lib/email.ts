@@ -44,7 +44,7 @@ async function send(to: string | null | undefined, subject: string, html: string
 const esc = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
-/** A simple, mobile-friendly email in HomeCook's colours. */
+/** A simple, mobile-friendly email in SimpleCook's colours. */
 function layout(heading: string, lines: string[], button?: { label: string; url: string }, footer?: string) {
   const body = lines
     .map((l) => `<p style="margin:0 0 10px;font-size:15px;line-height:1.5;color:#2b2b2b">${l}</p>`)
