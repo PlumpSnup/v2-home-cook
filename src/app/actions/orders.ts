@@ -5,6 +5,7 @@ import { currentUserId } from "@/lib/auth";
 import { acceptedPayments } from "@/lib/cook";
 import { db } from "@/lib/db";
 import { normalizePhone, siteUrl } from "@/lib/format";
+import { emailBuyer, emailCookNewOrder } from "@/lib/email";
 import { getProfile, isUuid } from "@/lib/queries";
 import { platformFeeCents, stripe } from "@/lib/stripe";
 import type { Dish, Fulfillment, PaymentMethod } from "@/lib/types";
@@ -38,12 +39,14 @@ export async function placeOrder(_prev: OrderFormState, form: FormData): Promise
   const buyerName = String(form.get("buyer_name") ?? "").trim();
   const buyerPhone = normalizePhone(String(form.get("buyer_phone") ?? ""));
   const note = String(form.get("note") ?? "").trim().slice(0, 300) || null;
+  const buyerEmail = String(form.get("buyer_email") ?? "").trim().toLowerCase().slice(0, 200) || null;
   const payment = String(form.get("payment_method") ?? "") as PaymentMethod;
   const fulfillment: Fulfillment = form.get("fulfillment") === "delivery" ? "delivery" : "pickup";
 
   if (!lines || lines.length === 0) return { error: "Your cart is empty." };
   if (!buyerName) return { error: "Please add your name." };
   if (buyerPhone.length < 10) return { error: "Please add a phone number the cook can reach you on." };
+  if (buyerEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) return { error: "That email doesn’t look right." };
   if (!isUuid(cookId)) return { error: "Something went wrong. Please go back to the kitchen and try again." };
 
   // Prices, availability and options always come from the database, never from the browser.
@@ -87,6 +90,7 @@ export async function placeOrder(_prev: OrderFormState, form: FormData): Promise
           total_cents: total,
           buyer_name: buyerName.slice(0, 80),
           buyer_phone: buyerPhone,
+          buyer_email: buyerEmail,
           note,
           fulfillment,
           payment_method: payment,
@@ -126,5 +130,22 @@ export async function placeOrder(_prev: OrderFormState, form: FormData): Promise
     redirect(session.url!);
   }
 
+  // Card orders send these once Stripe confirms payment; everything else sends them now.
+  const order = {
+    id: orderId,
+    buyer_name: buyerName,
+    buyer_phone: buyerPhone,
+    buyer_email: buyerEmail,
+    dish_name: summary,
+    total_cents: total,
+    fulfillment,
+    payment_method: payment,
+    note,
+  };
+  const kitchen = cook.kitchen_name || cook.full_name || "The cook";
+  await Promise.all([
+    cook.email_alerts ? emailCookNewOrder(cook.email, kitchen, order) : null,
+    emailBuyer("placed", kitchen, order),
+  ]);
   redirect(`/order/${orderId}?new=1`);
 }

@@ -128,6 +128,10 @@ alter table orders drop constraint if exists orders_quantity_check;
 -- v3: up to five photos per dish. photo_url stays as the first one (the cover) for cards.
 alter table dishes add column if not exists photo_urls text[] not null default '{}';
 update dishes set photo_urls = array[photo_url] where photo_url is not null and cardinality(photo_urls) = 0;
+
+-- v5: order emails. Buyers can leave an email for updates; cooks can turn new-order emails off.
+alter table orders add column if not exists buyer_email text;
+alter table profiles add column if not exists email_alerts boolean not null default true;
 `;
 
 async function ensureSchema() {

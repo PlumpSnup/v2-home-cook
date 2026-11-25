@@ -33,6 +33,7 @@ export default async function CheckoutPage({ searchParams }: Props) {
         fulfillments={fulfillmentOptions(cook)}
         deliveryFeeCents={cook.delivery_fee_cents}
         defaultName={viewer?.full_name ?? undefined}
+        defaultEmail={viewer?.email ?? undefined}
       />
     </div>
   );

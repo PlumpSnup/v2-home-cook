@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { emailBuyer, emailCookNewOrder } from "@/lib/email";
+import type { Order, Profile } from "@/lib/types";
 
 // Stripe calls this for card payments and Connect account updates.
 // Subscribe to: checkout.session.completed, account.updated (include Connect events).
@@ -23,7 +25,17 @@ export async function POST(request: Request) {
   if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object;
     if (session.payment_status === "paid") {
-      await sql`update orders set paid = true where stripe_session_id = ${session.id}`;
+      const [order] = await sql<Order[]>`
+        update orders set paid = true where stripe_session_id = ${session.id} and not paid returning *`;
+      // A card order only reaches the cook once it's paid, so this is when the emails go out.
+      if (order) {
+        const [cook] = await sql<Profile[]>`select * from profiles where id = ${order.cook_id}`;
+        const kitchen = cook?.kitchen_name || cook?.full_name || "The cook";
+        await Promise.all([
+          cook?.email_alerts ? emailCookNewOrder(cook.email, kitchen, order) : null,
+          emailBuyer("placed", kitchen, order),
+        ]);
+      }
     }
   }
 

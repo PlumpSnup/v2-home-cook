@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CookProfileForm } from "@/components/CookProfileForm";
 import { DeleteAccount } from "@/components/DeleteAccount";
+import { EmailAlertsToggle } from "@/components/EmailAlertsToggle";
 import { SignOutButton } from "@/components/SignOutButton";
 import { requireCook } from "@/lib/auth";
 import { kitchenName } from "@/lib/cook";
@@ -42,6 +43,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           )}
         </section>
       )}
+
+      <EmailAlertsToggle on={cook.email_alerts} email={cook.email} />
 
       <section className="space-y-4">
         <h1 className="font-display text-2xl font-semibold">Kitchen settings</h1>
