@@ -3,10 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar } from "@/components/Avatar";
+import { TrackView } from "@/components/Analytics";
 import { CookBadges } from "@/components/CookBadges";
 import { WaveOverlay } from "@/components/Decor";
 import { MenuItem } from "@/components/DishCard";
 import { ShareButton } from "@/components/ShareButton";
+import { getCurrentProfile } from "@/lib/auth";
 import { coverPhoto, kitchenName } from "@/lib/cook";
 import { CATEGORIES, siteUrl, whatsappLink } from "@/lib/format";
 import { getCookBySlug, getCookDishes } from "@/lib/queries";
@@ -36,6 +38,7 @@ export default async function Storefront({ params }: Props) {
   const data = await load(slug);
   if (!data) notFound();
   const { cook, dishes } = data;
+  const viewer = await getCurrentProfile();
   const name = kitchenName(cook);
   const url = `${siteUrl()}/c/${slug}`;
   const cover = coverPhoto(cook, dishes);
@@ -47,6 +50,16 @@ export default async function Storefront({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      {/* A kitchen link was opened; "viewer_is_cook" separates cooks from customers. */}
+      <TrackView
+        event="storefront_viewed"
+        properties={{
+          kitchen: slug,
+          viewer_is_cook: Boolean(viewer?.is_cook),
+          own_kitchen: viewer?.id === cook.id,
+          dishes: dishes.length,
+        }}
+      />
       <section>
         <div className="relative -mx-4 aspect-[3/1] overflow-hidden bg-brand-soft sm:mx-0 sm:mt-5 sm:rounded-t-[2.5rem]">
           {cover ? (

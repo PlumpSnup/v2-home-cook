@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { TrackView } from "@/components/Analytics";
 import { CheckoutForm } from "@/components/CheckoutForm";
 import { getCurrentProfile } from "@/lib/auth";
 import { acceptedPayments, fulfillmentOptions, kitchenName } from "@/lib/cook";
@@ -26,6 +27,7 @@ export default async function CheckoutPage({ searchParams }: Props) {
         <p className="text-sm text-muted">Your order from</p>
         <h1 className="font-display text-2xl font-semibold">{name}</h1>
       </div>
+      <TrackView event="checkout_started" properties={{ kitchen: cook.slug, viewer_is_cook: Boolean(viewer?.is_cook) }} />
       <CheckoutForm
         kitchen={{ id: cook.id, slug: cook.slug, name }}
         menu={menu}

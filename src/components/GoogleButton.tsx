@@ -2,10 +2,15 @@
 
 import { useFormStatus } from "react-dom";
 import { signInWithGoogle } from "@/app/actions/auth";
+import { track } from "@/components/Analytics";
 
 export function GoogleButton({ next }: { next: string }) {
   return (
-    <form action={signInWithGoogle.bind(null, next)}>
+    <form
+      action={signInWithGoogle.bind(null, next)}
+      // Where people log in from, and whether they're heading to a kitchen (cooks) or not.
+      onSubmit={() => track("login_started", { next, is_cook_signup: next.startsWith("/cook") })}
+    >
       <Submit />
     </form>
   );
