@@ -188,7 +188,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
             </span>
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">Your menu link</span>
-              <span className="block truncate text-muted">homecook/c/fatema</span>
+              <span className="block truncate text-muted">simplecook/c/fatema</span>
             </span>
             <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold text-brand-dark">Share</span>
           </div>
@@ -336,7 +336,7 @@ export function PhoneMockup({ className = "", at, clock }: { className?: string;
             </span>
             <span className="min-w-0 flex-1">
               <span className="flex justify-between text-[10px] text-muted">
-                <span>HomeCook</span>
+                <span>SimpleCook</span>
                 <span>now</span>
               </span>
               <span className="block font-semibold text-ink">New order 🎉</span>

@@ -17,7 +17,7 @@ type CartContextValue = {
   clear: () => void;
 };
 
-const STORAGE_KEY = "homecook-cart";
+const STORAGE_KEY = "simplecook-cart";
 const MAX_PER_DISH = 50;
 const CartContext = createContext<CartContextValue | null>(null);
 

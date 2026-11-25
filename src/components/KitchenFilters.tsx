@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-const CITY_KEY = "homecook-city";
+const CITY_KEY = "simplecook-city";
 
 function hrefWith(params: URLSearchParams, key: string, value?: string) {
   const next = new URLSearchParams(params);
